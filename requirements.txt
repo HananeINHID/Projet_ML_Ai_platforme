@@ -1,0 +1,9 @@
+# Dépendances du serveur web Django
+Django==5.2.7
+sqlparse==0.5.3
+
+# Dépendances pour le Machine Learning
+numpy==2.3.3
+pandas==2.3.3
+scikit-learn==1.7.2
+joblib==1.5.2

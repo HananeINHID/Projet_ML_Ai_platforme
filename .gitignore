@@ -205,3 +205,19 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Fichiers de base de données Django
+db.sqlite3
+
+# Environnements virtuels (au cas où)
+envML/
+.venv/
+
+# Fichiers de données brutes et scripts d'entraînement
+# (On ne partage pas les données, juste le modèle .pkl)
+
+*.ipynb
+creer_modele.py
+
+# Cache VS Code
+.vscode/
