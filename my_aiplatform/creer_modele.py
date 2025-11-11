@@ -1,77 +1,85 @@
 import pandas as pd
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
 import joblib
 import os
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score, mean_squared_error
+from sklearn.tree import DecisionTreeRegressor
 
-# --- 1. Configuration des chemins ---
-CSV_FILE = 'dataset_vehicules_classification_100k.csv'
-OUTPUT_DIR = 'models_ai' # Dossier de sortie pour les modèles
-MODEL_PATH = os.path.join(OUTPUT_DIR, 'logreg_model.pkl')
-SCALER_PATH = os.path.join(OUTPUT_DIR, 'scaler.pkl') 
-
-print(f"Fichier CSV source : {CSV_FILE}")
-print(f"Dossier de sortie : {OUTPUT_DIR}")
-
-# --- 2. Chargement des données ---
-try:
-    df = pd.read_csv(CSV_FILE)
-    print(f"Fichier '{CSV_FILE}' chargé.")
-except FileNotFoundError:
-    print(f"ERREUR : Fichier '{CSV_FILE}' introuvable.")
-    exit()
-
-# --- 3. Préparation des données ---
-# Nettoyer les noms de colonnes (ex: " Hauteur_m " -> "Hauteur_m")
-df.columns = df.columns.str.strip()
-
-# Gérer les valeurs manquantes (NaN)
-# On remplace les "trous" par la valeur médiane, ce qui est mieux que de supprimer la ligne.
-print("Nettoyage des NaN (remplissage par la médiane)...")
-df["Hauteur_m"] = df["Hauteur_m"].fillna(df["Hauteur_m"].median())
-df["Nombre_de_roues"] = df["Nombre_de_roues"].fillna(df["Nombre_de_roues"].median())
-
-# Convertir les cibles texte en chiffres (le ML ne comprend que les chiffres)
-target_map = {'Camion': 0, 'Touristique': 1}
-df['type_numeric'] = df['Type_de_vehicule'].map(target_map)
-
-# Définir les colonnes "caractéristiques" (X) et la colonne "cible" (y)
-features = ['Hauteur_m', 'Nombre_de_roues']
-target = 'type_numeric'
-
-X = df[features] # Données d'entrée (Hauteur, Roues)
-y = df[target]   # Ce qu'on veut prédire (0 ou 1)
-
-print("Données prêtes pour l'entraînement.")
-
-# --- 4. Entraînement du "Traducteur" (Scaler) ---
-scaler = StandardScaler()
-
-# On entraîne le scaler ET on transforme X en même temps.
-# 'scaler' mémorise la moyenne et l'écart-type de 'X'.
-# 'X_scaled' est la version "traduite" de X.
-X_scaled = scaler.fit_transform(X) 
-
-print(f"Scaler entraîné.")
-
-# --- 5. Entraînement du Modèle ---
-model = LogisticRegression()
-
-# On entraîne le modèle sur les données "traduites" (scalées)
-model.fit(X_scaled, y) 
-
-print(f"Modèle entraîné. Précision: {model.score(X_scaled, y) * 100:.2f}%")
-
-# --- 6. Sauvegarde des fichiers ---
-# S'assurer que le dossier 'models_ai' existe
+# Configuration Générale 
+OUTPUT_DIR = 'models_ai'
 os.makedirs(OUTPUT_DIR, exist_ok=True)
+print(f"Les modèles seront sauvegardés dans : {OUTPUT_DIR}")
 
-# Sauvegarder le modèle entraîné 
-joblib.dump(model, MODEL_PATH) 
-# Sauvegarder le scaler entraîné (TRÈS IMPORTANT pour l'application)
-joblib.dump(scaler, SCALER_PATH)
+def nettoyer_donnees(df, features, target):
+    """
+    Nettoie le DataFrame :
+    1. Garde uniquement les colonnes utiles.
+    2. Supprime TOUTES les lignes  avec des valeurs NaN.
+    """
+    colonnes_utiles = features + [target]
+    df = df[colonnes_utiles]
+    
+    print(f"Lignes avant nettoyage (données brutes) : {len(df)}")
+    df = df.dropna()
+    print(f"Lignes après nettoyage (données valides) : {len(df)}")
+    
+    return df
 
-print("\n--- FIN ---")
-print(f"Modèle sauvegardé dans : {MODEL_PATH}")
-print(f"Scaler sauvegardé dans : {SCALER_PATH}")
+def train_regression_arbre():
+    
+    # 1. Définition du Dataset 
+    DATASET_FILE = 'Student_Performance.csv'
+    
+    # 2. Charger les données 
+    df = pd.read_csv(DATASET_FILE)
+    print(f"Fichier '{DATASET_FILE}' chargé avec succès.")
 
+    # 3. Définir les Caractéristiques (X) et la Cible (y)
+    TARGET = 'Performance Index'
+    FEATURES = df.drop(columns=[TARGET]).columns.tolist() 
+    
+    print(f"Cible (y) : {TARGET}")
+    print(f"Caractéristiques (X) : {FEATURES}")
+
+    # 4. Nettoyage et Préparation (sans imputation)
+    df = nettoyer_donnees(df, FEATURES, TARGET)
+
+    # 5. Encodage automatique des colonnes catégorielles
+    print("\nVérification et encodage des colonnes non numériques...")
+    for col in FEATURES:
+        if df[col].dtype == 'object':
+            print(f"→ Encodage de la colonne catégorielle : '{col}'")
+            df[col] = df[col].astype('category').cat.codes
+
+    print("\nTypes de données après encodage :")
+    print(df.dtypes)
+
+    # 6. Séparation en train/test
+    X = df[FEATURES]
+    y = df[TARGET]
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # 7. Entraînement du modèle
+    print("\nLe modèle Arbre de Décision n'a pas besoin de normalisation (scaler).")
+    model = DecisionTreeRegressor(max_depth=10, random_state=42)
+    print(f"\nEntraînement du modèle Arbre de Décision...")
+    
+    model.fit(X_train, y_train)
+    
+    # 8. Évaluation
+    y_pred = model.predict(X_test)
+    r2 = r2_score(y_test, y_pred)
+    rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+    print(f"\nRésultats : R² = {r2:.3f}, RMSE = {rmse:.3f}")
+    
+    # 9. Sauvegarde du modèle
+    model_filename = 'DecisionTree_R.pkl'
+    joblib.dump(model, os.path.join(OUTPUT_DIR, model_filename))
+    print(f"\n Modèle '{model_filename}' sauvegardé dans '{OUTPUT_DIR}'.")
+
+
+# Exécution du script
+print("Début du script d'entraînement pour (Arbre de Décision Régression)...")
+train_regression_arbre()
+print("\nScript d'entraînement terminé avec succès ")
