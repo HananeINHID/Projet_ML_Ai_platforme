@@ -6,6 +6,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error, classification_report
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import classification_report
 
 # Configuration Générale 
 OUTPUT_DIR = 'models_ai'
@@ -93,6 +95,70 @@ def train_regression_arbre():
     model_filename = 'DecisionTree_R.pkl'
     joblib.dump(model, os.path.join(OUTPUT_DIR, model_filename))
     print(f"\n Modèle '{model_filename}' sauvegardé dans '{OUTPUT_DIR}'.")
+
+def train_classification_logreg():
+    """
+    Charge le dataset de CLASSIFICATION, le nettoie,
+    le normalise, et entraîne la Régression Logistique.
+    """
+    
+    # 1. Définition du Dataset
+    DATASET_FILE = 'dataset_meteo.csv'
+    
+    # 2. Charger les données
+    df = pd.read_csv(DATASET_FILE)
+    print(f"Fichier '{DATASET_FILE}' chargé avec succès.")
+
+    # 3. Définir les Caractéristiques (X) et la Cible (y)
+    TARGET = 'Pluie' 
+    
+    FEATURES = df.drop(columns=[TARGET]).columns.tolist() 
+    print(f"Cible (y) : {TARGET}")
+
+    # 4. Nettoyage et Préparation
+    # On réutilise votre fonction 'nettoyer_donnees'
+    df = nettoyer_donnees(df, FEATURES, TARGET)
+
+    # 5. Encodage automatique (identique à l'autre fonction)
+    print("\nVérification et encodage des colonnes non numériques...")
+    for col in FEATURES:
+        if df[col].dtype == 'object':
+            print(f"→ Encodage de la colonne catégorielle : '{col}'")
+            df[col] = df[col].astype('category').cat.codes
+
+    # 6. Séparation en train/test
+    X = df[FEATURES]
+    y = df[TARGET]
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # 7. Normalisation (StandardScaler)
+    # La Régression Logistique est sensible à l'échelle des données.
+    print("\nNormalisation (StandardScaler) requise pour la Régression Logistique...")
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled = scaler.transform(X_test)
+
+    # 8. Entraînement du modèle
+    model = LogisticRegression(random_state=42)
+    print(f"\nEntraînement du modèle Régression Logistique...")
+    
+    # On entraîne sur les données NORMALISÉES
+    model.fit(X_train_scaled, y_train)
+    
+    # 9. Évaluation
+    print("\nRésultats :")
+    # On évalue sur les données NORMALISÉES
+    y_pred = model.predict(X_test_scaled)
+    print(classification_report(y_test, y_pred))
+    
+    # 10. Sauvegarde des modèles (Modèle ET Scaler)
+    model_filename = 'LogisticRegression.pkl'
+    scaler_filename = 'c_scaler.pkl' # 'c' pour classification
+    
+    joblib.dump(model, os.path.join(OUTPUT_DIR, model_filename))
+    joblib.dump(scaler, os.path.join(OUTPUT_DIR, scaler_filename))
+    
+    print(f"\n Modèles '{model_filename}' et '{scaler_filename}' sauvegardés dans '{OUTPUT_DIR}'.")
 
 
 # Exécution du script
