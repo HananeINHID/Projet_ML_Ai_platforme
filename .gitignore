@@ -213,11 +213,5 @@ db.sqlite3
 envML/
 .venv/
 
-# Fichiers de données brutes et scripts d'entraînement
-# (On ne partage pas les données, juste le modèle .pkl)
-
-*.ipynb
-creer_modele.py
-
 # Cache VS Code
 .vscode/
