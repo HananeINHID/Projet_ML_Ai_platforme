@@ -3,8 +3,9 @@ import joblib
 import os
 import numpy as np
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import r2_score, mean_squared_error
+from sklearn.metrics import r2_score, mean_squared_error, classification_report
 from sklearn.tree import DecisionTreeRegressor
+from sklearn.linear_model import LogisticRegression
 
 # Configuration Générale 
 OUTPUT_DIR = 'models_ai'
@@ -16,6 +17,7 @@ def nettoyer_donnees(df, features, target):
     Nettoie le DataFrame :
     1. Garde uniquement les colonnes utiles.
     2. Supprime TOUTES les lignes  avec des valeurs NaN.
+    3. Gère les valeurs aberrantes (outliers) avec la méthode de l'IQR.
     """
     colonnes_utiles = features + [target]
     df = df[colonnes_utiles]
@@ -23,6 +25,20 @@ def nettoyer_donnees(df, features, target):
     print(f"Lignes avant nettoyage (données brutes) : {len(df)}")
     df = df.dropna()
     print(f"Lignes après nettoyage (données valides) : {len(df)}")
+    
+    # Détection et suppression des valeurs aberrantes
+    colonnes_numeriques = df.select_dtypes(include=[np.number]).columns.tolist()
+    print("\nSuppression des valeurs aberrantes sur :", colonnes_numeriques)
+
+    for col in colonnes_numeriques:
+        Q1 = df[col].quantile(0.25)
+        Q3 = df[col].quantile(0.75)
+        IQR = Q3 - Q1
+        borne_inf = Q1 - 1.5 * IQR
+        borne_sup = Q3 + 1.5 * IQR
+        df = df[(df[col] >= borne_inf) & (df[col] <= borne_sup)]
+
+    print(f"Lignes finales après nettoyage complet : {len(df)}")
     
     return df
 
