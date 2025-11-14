@@ -6,8 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error, classification_report
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import classification_report
+from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder
 
 # Configuration Générale 
 OUTPUT_DIR = 'models_ai'
@@ -44,124 +43,108 @@ def nettoyer_donnees(df, features, target):
     
     return df
 
-def train_regression_arbre():
+# Traitement des datasets 
+
+# 1. Dataset 1 : Student performance
+student_file = "Student_Performance.csv"
+df_student = pd.read_csv(student_file)
+print(f"Fichier '{student_file}' chargé.")
+
+target_student = "Performance Index"
+features_student = df_student.drop(columns=[target_student]).columns.tolist()
+df_student = nettoyer_donnees(df_student, features_student, target_student)
+
+# Encodage des colonnes catégorielles
+for col in features_student:
+     if df_student[col].dtype == "object":
+        print(f"Encodage LabelEncoder pour : {col}")
+        le = LabelEncoder()
+        df_student[col] = le.fit_transform(df_student[col])
+
+# 2. Dataset 2 : Météo
+meteo_file = "dataset_meteo.csv"
+df_meteo = pd.read_csv(meteo_file)
+print(f"Fichier '{meteo_file}' chargé.")
+
+target_meteo = "Pluie"
+features_meteo = df_meteo.drop(columns=[target_meteo]).columns.tolist()
+df_meteo = nettoyer_donnees(df_meteo, features_meteo, target_meteo)
+
+# Encodage des colonnes catégorielles
+cat_cols = [col for col in features_meteo if df_meteo[col].dtype == "object"]
+
+if cat_cols:
+    print("Encodage OneHotEncoder sur :", cat_cols)
     
-    # 1. Définition du Dataset 
-    DATASET_FILE = 'Student_Performance.csv'
+    ohe = OneHotEncoder(sparse=False, drop="first")
+    encoded = ohe.fit_transform(df_meteo[cat_cols])
     
-    # 2. Charger les données 
-    df = pd.read_csv(DATASET_FILE)
-    print(f"Fichier '{DATASET_FILE}' chargé avec succès.")
+    encoded_df = pd.DataFrame(encoded, columns=ohe.get_feature_names_out(cat_cols))
 
-    # 3. Définir les Caractéristiques (X) et la Cible (y)
-    TARGET = 'Performance Index'
-    FEATURES = df.drop(columns=[TARGET]).columns.tolist() 
-    
-    print(f"Cible (y) : {TARGET}")
-    print(f"Caractéristiques (X) : {FEATURES}")
+    df_meteo = df_meteo.drop(columns=cat_cols).reset_index(drop=True)
+    df_meteo = pd.concat([df_meteo, encoded_df], axis=1)
 
-    # 4. Nettoyage et Préparation (sans imputation)
-    df = nettoyer_donnees(df, FEATURES, TARGET)
+def train_regression_arbre(features_student, target_student ):
 
-    # 5. Encodage automatique des colonnes catégorielles
-    print("\nVérification et encodage des colonnes non numériques...")
-    for col in FEATURES:
-        if df[col].dtype == 'object':
-            print(f"→ Encodage de la colonne catégorielle : '{col}'")
-            df[col] = df[col].astype('category').cat.codes
+    X = df_student[features_student]
+    y = df_student[target_student]
 
-    print("\nTypes de données après encodage :")
-    print(df.dtypes)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42 )
 
-    # 6. Séparation en train/test
-    X = df[FEATURES]
-    y = df[TARGET]
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-    # 7. Entraînement du modèle
-    print("\nLe modèle Arbre de Décision n'a pas besoin de normalisation (scaler).")
-    model = DecisionTreeRegressor(max_depth=10, random_state=42)
-    print(f"\nEntraînement du modèle Arbre de Décision...")
-    
+    # 1. Entraînement du modèle
+    model = DecisionTreeRegressor(max_depth=10)
     model.fit(X_train, y_train)
-    
-    # 8. Évaluation
+
+    # 2. Evaluation 
     y_pred = model.predict(X_test)
     r2 = r2_score(y_test, y_pred)
     rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-    print(f"\nRésultats : R² = {r2:.3f}, RMSE = {rmse:.3f}")
-    
-    # 9. Sauvegarde du modèle
-    model_filename = 'DecisionTree_R.pkl'
-    joblib.dump(model, os.path.join(OUTPUT_DIR, model_filename))
-    print(f"\n Modèle '{model_filename}' sauvegardé dans '{OUTPUT_DIR}'.")
+    print(f"Résultats : R² = {r2:.3f}, RMSE = {rmse:.3f}")
 
-def train_classification_logreg():
+    
+    
+    # 3. Sauvegarde du modèle
+    joblib.dump(model, os.path.join(OUTPUT_DIR, "DecisionTreeRegressor.pkl"))
+    print("\nModèle DecisionTreeRegressor sauvegardé.\n")
+
+def train_classification_logreg(df_meteo, features_meteo, target_meteo):
     """
-    Charge le dataset de CLASSIFICATION, le nettoie,
-    le normalise, et entraîne la Régression Logistique.
+    Entraîne une Régression Logistique sur le dataset météo
+    déjà NETTOYÉ et déjà ENCODÉ plus haut.
     """
-    
-    # 1. Définition du Dataset
-    DATASET_FILE = 'dataset_meteo.csv'
-    
-    # 2. Charger les données
-    df = pd.read_csv(DATASET_FILE)
-    print(f"Fichier '{DATASET_FILE}' chargé avec succès.")
-
-    # 3. Définir les Caractéristiques (X) et la Cible (y)
-    TARGET = 'Pluie' 
-    
-    FEATURES = df.drop(columns=[TARGET]).columns.tolist() 
-    print(f"Cible (y) : {TARGET}")
-
-    # 4. Nettoyage et Préparation
-    # On réutilise votre fonction 'nettoyer_donnees'
-    df = nettoyer_donnees(df, FEATURES, TARGET)
-
-    # 5. Encodage automatique (identique à l'autre fonction)
-    print("\nVérification et encodage des colonnes non numériques...")
-    for col in FEATURES:
-        if df[col].dtype == 'object':
-            print(f"→ Encodage de la colonne catégorielle : '{col}'")
-            df[col] = df[col].astype('category').cat.codes
-
-    # 6. Séparation en train/test
-    X = df[FEATURES]
-    y = df[TARGET]
+    # 1. Séparation X / y
+    X = df_meteo[features_meteo]
+    y = df_meteo[target_meteo]
+   
+    # 2. Split train/test
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    # 7. Normalisation (StandardScaler)
-    # La Régression Logistique est sensible à l'échelle des données.
+    # 3. Normalisation (StandardScaler)
     print("\nNormalisation (StandardScaler) requise pour la Régression Logistique...")
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
 
-    # 8. Entraînement du modèle
+    # 4. Entraînement du modèle
     model = LogisticRegression(random_state=42)
     print(f"\nEntraînement du modèle Régression Logistique...")
     
     # On entraîne sur les données NORMALISÉES
     model.fit(X_train_scaled, y_train)
     
-    # 9. Évaluation
+    # 5. Évaluation
     print("\nRésultats :")
-    # On évalue sur les données NORMALISÉES
+    # On évalue sur les données normalisés
     y_pred = model.predict(X_test_scaled)
     print(classification_report(y_test, y_pred))
     
-    # 10. Sauvegarde des modèles (Modèle ET Scaler)
-    model_filename = 'LogisticRegression.pkl'
-    scaler_filename = 'c_scaler.pkl' # 'c' pour classification
-    
-    joblib.dump(model, os.path.join(OUTPUT_DIR, model_filename))
-    joblib.dump(scaler, os.path.join(OUTPUT_DIR, scaler_filename))
-    
-    print(f"\n Modèles '{model_filename}' et '{scaler_filename}' sauvegardés dans '{OUTPUT_DIR}'.")
+    # 6. Sauvegarde des modèles (Modèle ET Scaler)
+    joblib.dump(model, os.path.join(OUTPUT_DIR, "LogisticRegression.pkl"))
+    joblib.dump(scaler, os.path.join(OUTPUT_DIR, "c_scaler.pkl"))
 
+    print("\n Modèle LogisticRegression sauvegardé.")
 
 # Exécution du script
-print("Début du script d'entraînement pour (Arbre de Décision Régression)...")
-train_regression_arbre()
-print("\nScript d'entraînement terminé avec succès ")
+train_classification_logreg(df_meteo, features_meteo, target_meteo)
+train_regression_arbre(features_student, target_student)
+
