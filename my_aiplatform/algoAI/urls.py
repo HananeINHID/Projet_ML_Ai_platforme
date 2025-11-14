@@ -6,4 +6,10 @@ urlpatterns = [
     path('regLog_atlier/', views.regLog_atelier, name='regLog_atelier'),
     path('regLog_tester/', views.regLog_tester, name='regLog_tester'),
     path('regLog_prediction', views.regLog_prediction, name='regLog_prediction'),
+    path('ran_forest_details/', views.ran_forest_details, name='ran_forest_details'),
+    path('ran_forest_atelier/', views.ran_forest_atelier, name='ran_forest_atelier'),
+    path('ran_forest_tester/', views.ran_forest_tester, name='ran_forest_tester'),
+    path('ran_forest_reg_details/', views.ran_forest_reg_details, name='ran_forest_reg_details'),
+    path('ran_forest_reg_atelier/', views.ran_forest_reg_atelier, name='ran_forest_reg_atelier'),
+    path('rf_prediction/', views.rf_prediction, name='rf_prediction'),
 ]

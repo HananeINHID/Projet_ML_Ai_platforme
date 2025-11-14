@@ -1,0 +1,26 @@
+{% include "includes/header.html" %}
+{% load static %}
+<div class="container">
+    <h2 class="mb-4">Algorithme de Random Forest</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Détails:</h3>
+            <p>La Random Forest est un modèle de classification supervisée (ou de régression) qui combine plusieurs arbres de décision pour améliorer la précision et réduire le risque de surapprentissage. Chaque arbre contribue à la prédiction finale par un vote majoritaire (pour la classification) ou une moyenne (pour la régression), ce qui rend le modèle plus robuste et performant.</p>
+        </div>
+        <div class="col-md-6">
+            <h3>Caractéristiques:</h3>
+            <ul>
+                <li>Vote Majoritaire des Arbres</li>
+                <li>Robuste au Surapprentissage</li>
+                <li>Peut Faire Classification ou Régression</li>
+            </ul>
+        </div>
+    </div>
+    <div>
+        <iframe src="{% static 'pdfs/random forest.pdf' %}" width="100%" height="600px" style="border:1px solid #ccc;">
+            Ce navigateur ne supporte pas les PDFs. veuillez le télécharger :)
+            <a href="{% static 'pdfs/random forest.pdf' %}">Télécharger PDF</a>
+        </iframe>
+    </div>
+</div>
+{% include "includes/footer.html" %}

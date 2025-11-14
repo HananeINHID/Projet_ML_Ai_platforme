@@ -143,3 +143,28 @@ def regLog_prediction(request):
     # Logique pour une requête GET (l'utilisateur accède à la page pour la 1ère fois)
     # On affiche simplement le formulaire de saisie.
     return render(request, 'vehicles_from.html')
+
+def ran_forest_details(request):
+    return render(request, 'ran_forest_details.html')
+def ran_forest_atelier(request):
+    return render(request, 'ran_forest_atelier.html')
+def ran_forest_tester(request):
+    return render(request, 'rain_form.html')
+def ran_forest_reg_details(request):
+    return render(request, 'ran_forest_reg_details.html')
+def ran_forest_reg_atelier(request):
+    return render(request, 'ran_forest_reg_atelier.html')
+def ran_forest_reg_tester(request):
+    return render(request, 'rain_form.html')
+from django.shortcuts import render
+
+def rf_prediction(request):
+    if request.method == "POST":
+        temperature = request.POST.get('temperature')
+        humidity = request.POST.get('humidity')
+        wind = request.POST.get('wind')
+        pressure = request.POST.get('pressure')
+        # Ici tu peux mettre ton modèle RF pour prédire
+        result = "Exemple de prédiction"
+        return render(request, 'rain_form.html', {'result': result})
+    return render(request, 'rain_form.html')
