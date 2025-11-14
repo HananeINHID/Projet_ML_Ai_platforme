@@ -1,19 +1,18 @@
 {% include "includes/header.html" %}
 {% load static %}
 <div class="container">
-    <h2 class="mb-4">Atelier Pratique - Classification des véhicules</h2>
+    <h2 class="mb-4">Atelier Pratique - Classification Météo (Pluie/Non Pluie)</h2>
     <div class="row">
         <div class="col-md-6">
-            <h3>Dataset des véhicules</h3>
-            <p>L'objectif de ce démonstration est de vous montrer comment on entraine un modèle de régression logistique pour
-            classifier les véhicules en Camion ou Touristique selon le nombre de roes et la hauteur donné</p>
-            <p>les modèles entrainés et sauvegardés de cette atelier vont être utiliser pour faire des classification à base
-            des données qui vont être saisir par l'utilisateur de l'application via un formulaire une fois il clique sur le
-            bouton "tester le modèle</p>
+            <h3>Dataset Météo</h3>
+            <p>L'objectif de cet atelier est d'entraîner un modèle de <strong>Régression Logistique</strong> pour
+            prédire s'il va pleuvoir ("Pluie") ou non ("Non Pluie") en se basant sur les conditions météo (température, humidité, etc.).</p>
+            <p>Le modèle a été entraîné et sauvegardé. Il va maintenant être utilisé pour faire des prédictions à base
+            des données saisies par l'utilisateur via le formulaire de test.</p>
         </div>
         <div class="col-md-6">
-            <img src="{% static 'images/camion.jpg' %}" width="40%">
-            <img src="{% static 'images/touristique.jpg' %}" width="40%">
+            <img src="{% static 'images/pluie.jpg' %}" width="40%">
+            <img src="{% static 'images/soleil.png' %}" width="40%">
         </div>
     </div>
     <a class="btn btn-success col-12 mt-2 mb-2" href="{% url 'regLog_tester' %}">Tester le modèle</a>

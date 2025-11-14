@@ -1,0 +1,92 @@
+{% include "includes/header.html" %}
+{% load static %}
+<div class="container">
+  <h2 class="mb-4">Caractéristiques de la météo</h2>
+
+  <div class="ps-2 card">
+    <div class="card-title">
+      <img src="{% static 'images/meteo_banner.jpg' %}" width="100%">
+    </div>
+
+    <div class="card-body">
+
+      <form method="post" action="{% url 'regLog_prediction' %}" class="ps-4 pe-4 pt-4 pb-4">
+        {% csrf_token %}
+
+        <!-- Température -->
+        <div class="mb-4">
+          <label class="form-label">Température (°C)</label>
+
+          <div class="input-group mb-2">
+            <input type="number" class="form-control" id="temperatureNumber" min="-10" max="50" step="0.5" value="20">
+            <span class="input-group-text">°C</span>
+          </div>
+
+          <input type="range" class="form-range" min="-10" max="50" step="0.5"
+                 id="temperatureSlider" name="Temperature_C" value="20">
+        </div>
+
+        <!-- Humidité -->
+        <div class="mb-4">
+          <label class="form-label">Humidité (%)</label>
+
+          <div class="input-group mb-2">
+            <input type="number" class="form-control" id="humidityNumber" min="0" max="100" step="1" value="50">
+            <span class="input-group-text">%</span>
+          </div>
+
+          <input type="range" class="form-range" min="0" max="100" step="1"
+                 id="humiditySlider" name="Humidite_%" value="50">
+        </div>
+
+        <!-- Vent -->
+        <div class="mb-4">
+          <label class="form-label">Vitesse du Vent (km/h)</label>
+
+          <div class="input-group mb-2">
+            <input type="number" class="form-control" id="ventNumber" min="0" max="100" step="1" value="10">
+            <span class="input-group-text">km/h</span>
+          </div>
+
+          <input type="range" class="form-range" min="0" max="100" step="1"
+                 id="ventSlider" name="Vent_kmh" value="10">
+        </div>
+
+        <!-- Pression -->
+        <div class="mb-4">
+          <label class="form-label">Pression (hPa)</label>
+
+          <div class="input-group mb-2">
+            <input type="number" class="form-control" id="pressionNumber" min="950" max="1050" step="1" value="1013">
+            <span class="input-group-text">hPa</span>
+          </div>
+
+          <input type="range" class="form-range" min="950" max="1050" step="1"
+                 id="pressionSlider" name="Pression_hPa" value="1013">
+        </div>
+
+        <button type="submit" class="btn btn-primary col-12">Prévoir</button>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  const pairs = [
+    ["temperatureNumber", "temperatureSlider"],
+    ["humidityNumber", "humiditySlider"],
+    ["ventNumber", "ventSlider"],
+    ["pressionNumber", "pressionSlider"]
+  ];
+
+  pairs.forEach(([numId, sliderId]) => {
+    const num = document.getElementById(numId);
+    const slider = document.getElementById(sliderId);
+
+    num.addEventListener("input", () => slider.value = num.value);
+    slider.addEventListener("input", () => num.value = slider.value);
+  });
+</script>
+
+{% include "includes/footer.html" %}

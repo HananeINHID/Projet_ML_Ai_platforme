@@ -26,9 +26,9 @@ def regLog_atelier(request):
 
 def regLog_tester(request):
     """
-    Affiche le formulaire de test (vehicles_from.html) pour la prédiction.
+    Affiche le formulaire de test (meteo_form.html) pour la prédiction.
     """
-    return render(request, 'vehicles_from.html')
+    return render(request, 'meteo_form.html')
 
 # --- Fonctions de Support (Helpers) ---
 
@@ -68,78 +68,77 @@ def load_models(name):
 
 def regLog_prediction(request):
     """
-    Gère la logique de prédiction du type de véhicule.
-
-    - Si la méthode est GET : Affiche le formulaire de saisie.
-    - Si la méthode est POST : Traite les données soumises, effectue la prédiction
-                              et affiche la page de résultats.
+    Gère la logique de prédiction de la MÉTÉO.
     """
     
     # Logique pour une requête POST (l'utilisateur a soumis le formulaire)
     if request.method == 'POST':
         
-        # --- Tâche 1 : Récupération et Nettoyage des Données ---
-        # On récupère les valeurs du formulaire (attribut 'name' des inputs)
-        # On les convertit en 'float' pour les calculs mathématiques.
+        # --- Tâche 1 : Récupération des Données Météo ---
         try:
-            hauteur = float(request.POST.get('hauteur')) 
-            nbr_roues = float(request.POST.get('Nombre_de_roues'))
+            # Doit correspondre EXACTEMENT aux attributs 'name' de meteo_form.html
+            temp = float(request.POST.get('Temperature_C')) 
+            hum = float(request.POST.get('Humidite_%'))
+            vent = float(request.POST.get('Vent_kmh'))
+            pression = float(request.POST.get('Pression_hPa'))
+            
+            
         except (ValueError, TypeError):
-            # Gérer le cas où les données ne sont pas des nombres valides
             print("Erreur : Données d'entrée non valides.")
-            return render(request, 'erreur_modele.html')
+            return render(request, 'erreur_modele.html') # Pensez à créer ce template
 
-        # --- Tâche 2 : Chargement des Modèles ---
-        model = load_models('logreg_model.pkl')
-        scaler = load_models('scaler.pkl') 
+        # --- Tâche 2 : Chargement des Modèles Météo ---
         
-        # Sécurité : Vérifier que les deux modèles sont bien chargés
+        # Doit correspondre aux noms de fichiers de 'creer_modele.py'
+        model = load_models('LogisticRegression.pkl')
+        scaler = load_models('c_scaler.pkl') 
+        # (Si vous avez un encodeur, chargez-le aussi)
+        # encoder = load_models('meteo_encoder.pkl') 
+        
         if model is None or scaler is None:
-            # Si les fichiers .pkl sont introuvables, on affiche une page d'erreur
             print("Erreur : Chargement des fichiers .pkl a échoué.")
             return render(request, 'erreur_modele.html')
 
-        # --- Tâche 3 : Standardisation des Données (Scaling) ---
-        # Le modèle a été entraîné sur des données "standardisées" (scalées).
-        # Il est OBLIGATOIRE d'appliquer la *même* transformation (le 'scaler')
-        # aux nouvelles données avant de faire une prédiction.
+        # --- Tâche 3 : Préparation des Données ---
         
-        # 1. Créer un tableau 2D, car le scaler attend cette structure
-        donnees_brutes = np.array([[hauteur, nbr_roues]]) 
+        # 1. (Si vous avez un encodeur) : Transformez les données texte en chiffres
+        # ...
         
-        # 2. Appliquer la transformation
+        # 2. Créer un tableau 2D pour le scaler
+        # L'ORDRE DOIT ÊTRE EXACTEMENT LE MÊME QUE LORS DE L'ENTRAÎNEMENT
+        donnees_brutes = np.array([[temp, hum, vent, pression]]) 
+        
+        # 3. Appliquer la transformation (normalisation)
         donnees_scalees = scaler.transform(donnees_brutes)
 
         # --- Tâche 4 : Exécution de la Prédiction ---
-        # On fournit les données standardisées au modèle
         prediction = model.predict(donnees_scalees)
-        predicted_class = prediction[0] # On extrait la prédiction (ex: 0 ou 1)
+        predicted_class = prediction[0] # ex: 0 ou 1
         
         # --- Tâche 5 : Interprétation des Résultats ---
-        # On "traduit" la sortie numérique du modèle (0 ou 1) en
-        # une réponse compréhensible par l'utilisateur.
-        type_vehicules = {0:'Camion', 1:'Touristique'}
-        img_url = {'Camion':'images/camion.jpg', 'Touristique':'images/touristique.jpg'}
+        # 'non' = 'Non Pluie', 'oui' = 'Pluie'
+        type_prediction = {'non':'Non Pluie', 'oui':'Pluie'}
+        img_url = {'Non Pluie':'images/soleil.png', 'Pluie':'images/pluie.jpg'} 
         
-        # Utiliser .get() est plus sûr que l'accès direct [key]
-        pred_vehicule = type_vehicules.get(predicted_class, "Inconnu")
-        pred_img = img_url.get(pred_vehicule)
+        pred_texte = type_prediction.get(predicted_class, "Inconnu")
+        pred_img = img_url.get(pred_texte)
 
         # --- Tâche 6 : Préparation du Contexte pour la Réponse ---
-        # On regroupe toutes les informations à envoyer au template de résultats.
         input_data = {
-            'hauteur':hauteur,
-            'nbr_roues':nbr_roues
+            'Température (°C)': temp,
+            'Humidité (%)': hum,
+            'Vent (km/h)': vent,
+            'Pression (hPa)': pression
         }
         context = {
-            'type_vehicule': pred_vehicule,
-            'img_vehicule': pred_img,
+            'prediction_texte': pred_texte,
+            'prediction_image': pred_img,
             'initial_data': input_data 
         }
         
-        # On affiche la page de résultats avec les informations du contexte
+        # On affiche une NOUVELLE page de résultats
         return render(request, 'regLog_results.html', context)
         
-    # Logique pour une requête GET (l'utilisateur accède à la page pour la 1ère fois)
-    # On affiche simplement le formulaire de saisie.
-    return render(request, 'vehicles_from.html')
+    # Logique pour une requête GET (l'utilisateur accède à la page)
+    return render(request, 'meteo_form.html')
+    
