@@ -75,18 +75,12 @@ def regLog_prediction(request):
     if request.method == 'POST':
         
         # --- Tâche 1 : Récupération des Données Météo ---
-        try:
-            # Doit correspondre EXACTEMENT aux attributs 'name' de meteo_form.html
-            temp = float(request.POST.get('Temperature_C')) 
-            hum = float(request.POST.get('Humidite_%'))
-            vent = float(request.POST.get('Vent_kmh'))
-            pression = float(request.POST.get('Pression_hPa'))
+        # Doit correspondre EXACTEMENT aux attributs 'name' de meteo_form.html
+        temp = float(request.POST.get('Temperature_C')) 
+        hum = float(request.POST.get('Humidite_%'))
+        vent = float(request.POST.get('Vent_kmh'))
+        pression = float(request.POST.get('Pression_hPa'))
             
-            
-        except (ValueError, TypeError):
-            print("Erreur : Données d'entrée non valides.")
-            return render(request, 'erreur_modele.html') # Pensez à créer ce template
-
         # --- Tâche 2 : Chargement des Modèles Météo ---
         
         # Doit correspondre aux noms de fichiers de 'creer_modele.py'
@@ -97,8 +91,7 @@ def regLog_prediction(request):
         
         if model is None or scaler is None:
             print("Erreur : Chargement des fichiers .pkl a échoué.")
-            return render(request, 'erreur_modele.html')
-
+            return 
         # --- Tâche 3 : Préparation des Données ---
         
         # 1. (Si vous avez un encodeur) : Transformez les données texte en chiffres
@@ -141,4 +134,72 @@ def regLog_prediction(request):
         
     # Logique pour une requête GET (l'utilisateur accède à la page)
     return render(request, 'meteo_form.html')
+
+
+#  VUES POUR L'ARBRE DE DÉCISION (CLASSIFICATION)
+
+def tree_c_details(request):
+    """Affiche la page de détails sur l'Arbre de Décision (Classification)."""
+    # Vous devez créer le template 'tree_c_details.html'
+    return render(request, 'tree_c_details.html')
+
+def tree_c_atelier(request):
+    """Affiche la page d'atelier pour l'Arbre de Décision (Classification)."""
+    # Vous devez créer le template 'tree_c_atelier.html'
+    return render(request, 'tree_c_atelier.html')
+
+def tree_c_tester(request):
+    """Affiche le formulaire de test pour l'Arbre de Décision (Classification)."""
+    # Vous pouvez COPIER 'meteo_form.html' et le renommer 'tree_c_form.html'
+    # Il faudra changer son 'action' pour qu'elle pointe vers 'tree_c_prediction'
+    return render(request, 'tree_c_form.html')
+
+def tree_c_prediction(request):
+    """Gère la prédiction de l'Arbre de Décision (Classification)."""
     
+    if request.method == 'POST':
+        # Récupération des données
+        temp = float(request.POST.get('Temperature_C'))
+        hum = float(request.POST.get('Humidite_%'))
+        vent = float(request.POST.get('Vent_kmh'))
+        pression = float(request.POST.get('Pression_hPa'))
+            
+
+        # Chargement du modèle Arbre de Décision (SANS scaler)
+        model = load_models('DecisionTreeClassifier.pkl')  # À créer dans creer_modele.py
+        
+        if model is None:
+            return render(request, 'erreur_modele.html', {'message': 'Modèle Arbre de Décision non trouvé'})
+
+        # Préparation des données (PAS de normalisation pour les arbres)
+        donnees_brutes = np.array([[temp, hum, vent, pression]])
+        
+        # Prédiction
+        prediction = model.predict(donnees_brutes)
+        predicted_class = prediction[0]
+        
+        # Interprétation
+        type_prediction = {'non': 'Non Pluie', 'oui': 'Pluie'}  # Ajustez selon votre encodage
+        img_url = {'Non Pluie': 'images/soleil.png', 'Pluie': 'images/pluie.jpg'}
+        
+        pred_texte = type_prediction.get(predicted_class, "Inconnu")
+        pred_img = img_url.get(pred_texte)
+
+        # Contexte
+        input_data = {
+            'Température (°C)': temp,
+            'Humidité (%)': hum,
+            'Vent (km/h)': vent,
+            'Pression (hPa)': pression
+        }
+        
+        context = {
+            'prediction_texte': pred_texte,
+            'prediction_image': pred_img,
+            'initial_data': input_data,
+            'modele_utilise': 'Arbre de Décision'  # Pour différencier dans le template
+        }
+        
+        return render(request, 'regLog_results.html', context)  # Réutilise le même template
+    
+    return render(request, 'tree_c_form.html')

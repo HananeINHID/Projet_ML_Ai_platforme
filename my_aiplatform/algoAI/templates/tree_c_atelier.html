@@ -1,0 +1,29 @@
+{% include "includes/header.html" %}
+{% load static %}
+<div class="container">
+    
+    <h2 class="mb-4">Atelier Pratique - Arbre de Décision (Météo)</h2>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Dataset Météo</h3>
+            <p>L'objectif de cet atelier est d'entraîner un modèle d'<strong>Arbre de Décision</strong> pour
+            prédire s'il va pleuvoir ("Pluie") ou non ("Non Pluie") en se basant sur les conditions météo.</p>
+            <p>Ce modèle est entraîné sans normalisation (StandardScaler), ce qui le rend différent de la Régression Logistique.</p>
+        </div>
+        <div class="col-md-6">
+            <img src="{% static 'images/pluie.jpg' %}" width="40%">
+            <img src="{% static 'images/soleil.png' %}" width="40%">
+        </div>
+    </div>
+    
+    <!-- Pointez vers l'URL de test de l'arbre -->
+    <a class="btn btn-success col-12 mt-2 mb-2" href="{% url 'tree_c_tester' %}">Tester le modèle</a>
+    <div class="card">
+        <iframe src="{% static 'pdfs/demonstration_dt.pdf' %}" width="100%" height="600px" style="border:1px solide #ccc;">
+            Ce navigateur ne support pas PDFs. veuillez le télécharger :
+            <a href="{% static 'pdfs/demonstration_dt.pdf' %}"> Télécharger PDF</a>
+        </iframe>
+    </div>
+</div>
+{% include "includes/footer.html" %}
