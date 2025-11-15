@@ -10,4 +10,8 @@ urlpatterns = [
     path('tree_c_atelier/', views.tree_c_atelier, name='tree_c_atelier'),
     path('tree_c_tester/', views.tree_c_tester, name='tree_c_tester'),
     path('tree_c_prediction/', views.tree_c_prediction, name='tree_c_prediction'),
+    path('svm_c_details/', views.svm_c_details, name='svm_c_details'),
+    path('svm_c_atelier/', views.svm_c_atelier, name='svm_c_atelier'),
+    path('svm_c_tester/', views.svm_c_tester, name='svm_c_tester'),
+    path('svm_c_prediction/', views.svm_c_prediction, name='svm_c_prediction'),
 ]

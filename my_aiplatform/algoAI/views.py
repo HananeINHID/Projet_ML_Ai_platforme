@@ -140,18 +140,14 @@ def regLog_prediction(request):
 
 def tree_c_details(request):
     """Affiche la page de détails sur l'Arbre de Décision (Classification)."""
-    # Vous devez créer le template 'tree_c_details.html'
     return render(request, 'tree_c_details.html')
 
 def tree_c_atelier(request):
     """Affiche la page d'atelier pour l'Arbre de Décision (Classification)."""
-    # Vous devez créer le template 'tree_c_atelier.html'
     return render(request, 'tree_c_atelier.html')
 
 def tree_c_tester(request):
     """Affiche le formulaire de test pour l'Arbre de Décision (Classification)."""
-    # Vous pouvez COPIER 'meteo_form.html' et le renommer 'tree_c_form.html'
-    # Il faudra changer son 'action' pour qu'elle pointe vers 'tree_c_prediction'
     return render(request, 'tree_c_form.html')
 
 def tree_c_prediction(request):
@@ -165,13 +161,13 @@ def tree_c_prediction(request):
         pression = float(request.POST.get('Pression_hPa'))
             
 
-        # Chargement du modèle Arbre de Décision (SANS scaler)
-        model = load_models('DecisionTreeClassifier.pkl')  # À créer dans creer_modele.py
+        # Chargement du modèle Arbre de Décision
+        model = load_models('DecisionTreeClassifier.pkl')
         
         if model is None:
-            return render(request, 'erreur_modele.html', {'message': 'Modèle Arbre de Décision non trouvé'})
+            return render(request,{'message': 'Modèle Arbre de Décision non trouvé'})
 
-        # Préparation des données (PAS de normalisation pour les arbres)
+        # Préparation des données
         donnees_brutes = np.array([[temp, hum, vent, pression]])
         
         # Prédiction
@@ -179,7 +175,7 @@ def tree_c_prediction(request):
         predicted_class = prediction[0]
         
         # Interprétation
-        type_prediction = {'non': 'Non Pluie', 'oui': 'Pluie'}  # Ajustez selon votre encodage
+        type_prediction = {'non': 'Non Pluie', 'oui': 'Pluie'}
         img_url = {'Non Pluie': 'images/soleil.png', 'Pluie': 'images/pluie.jpg'}
         
         pred_texte = type_prediction.get(predicted_class, "Inconnu")
@@ -197,9 +193,34 @@ def tree_c_prediction(request):
             'prediction_texte': pred_texte,
             'prediction_image': pred_img,
             'initial_data': input_data,
-            'modele_utilise': 'Arbre de Décision'  # Pour différencier dans le template
+            'modele_utilise': 'Arbre de Décision' 
         }
         
-        return render(request, 'regLog_results.html', context)  # Réutilise le même template
+        return render(request, 'regLog_results.html', context)
     
     return render(request, 'tree_c_form.html')
+
+# VUES POUR SVM (CLASSIFICATION)
+
+def svm_c_details(request):
+    """
+    Affiche la page de détails sur l'algorithme SVM.
+    """
+    return render(request, 'svm_c_details.html')
+
+def svm_c_atelier(request):
+    """
+    Affiche la page de présentation de l'atelier pratique.
+    """
+    return render(request, 'svm_c_atelier.html')
+
+def svm_c_tester(request):
+    """
+    Affiche le formulaire de test (svm_c_form.html) pour la prédiction.
+    """
+    return render(request, 'svm_c_form.html')
+
+def svm_c_prediction(request):
+    
+    return(request, 'svm_c_form.html')
+    
