@@ -1,0 +1,237 @@
+{% include "includes/header.html" %}
+{% load static %}
+<div class="container">
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0">Résultat de Prédiction - Performance Étudiante</h4>
+        </div>
+        <div class="card-body">
+            <!-- Carte de résultat principal -->
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center">
+                    <div class="performance-circle mx-auto mb-3">
+                        <div class="circle-bg">
+                            <div class="circle-content">
+                                <h3 class="score-display">{{ predicted_score|floatformat:1 }}</h3>
+                                <small class="text-muted">Performance Index</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="performance-status">
+                        {% if predicted_score >= 80 %}
+                        <span class="badge bg-success fs-6">Excellence</span>
+                        {% elif predicted_score >= 60 %}
+                        <span class="badge bg-warning fs-6">Bonne Performance</span>
+                        {% else %}
+                        <span class="badge bg-danger fs-6">Besoin d'Amélioration</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="card-title">Analyse de la Prédiction</h5>
+                    <p class="card-text">
+                        Basé sur les caractéristiques saisies, le modèle d'<strong>Arbre de Décision (Régression)</strong>
+                        prédit un Performance Index de <strong>{{ predicted_score|floatformat:1 }}/100</strong>.
+                    </p>
+                    
+                    <!-- Indicateur de performance -->
+                    <div class="progress mb-3" style="height: 25px;">
+                        <div class="progress-bar 
+                            {% if predicted_score >= 80 %}bg-success
+                            {% elif predicted_score >= 60 %}bg-warning
+                            {% else %}bg-danger
+                            {% endif %}" 
+                            role="progressbar" 
+                            style="width: {{ predicted_score }}%"
+                            aria-valuenow="{{ predicted_score }}" 
+                            aria-valuemin="0" 
+                            aria-valuemax="100">
+                            {{ predicted_score|floatformat:1 }}%
+                        </div>
+                    </div>
+                    
+                    <p class="small text-muted">
+                        <strong>Modèle utilisé:</strong> Arbre de Décision (Régression)<br>
+                        <strong>Dataset:</strong> Student Performance
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Détails des caractéristiques d'entrée -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Caractéristiques Saisies</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <td><strong>Heures d'Étude</strong></td>
+                                <td>{{ input_features.Hours_Studied }} heures/jour</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Notes Précédentes</strong></td>
+                                <td>{{ input_features.Previous_Scores }}/100</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Activités Extra.</strong></td>
+                                <td>
+                                    {% if input_features.Extracurricular_Activities == 1 %}
+                                    <span class="badge bg-success">Oui</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">Non</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <td><strong>Heures de Sommeil</strong></td>
+                                <td>{{ input_features.Sleep_Hours }} heures/nuit</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Examens Blancs</strong></td>
+                                <td>{{ input_features.Sample_Question_Papers_Practiced }} pratiqués</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recommandations basées sur le score -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Recommandations</h5>
+        </div>
+        <div class="card-body">
+            {% if predicted_score >= 80 %}
+            <div class="alert alert-success">
+                <h6>Performance Excellente !</h6>
+                <p class="mb-0">Vos habitudes d'étude sont optimales. Continuez sur cette lancée !</p>
+            </div>
+            {% elif predicted_score >= 60 %}
+            <div class="alert alert-warning">
+                <h6>Bonne Performance</h6>
+                <p class="mb-0">Vos résultats sont bons. Quelques ajustements pourraient mener à l'excellence.</p>
+                <ul class="mt-2 mb-0">
+                    <li>Augmentez légèrement le temps d'étude</li>
+                    <li>Pratiquez plus d'examens blancs</li>
+                    <li>Maintenez une bonne routine de sommeil</li>
+                </ul>
+            </div>
+            {% else %}
+            <div class="alert alert-danger">
+                <h6>Amélioration Nécessaire</h6>
+                <p class="mb-0">Voici quelques suggestions pour améliorer votre performance :</p>
+                <ul class="mt-2 mb-0">
+                    <li>Augmentez le temps d'étude quotidien</li>
+                    <li>Améliorez votre routine de sommeil</li>
+                    <li>Pratiquez régulièrement des examens blancs</li>
+                    <li>Équilibrez activités académiques et extra-scolaires</li>
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="row">
+        <div class="col-md-6 mb-2">
+            <a href="{% url 'tree_r_tester' %}" class="btn btn-primary w-100">
+                <i class="fas fa-redo me-2"></i>Nouvelle Prédiction
+            </a>
+        </div>
+        <div class="col-md-6 mb-2">
+            <a href="{% url 'index' %}" class="btn btn-outline-secondary w-100">
+                <i class="fas fa-home me-2"></i>Retour à l'Accueil
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .performance-circle {
+        width: 200px;
+        height: 200px;
+        position: relative;
+    }
+    
+    .circle-bg {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: conic-gradient(
+            {% if predicted_score >= 80 %}#198754
+            {% elif predicted_score >= 60 %}#ffc107
+            {% else %}#dc3545
+            {% endif %} 0% {{ predicted_score }}%, 
+            #e9ecef {{ predicted_score }}% 100%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+    
+    .circle-bg::before {
+        content: '';
+        position: absolute;
+        width: 80%;
+        height: 80%;
+        background: white;
+        border-radius: 50%;
+    }
+    
+    .circle-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+    }
+    
+    .score-display {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin: 0;
+        color: {% if predicted_score >= 80 %}#198754
+               {% elif predicted_score >= 60 %}#ffc107
+               {% else %}#dc3545
+               {% endif %};
+    }
+    
+    .progress {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .progress-bar {
+        border-radius: 15px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    
+    @media (max-width: 768px) {
+        .performance-circle {
+            width: 150px;
+            height: 150px;
+        }
+        
+        .score-display {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+{% include "includes/footer.html" %}

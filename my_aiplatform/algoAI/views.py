@@ -138,67 +138,59 @@ def regLog_prediction(request):
 
 #  VUES POUR L'ARBRE DE DÉCISION (CLASSIFICATION)
 
-def tree_c_details(request):
+def tree_r_details(request):
     """Affiche la page de détails sur l'Arbre de Décision (Classification)."""
-    return render(request, 'tree_c_details.html')
+    return render(request, 'tree_r_details.html')
 
-def tree_c_atelier(request):
+def tree_r_atelier(request):
     """Affiche la page d'atelier pour l'Arbre de Décision (Classification)."""
-    return render(request, 'tree_c_atelier.html')
+    return render(request, 'tree_r_atelier.html')
 
-def tree_c_tester(request):
+def tree_r_tester(request):
     """Affiche le formulaire de test pour l'Arbre de Décision (Classification)."""
-    return render(request, 'tree_c_form.html')
+    return render(request, 'tree_r_form.html')
 
-def tree_c_prediction(request):
-    """Gère la prédiction de l'Arbre de Décision (Classification)."""
+def tree_r_prediction(request):
+    """Gère la prédiction de l'Arbre de Décision (Rgression)."""
     
     if request.method == 'POST':
         # Récupération des données
-        temp = float(request.POST.get('Temperature_C'))
-        hum = float(request.POST.get('Humidite_%'))
-        vent = float(request.POST.get('Vent_kmh'))
-        pression = float(request.POST.get('Pression_hPa'))
+        hours_studied = float(request.POST.get('hours_studied'))
+        previous_score = float(request.POST.get('previous_scores'))
+        extr_activities = float(request.POST.get('extracurricular'))
+        sleep_hours = float(request.POST.get('sleep_hours'))
+        sample_questions = float(request.POST.get('sample_papers'))
+
             
 
         # Chargement du modèle Arbre de Décision
-        model = load_models('DecisionTreeClassifier.pkl')
-        
+        model = load_models('DecisionTreeRegressor.pkl')
         if model is None:
-            return render(request,{'message': 'Modèle Arbre de Décision non trouvé'})
+            print("Erreur : Chargement du fichier .pkl a échoué.")
+            return
+        
 
         # Préparation des données
-        donnees_brutes = np.array([[temp, hum, vent, pression]])
-        
-        # Prédiction
-        prediction = model.predict(donnees_brutes)
-        predicted_class = prediction[0]
-        
-        # Interprétation
-        type_prediction = {'non': 'Non Pluie', 'oui': 'Pluie'}
-        img_url = {'Non Pluie': 'images/soleil.png', 'Pluie': 'images/pluie.jpg'}
-        
-        pred_texte = type_prediction.get(predicted_class, "Inconnu")
-        pred_img = img_url.get(pred_texte)
-
-        # Contexte
-        input_data = {
-            'Température (°C)': temp,
-            'Humidité (%)': hum,
-            'Vent (km/h)': vent,
-            'Pression (hPa)': pression
+        input_data = np.array([[hours_studied, previous_score, extr_activities, sleep_hours, sample_questions]])
+        # Exécution de la prédiction
+        prediction = model.predict(input_data)
+        predicted_score = prediction[0]  # Valeur prédite
+        # Préparation du contexte pour la réponse
+        input_features = {
+            'Hours_Studied': hours_studied,
+            'Previous_Scores': previous_score,
+            'Extracurricular_Activities': extr_activities,
+            'Sleep_Hours': sleep_hours,
+            'Sample_Question_Papers_Practiced': sample_questions
         }
-        
         context = {
-            'prediction_texte': pred_texte,
-            'prediction_image': pred_img,
-            'initial_data': input_data,
-            'modele_utilise': 'Arbre de Décision' 
+            'predicted_score': predicted_score,
+            'input_features': input_features
         }
-        
-        return render(request, 'regLog_results.html', context)
+        # Affichage de la page de résultats
+        return render(request, 'tree_r_results.html', context)
     
-    return render(request, 'tree_c_form.html')
+    return render(request, 'tree_r_form.html')
 
 # VUES POUR SVM (CLASSIFICATION)
 
@@ -224,3 +216,25 @@ def svm_c_prediction(request):
     
     return(request, 'svm_c_form.html')
     
+# VUES POUR XGBOOST (REGRESSION)
+def xgboost_r_details(request):
+    """
+    Affiche la page de détails sur l'algorithme XGBoost regression.
+    """
+    return render(request, 'xgboost_r_details.html')
+
+def xgboost_r_atelier(request):
+    """
+    Affiche la page de présentation de l'atelier pratique.
+    """
+    return render(request, 'xgboost_r_atelier.html')
+
+def xgboost_r_tester(request):
+    """
+    Affiche le formulaire de test (xgboost_r_form.html) pour la prédiction.
+    """
+    return render(request, 'xgboost_r_form.html')
+
+def xgboost_r_prediction(request):
+    
+    return(request, 'xgboost_r_form.html')
