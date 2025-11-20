@@ -85,7 +85,7 @@ def regLog_prediction(request):
         
         # Doit correspondre aux noms de fichiers de 'creer_modele.py'
         model = load_models('LogisticRegression.pkl')
-        scaler = load_models('c_scaler.pkl') 
+        scaler = load_models('LogisticRegression_scaler.pkl') 
         # (Si vous avez un encodeur, chargez-le aussi)
         # encoder = load_models('meteo_encoder.pkl') 
         
@@ -214,7 +214,7 @@ def svm_c_tester(request):
 
 def svm_c_prediction(request):
     
-    return(request, 'svm_c_form.html')
+    return render(request, 'svm_c_form.html')
     
 # VUES POUR XGBOOST (REGRESSION)
 def xgboost_r_details(request):
@@ -247,8 +247,8 @@ def xgboost_r_prediction(request):
 
             
 
-        # Chargement du modèle Arbre de Décision
-        model = load_models('.pkl')
+        # Chargement du modèle XGBoost Regression
+        model = load_models('XGBoostRegressor.pkl')
         if model is None:
             print("Erreur : Chargement du fichier .pkl a échoué.")
             return
