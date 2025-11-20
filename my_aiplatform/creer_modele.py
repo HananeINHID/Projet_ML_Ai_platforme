@@ -7,6 +7,7 @@ from sklearn.metrics import r2_score, mean_squared_error, classification_report
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder
+from xgboost import XGBRegressor
 
 # Configuration Générale 
 OUTPUT_DIR = 'models_ai'
@@ -16,22 +17,13 @@ print(f"Les modèles seront sauvegardés dans : {OUTPUT_DIR}")
 def nettoyer_donnees(df, features, target):
     """
     Nettoie le DataFrame :
-    1. Garde uniquement les colonnes utiles.
-    2. Supprime TOUTES les lignes  avec des valeurs NaN.
-    3. Gère les valeurs aberrantes (outliers) avec la méthode de l'IQR.
+    - Supprime les lignes avec des valeurs manquantes.
+    - Supprime les outliers basés sur l'IQR pour les colonnes numériques.
     """
-    colonnes_utiles = features + [target]
-    df = df[colonnes_utiles]
-    
-    print(f"Lignes avant nettoyage (données brutes) : {len(df)}")
-    df = df.dropna()
-    print(f"Lignes après nettoyage (données valides) : {len(df)}")
-    
-    # Détection et suppression des valeurs aberrantes
-    colonnes_numeriques = df.select_dtypes(include=[np.number]).columns.tolist()
-    print("\nSuppression des valeurs aberrantes sur :", colonnes_numeriques)
+    df = df[features + [target]].dropna()
 
-    for col in colonnes_numeriques:
+    colonnes_num = df.select_dtypes(include=[np.number]).columns
+    for col in colonnes_num:
         Q1 = df[col].quantile(0.25)
         Q3 = df[col].quantile(0.75)
         IQR = Q3 - Q1
@@ -39,9 +31,8 @@ def nettoyer_donnees(df, features, target):
         borne_sup = Q3 + 1.5 * IQR
         df = df[(df[col] >= borne_inf) & (df[col] <= borne_sup)]
 
-    print(f"Lignes finales après nettoyage complet : {len(df)}")
-    
     return df
+
 
 # Traitement des datasets 
 
@@ -63,11 +54,16 @@ for col in features_student:
 
 # 2. Dataset 2 : Météo
 meteo_file = "dataset_meteo.csv"
-df_meteo = pd.read_csv(meteo_file)
+df_meteo = pd.read_csv(meteo_file, sep=';')
 print(f"Fichier '{meteo_file}' chargé.")
 
 target_meteo = "Pluie"
 features_meteo = df_meteo.drop(columns=[target_meteo]).columns.tolist()
+
+# Encodage de la colonne cible pluie en binaire Oui/Non
+le= LabelEncoder()
+df_meteo[target_meteo] = le.fit_transform(df_meteo[target_meteo])
+
 df_meteo = nettoyer_donnees(df_meteo, features_meteo, target_meteo)
 
 # Encodage des colonnes catégorielles
@@ -76,13 +72,14 @@ cat_cols = [col for col in features_meteo if df_meteo[col].dtype == "object"]
 if cat_cols:
     print("Encodage OneHotEncoder sur :", cat_cols)
     
-    ohe = OneHotEncoder(sparse=False, drop="first")
+    ohe = OneHotEncoder(sparse_output=False, drop="first")
     encoded = ohe.fit_transform(df_meteo[cat_cols])
     
     encoded_df = pd.DataFrame(encoded, columns=ohe.get_feature_names_out(cat_cols))
 
     df_meteo = df_meteo.drop(columns=cat_cols).reset_index(drop=True)
-    df_meteo = pd.concat([df_meteo, encoded_df], axis=1)
+    df_meteo = pd.concat([df_meteo, encoded_df], axis=1, ignore_index=False)
+features_meteo = df_meteo.drop(columns=[target_meteo]).columns.tolist()
 
 def train_regression_arbre(features_student, target_student ):
 
@@ -140,11 +137,33 @@ def train_classification_logreg(df_meteo, features_meteo, target_meteo):
     
     # 6. Sauvegarde des modèles (Modèle ET Scaler)
     joblib.dump(model, os.path.join(OUTPUT_DIR, "LogisticRegression.pkl"))
-    joblib.dump(scaler, os.path.join(OUTPUT_DIR, "c_scaler.pkl"))
+    joblib.dump(scaler, os.path.join(OUTPUT_DIR, "LogisticRegression_scaler.pkl"))
 
     print("\n Modèle LogisticRegression sauvegardé.")
 
+def xgboost_regression(features_student, target_student):
+    """
+    Entraîne un modèle XGBoost pour la régression sur le dataset étudiant.
+    """
+    
+    X = df_student[features_student]
+    y = df_student[target_student]
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    model = XGBRegressor(n_estimators=100, learning_rate=0.1, max_depth=6, random_state=42)
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    r2 = r2_score(y_test, y_pred)
+    rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+    print(f"Résultats XGBoost : R² = {r2:.3f}, RMSE = {rmse:.3f}")
+    
+
+    joblib.dump(model, os.path.join(OUTPUT_DIR, "XGBoostRegressor.pkl"))
+    print("\nModèle XGBoostRegressor sauvegardé.\n")
+
 # Exécution du script
-train_classification_logreg(df_meteo, features_meteo, target_meteo)
-train_regression_arbre(features_student, target_student)
+if __name__ == "__main__":
+    train_classification_logreg(df_meteo, features_meteo, target_meteo)
+    train_regression_arbre(features_student, target_student)
+    xgboost_regression(features_student, target_student)
 

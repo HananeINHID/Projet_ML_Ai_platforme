@@ -1,0 +1,27 @@
+{% include "includes/header.html" %}
+{% load static %}
+<div class="container">
+    <div class="card mb-3">
+        <div class="card-header">
+            <strong>Résultats de la performance d'étudiant</strong>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="card-title">Perofrmance Prédite :
+                        <span class="badge bg-primary">{{ prediction_texte}}</span>
+                    </h5>
+                    <img src="{% static prediction_image %}" class="img thumbnail card-img-top" style="width:350px">
+                </div>
+                <div class="col-md-6">
+                    <p class="card-text">
+                        La performance prédite est basée sur les caractéristiques suivantes : </p>
+                    {% for key, value in initial_data.items %}
+                        <div><strong>{{key}}:</strong> {{value}}</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -236,5 +236,42 @@ def xgboost_r_tester(request):
     return render(request, 'xgboost_r_form.html')
 
 def xgboost_r_prediction(request):
+    if request.method == 'POST':
+        # Récupération des données
+          # Récupération des données
+        hours_studied = float(request.POST.get('hours_studied'))
+        previous_score = float(request.POST.get('previous_scores'))
+        extr_activities = float(request.POST.get('extracurricular'))
+        sleep_hours = float(request.POST.get('sleep_hours'))
+        sample_questions = float(request.POST.get('sample_papers'))
+
+            
+
+        # Chargement du modèle Arbre de Décision
+        model = load_models('.pkl')
+        if model is None:
+            print("Erreur : Chargement du fichier .pkl a échoué.")
+            return
+        
+
+        # Préparation des données
+        input_data = np.array([[hours_studied, previous_score, extr_activities, sleep_hours, sample_questions]])
+        # Exécution de la prédiction
+        prediction = model.predict(input_data)
+        predicted_score = prediction[0]  # Valeur prédite
+        # Préparation du contexte pour la réponse
+        input_features = {
+            'Hours_Studied': hours_studied,
+            'Previous_Scores': previous_score,
+            'Extracurricular_Activities': extr_activities,
+            'Sleep_Hours': sleep_hours,
+            'Sample_Question_Papers_Practiced': sample_questions
+        }
+        context = {
+            'predicted_score': predicted_score,
+            'input_features': input_features
+        }
     
+        # Affichage de la page de résultats
+        return render(request, 'xgboost_r_results.html', context)
     return(request, 'xgboost_r_form.html')
