@@ -109,8 +109,7 @@ def regLog_prediction(request):
         predicted_class = prediction[0] # ex: 0 ou 1
         
         # --- Tâche 5 : Interprétation des Résultats ---
-        # 'non' = 'Non Pluie', 'oui' = 'Pluie'
-        type_prediction = {'non':'Non Pluie', 'oui':'Pluie'}
+        type_prediction = {0: 'Non Pluie', 1: 'Pluie'}
         img_url = {'Non Pluie':'images/soleil.png', 'Pluie':'images/pluie.jpg'} 
         
         pred_texte = type_prediction.get(predicted_class, "Inconnu")
