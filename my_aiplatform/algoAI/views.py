@@ -238,7 +238,6 @@ def xgboost_r_tester(request):
 def xgboost_r_prediction(request):
     if request.method == 'POST':
         # Récupération des données
-          # Récupération des données
         hours_studied = float(request.POST.get('hours_studied'))
         previous_score = float(request.POST.get('previous_scores'))
         extr_activities = float(request.POST.get('extracurricular'))
