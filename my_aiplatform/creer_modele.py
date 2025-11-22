@@ -8,6 +8,7 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder
 from xgboost import XGBRegressor
+from sklearn.svm import SVC
 
 # Configuration Générale 
 OUTPUT_DIR = 'models_ai'
@@ -161,9 +162,34 @@ def xgboost_regression(features_student, target_student):
     joblib.dump(model, os.path.join(OUTPUT_DIR, "XGBoostRegressor.pkl"))
     print("\nModèle XGBoostRegressor sauvegardé.\n")
 
+def svm_classification(features_meteo, target_meteo):
+    """
+    Entraîne un modèle SVM pour la classification sur le dataset météo.
+    """
+    X = df_meteo[features_meteo]
+    y = df_meteo[target_meteo]
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled = scaler.transform(X_test)
+
+    model = SVC(kernel='rbf', C=1.0, gamma='scale', random_state=42)
+    model.fit(X_train_scaled, y_train)
+
+    y_pred = model.predict(X_test_scaled)
+    print("Résultats SVM :")
+    print(classification_report(y_test, y_pred))
+
+    joblib.dump(model, os.path.join(OUTPUT_DIR, "SVM_Classifier.pkl"))
+    joblib.dump(scaler, os.path.join(OUTPUT_DIR, "SVM_Classifier_scaler.pkl"))
+    print("\nModèle SVM_Classifier sauvegardé.\n")
+    
 # Exécution du script
 if __name__ == "__main__":
     train_classification_logreg(df_meteo, features_meteo, target_meteo)
     train_regression_arbre(features_student, target_student)
     xgboost_regression(features_student, target_student)
+    svm_classification(features_meteo, target_meteo)
 
