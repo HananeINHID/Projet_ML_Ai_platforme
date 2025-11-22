@@ -116,7 +116,7 @@ def regLog_prediction(request):
             if temp <= 5 :
                 img_path = 'images/froid.jpeg'
             elif temp <=15 :
-                img_path = 'images/temps_cloudy.jpg'
+                img_path = 'images/temps_cloudy.webp'
             else:
                 img_path = 'images/soleil.png'
             
@@ -339,7 +339,7 @@ def svm_c_prediction(request):
             if temperature <= 5 :
                 img_path = 'images/froid.jpeg'
             elif temperature <=15 :
-                img_path = 'images/temps_cloudy.jpg'
+                img_path = 'images/temps_cloudy.webp'
             else:
                 img_path = 'images/soleil.png'
             
