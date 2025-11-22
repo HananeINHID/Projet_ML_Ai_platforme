@@ -1,0 +1,33 @@
+{% include "includes/header.html" %}
+{% load static %}
+<div class="container mt-4">
+    <div class="card mb-3">
+        <div class="card-header">
+            <strong>Résultat de la prédiction météo</strong>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <!-- Partie gauche : résultat + image -->
+                <div class="col-md-6">
+                    <h5 class="card-title">
+                        Prédiction : 
+                        <span class="badge bg-primary">{{ resultat }}</span>
+                    </h5>
+                    <img src="{% static img %}" class="img-thumbnail card-img-top" style="width:350px">
+                </div>
+
+                <!-- Partie droite : données saisies -->
+                <div class="col-md-6">
+                    <p class="card-text">
+                        Valeurs utilisées pour la prédiction :
+                    </p>
+                    {% for key, value in input_data.items %}
+                        <div><strong>{{ key|capfirst }} :</strong> {{ value }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "includes/footer.html" %}

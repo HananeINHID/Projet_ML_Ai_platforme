@@ -1,0 +1,32 @@
+{% include "includes/header.html" %}
+{% load static %}
+
+<div class="container mt-4">
+    <div class="card mb-3">
+        <div class="card-header">
+            <strong>Résultat de la prédiction des étudiants </strong>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <!-- Partie gauche : résultat + image -->
+                <div class="col-md-6 text-center">
+                    <h5 class="card-title">
+                        Performance prédite : 
+                         <span class="badge bg-primary">{{ prediction }} - {{ resultat }}</span>
+                    </h5>
+                    <img src="{% static img %}" class="img-thumbnail mt-3" style="width:350px">
+                </div>
+
+                <!-- Partie droite : données saisies -->
+                <div class="col-md-6">
+                    <p class="card-text fw-bold">Valeurs utilisées pour la prédiction :</p>
+                    {% for key, value in input_data.items %}
+                        <div><strong>{{ key|capfirst }} :</strong> {{ value }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "includes/footer.html" %}
