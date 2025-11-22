@@ -108,6 +108,8 @@ def regLog_prediction(request):
         type_prediction = {0: 'Non Pluie', 1: 'Pluie'}
         img_path =""
         
+        pred_texte = type_prediction.get(predicted_class, "Inconnu")
+        
         if pred_texte == "Pluie":
             img_path = 'images/pluie.jpg'
         else:
@@ -118,7 +120,7 @@ def regLog_prediction(request):
             else:
                 img_path = 'images/soleil.png'
             
-        pred_texte = type_prediction.get(predicted_class, "Inconnu")
+        
         pred_img = img_path
 
         # --- Tâche 6 : Préparation du Contexte pour la Réponse ---
