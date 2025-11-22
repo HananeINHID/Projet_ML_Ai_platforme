@@ -162,11 +162,12 @@ def xgboost_regression(features_student, target_student):
     joblib.dump(model, os.path.join(OUTPUT_DIR, "XGBoostRegressor.pkl"))
     print("\nModèle XGBoostRegressor sauvegardé.\n")
 
-def svm_classification(features_meteo, target_meteo):
+def svm_classification(target_meteo):
     """
     Entraîne un modèle SVM pour la classification sur le dataset météo.
     """
-    X = df_meteo[features_meteo]
+    features = ['Temperature_C', 'Humidite_%', 'Vent_kmh', 'Pression_hPa']
+    X = df_meteo[features]
     y = df_meteo[target_meteo]
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -191,5 +192,5 @@ if __name__ == "__main__":
     train_classification_logreg(df_meteo, features_meteo, target_meteo)
     train_regression_arbre(features_student, target_student)
     xgboost_regression(features_student, target_student)
-    svm_classification(features_meteo, target_meteo)
+    svm_classification(target_meteo)
 

@@ -273,3 +273,82 @@ def xgboost_r_prediction(request):
         # Affichage de la page de résultats
         return render(request, 'xgboost_r_results.html', context)
     return(request, 'xgboost_r_form.html')
+
+
+# VUES POUR SVM (CLASSIFICATION)
+def svm_c_details(request):
+    """
+    Affiche la page de détails sur l'algorithme SVM.
+    """
+    return render(request, 'svm_c_details.html')
+
+def svm_c_atelier(request):
+    """
+    Affiche la page de présentation de l'atelier pratique.
+    """
+    return render(request, 'svm_c_atelier.html')
+
+def svm_c_tester(request):
+    """
+    Affiche le formulaire de test (svm_c_form.html) pour la prédiction.
+    """
+    return render(request, 'svm_c_form.html')
+
+def svm_c_prediction(request):
+    """
+    Gère la logique de prédiction SVM.
+    """
+    if request.method == 'POST':
+        # Récupération des données du formulaire
+        temperature = float(request.POST.get('Temperature_C'))
+        humidity = float(request.POST.get('Humidite_%'))
+        wind_speed = float(request.POST.get('Vent_kmh'))
+        pressure = float(request.POST.get('Pression_hPa'))
+        
+        # Chargement du modèle SVM
+        model = load_models('SVM_Classifier.pkl')
+        scaler = load_models('SVM_Classifier_scaler.pkl')
+        
+        if model is None or scaler is None:
+            print("Erreur : Chargement des fichiers .pkl a échoué.")
+            return
+        
+        # Préparation des données pour la prédiction
+        raw_data = np.array([[temperature, humidity, wind_speed, pressure]])
+        scaled_data = scaler.transform(raw_data)
+        # Exécution de la prédiction
+        prediction = model.predict(scaled_data)
+        predicted_class = prediction[0]
+        # Interprétation des résultats
+        type_prediction = {0: 'Non Pluie', 1: 'Pluie'}
+        img_url = {'Non Pluie':'images/soleil.png', 'Pluie':'images/pluie.jpg'}
+        pred_texte = type_prediction.get(predicted_class, "Inconnu")
+        img_path =""
+        
+        if pred_texte == "Pluie":
+            img_path = 'images/pluie.jpg'
+        else:
+            if temperature <= 5 :
+                img_path = 'images/froid.jpeg'
+            elif temperature <=15 :
+                img_path = 'images/temps_cloudy.jpg'
+            else:
+                img_path = 'images/soleil.png'
+            
+        # Préparation du contexte pour la réponse
+        input_data = {
+            'Température (°C)': temperature,
+            'Humidité (%)': humidity,
+            'Vent (km/h)': wind_speed,
+            'Pression (hPa)': pressure
+        }
+        context = {
+            'prediction_texte': pred_texte,
+            'prediction_image': img_path,
+            'initial_data': input_data
+        }
+        # Affichage de la page de résultats
+        return render(request, 'svm_c_results.html', context)
+    
+    return render(request, 'svm_c_form.html')
+    
