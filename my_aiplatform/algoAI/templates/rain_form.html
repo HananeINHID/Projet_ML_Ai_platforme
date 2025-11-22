@@ -20,24 +20,26 @@
 
                 <div class="mb-4">
                     <label for="humidity" class="form-label">Humidité (%)</label>
-                    <input type="range" class="form-range" min="0" max="100" step="1" id="humidity" name="humidity"
+                    <input type="range" class="form-range" min="0" max="100" step="1" id="humidity" name="humidite"
                         value="50" oninput="humidityValue.value=this.value">
                     <span class="slider-value" id="humidityValue">50</span>
                 </div>
 
                 <div class="mb-4">
-                    <label for="wind" class="form-label">Vent (km/h)</label>
-                    <input type="range" class="form-range" min="0" max="100" step="1" id="wind" name="wind"
-                        value="10" oninput="windValue.value=this.value">
-                    <span class="slider-value" id="windValue">10</span>
-                </div>
+    <label for="vent" class="form-label">Vent (km/h)</label>
+    <input type="range" class="form-range" min="0" max="100" step="1" id="vent" name="vent"
+        value="10" oninput="windValue.innerText = this.value">
+    <span class="slider-value" id="windValue">10</span>
+</div>
+
 
                 <div class="mb-4">
-                    <label for="pressure" class="form-label">Pression (hPa)</label>
-                    <input type="range" class="form-range" min="950" max="1050" step="1" id="pressure" name="pressure"
-                        value="1013" oninput="pressureValue.value=this.value">
-                    <span class="slider-value" id="pressureValue">1013</span>
-                </div>
+    <label for="pression" class="form-label">Pression (hPa)</label>
+    <input type="range" class="form-range" min="950" max="1050" step="1" id="pressure" name="pression"
+        value="1013" oninput="pressureValue.innerText = this.value">
+    <span class="slider-value" id="pressureValue">1013</span>
+</div>
+
 
                 <button type="submit" class="btn btn-primary col-12">Predict</button>
             </form>
