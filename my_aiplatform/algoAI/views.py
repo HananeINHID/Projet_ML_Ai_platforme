@@ -267,7 +267,7 @@ def xgboost_r_prediction(request):
         }
         context = {
             'predicted_score': predicted_score,
-            'input_features': input_features
+            'initial_data': input_features
         }
     
         # Affichage de la page de résultats

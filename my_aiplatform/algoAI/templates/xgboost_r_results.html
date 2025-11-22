@@ -1,27 +1,171 @@
 {% include "includes/header.html" %}
 {% load static %}
 <div class="container">
-    <div class="card mb-3">
-        <div class="card-header">
-            <strong>Résultats de la performance d'étudiant</strong>
+    <div class="card shadow-lg border-1 mb-4">
+        <div class="card-header bg-gradient-primary text-black py-3">
+            <h3 class="mb-0">
+                <i class="fas fa-chart-line me-2"></i>Résultats de la Prédiction XGBoost Regression
+            </h3>
         </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5 class="card-title">Perofrmance Prédite :
-                        <span class="badge bg-primary">{{ prediction_texte}}</span>
-                    </h5>
-                    <img src="{% static prediction_image %}" class="img thumbnail card-img-top" style="width:350px">
+        <div class="card-body p-4">
+            <div class="row align-items-center">
+                <!-- Section Score Visuel -->
+                <div class="col-md-5 text-center">
+                    <div class="performance-display mb-4">
+                        <div class="score-circle mx-auto mb-3">
+                            <div class="circle-content">
+                                <h2 class="score-value mb-0">{{ predicted_score|floatformat:1 }}</h2>
+                                <small class="text-muted">/100</small>
+                            </div>
+                        </div>
+                        <div class="performance-badge">
+                            {% if predicted_score >= 80 %}
+                            <span class="badge bg-success fs-6 p-2">
+                                <i class="fas fa-trophy me-1"></i>Excellence
+                            </span>
+                            {% elif predicted_score >= 60 %}
+                            <span class="badge bg-warning fs-6 p-2">
+                                <i class="fas fa-chart-line me-1"></i>Bonne Performance
+                            </span>
+                            {% else %}
+                            <span class="badge bg-danger fs-6 p-2">
+                                <i class="fas fa-exclamation-triangle me-1"></i>À Améliorer
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Barre de progression -->
+                    <div class="progress-container">
+                        <div class="d-flex justify-content-between mb-2">
+                            <small>0</small>
+                            <small>50</small>
+                            <small>100</small>
+                        </div>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar 
+                                {% if predicted_score >= 80 %}bg-success
+                                {% elif predicted_score >= 60 %}bg-warning
+                                {% else %}bg-danger
+                                {% endif %}" 
+                                role="progressbar" 
+                                style="width: {{ predicted_score }}%"
+                                aria-valuenow="{{ predicted_score }}" 
+                                aria-valuemin="0" 
+                                aria-valuemax="100">
+                                <strong>{{ predicted_score|floatformat:1 }}%</strong>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <p class="card-text">
-                        La performance prédite est basée sur les caractéristiques suivantes : </p>
-                    {% for key, value in initial_data.items %}
-                        <div><strong>{{key}}:</strong> {{value}}</div>
-                    {% endfor %}
+
+                <!-- Section Détails -->
+                <div class="col-md-7">
+                    <h5 class="card-title text-primary mb-3">
+                        <i class="fas fa-info-circle me-2"></i>Détails de la Prédiction
+                    </h5>
+                    <p class="card-text mb-4">
+                        Le modèle <strong>XGBoost Regression</strong> a prédit cette performance 
+                        basée sur les caractéristiques académiques suivantes :
+                    </p>
+                    
+                    <div class="features-grid">
+                        <div class="row">
+                            {% for key, value in initial_data.items %}
+                            <div class="col-sm-6 mb-3">
+                                <div class="feature-card p-3 border rounded">
+                                    <div class="feature-label text-muted small">{{ key }}</div>
+                                    <div class="feature-value fw-bold fs-5">
+                                        {% if key == "Extracurricular Activities" %}
+                                            {% if value == 1 %}
+                                                <span class="text-success">Oui</span>
+                                            {% else %}
+                                                <span class="text-danger">Non</span>
+                                            {% endif %}
+                                        {% else %}
+                                            {{ value }}
+                                            {% if "Hours" in key %}h{% endif %}
+                                            {% if "Scores" in key %}/100{% endif %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
+    <div class="row">
+        <div class="col-md-6 mb-2">
+            <a href="{% url 'xgboost_r_tester' %}" class="btn btn-primary w-100 py-2">
+                <i class="fas fa-redo me-2"></i>Nouvelle Prédiction
+            </a>
+        </div>
+        <div class="col-md-6 mb-2">
+            <a href="{% url 'index' %}" class="btn btn-outline-secondary w-100 py-2">
+                <i class="fas fa-home me-2"></i>Retour à l'Accueil
+            </a>
+        </div>
+    </div>
 </div>
+
+<style>
+    .score-circle {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background: conic-gradient(
+            {% if predicted_score >= 80 %}#28a745
+            {% elif predicted_score >= 60 %}#ffc107
+            {% else %}#dc3545
+            {% endif %} 0% {{ predicted_score }}%, 
+            #e9ecef {{ predicted_score }}% 100%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+    
+    .score-circle::before {
+        content: '';
+        position: absolute;
+        width: 120px;
+        height: 120px;
+        background: white;
+        border-radius: 50%;
+    }
+    
+    .circle-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+    }
+    
+    .score-value {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: if(predicted_score >= 80, '#28a745', if(predicted_score >= 60, '#ffc107', '#dc3545'));
+    }
+    
+    
+    @media (max-width: 768px) {
+        .score-circle {
+            width: 120px;
+            height: 120px;
+        }
+        
+        .score-circle::before {
+            width: 90px;
+            height: 90px;
+        }
+        
+        .score-value {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+{% include "includes/footer.html" %}
