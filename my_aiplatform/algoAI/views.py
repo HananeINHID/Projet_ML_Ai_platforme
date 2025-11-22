@@ -94,11 +94,7 @@ def regLog_prediction(request):
             return 
         # --- Tâche 3 : Préparation des Données ---
         
-        # 1. (Si vous avez un encodeur) : Transformez les données texte en chiffres
-        # ...
-        
-        # 2. Créer un tableau 2D pour le scaler
-        # L'ORDRE DOIT ÊTRE EXACTEMENT LE MÊME QUE LORS DE L'ENTRAÎNEMENT
+        # 1. Créer un array numpy avec les données brutes
         donnees_brutes = np.array([[temp, hum, vent, pression]]) 
         
         # 3. Appliquer la transformation (normalisation)
@@ -106,14 +102,24 @@ def regLog_prediction(request):
 
         # --- Tâche 4 : Exécution de la Prédiction ---
         prediction = model.predict(donnees_scalees)
-        predicted_class = prediction[0] # ex: 0 ou 1
+        predicted_class = prediction[0] 
         
         # --- Tâche 5 : Interprétation des Résultats ---
         type_prediction = {0: 'Non Pluie', 1: 'Pluie'}
-        img_url = {'Non Pluie':'images/soleil.png', 'Pluie':'images/pluie.jpg'} 
+        img_path =""
         
+        if pred_texte == "Pluie":
+            img_path = 'images/pluie.jpg'
+        else:
+            if temp <= 5 :
+                img_path = 'images/froid.jpeg'
+            elif temp <=15 :
+                img_path = 'images/temps_cloudy.jpg'
+            else:
+                img_path = 'images/soleil.png'
+            
         pred_texte = type_prediction.get(predicted_class, "Inconnu")
-        pred_img = img_url.get(pred_texte)
+        pred_img = img_path
 
         # --- Tâche 6 : Préparation du Contexte pour la Réponse ---
         input_data = {

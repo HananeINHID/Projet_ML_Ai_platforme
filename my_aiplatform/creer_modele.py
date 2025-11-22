@@ -105,13 +105,15 @@ def train_regression_arbre(features_student, target_student ):
     joblib.dump(model, os.path.join(OUTPUT_DIR, "DecisionTreeRegressor.pkl"))
     print("\nModèle DecisionTreeRegressor sauvegardé.\n")
 
-def train_classification_logreg(df_meteo, features_meteo, target_meteo):
+def train_classification_logreg(target_meteo):
     """
     Entraîne une Régression Logistique sur le dataset météo
     déjà NETTOYÉ et déjà ENCODÉ plus haut.
     """
+    
+    features = ['Temperature_C', 'Humidite_%', 'Vent_kmh', 'Pression_hPa']
     # 1. Séparation X / y
-    X = df_meteo[features_meteo]
+    X = df_meteo[features]
     y = df_meteo[target_meteo]
    
     # 2. Split train/test
@@ -189,7 +191,7 @@ def svm_classification(target_meteo):
     
 # Exécution du script
 if __name__ == "__main__":
-    train_classification_logreg(df_meteo, features_meteo, target_meteo)
+    train_classification_logreg(target_meteo)
     train_regression_arbre(features_student, target_student)
     xgboost_regression(features_student, target_student)
     svm_classification(target_meteo)
