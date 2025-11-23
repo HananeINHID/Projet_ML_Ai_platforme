@@ -2,6 +2,24 @@ from django.shortcuts import render
 import joblib  # Utilisé pour charger les modèles .pkl (modèle ML et scaler)
 import os      # Utilisé pour la manipulation des chemins de fichiers (os.path, os.path.exists)
 import numpy as np # Utilisé pour créer des tableaux (arrays) pour la prédiction
+import pandas as pd
+
+import pickle
+import os
+from django.conf import settings
+
+def load_model(filename):
+    """
+    Charge un modèle pickle (.pkl) depuis le dossier model_ai et le retourne.
+    """
+    path = os.path.join(settings.BASE_DIR, 'models_ai', filename)
+    if not os.path.exists(path):
+        print(f"Erreur : le fichier {filename} n'existe pas à {path}")
+        return None
+    with open(path, 'rb') as f:
+        return pickle.load(f)
+
+
 
 # --- Vues Statiques ---
 # Ces vues ont pour seul rôle de_render_ des pages HTML.
@@ -364,4 +382,157 @@ def svm_c_prediction(request):
         return render(request, 'svm_c_results.html', context)
     
     return render(request, 'svm_c_form.html')
+    
+def ran_forest_details(request):
+    return render(request, 'ran_forest_details.html')
+def ran_forest_atelier(request):
+    return render(request, 'ran_forest_atelier.html')
+def ran_forest_tester(request):
+    return render(request, 'rain_form.html')
+#RF REGRESSION
+def ran_forest_reg_details(request):
+    return render(request, 'ran_forest_reg_details.html')
+def ran_forest_reg_atelier(request):
+    return render(request, 'ran_forest_reg_atelier.html')
+def ran_forest_reg_tester(request):
+    return render(request, 'student_form.html')
+from django.shortcuts import render
+
+def rf_prediction(request):
+    """
+    Gère la prédiction pluie / pas de pluie.
+    """
+
+    if request.method == 'POST':
+
+        # --- 1️⃣ Récupération des données du formulaire ---
+        try:
+            temperature = float(request.POST.get('temperature'))
+            humidite = float(request.POST.get('humidite'))
+            vent = float(request.POST.get('vent'))
+            pression = float(request.POST.get('pression'))
+        except (ValueError, TypeError):
+            print("Erreur : données invalides.")
+            return render(request, 'erreur_modele.html')
+
+        # --- 2️⃣ Charger le modèle Random Forest ---
+        model = load_models('rf_classification.pkl')
+
+        if model is None:
+            print("Erreur : Impossible de charger random_forest.pkl")
+            return render(request, 'erreur_modele.html')
+
+        # --- 3️⃣ Construire la DataFrame pour la prédiction ---
+        features = ["Temperature_C", "Humidite_%", "Vent_kmh", "Pression_hPa"]
+        entree = pd.DataFrame(
+            [[temperature, humidite, vent, pression]],
+            columns=features
+        )
+
+        # --- 4️⃣ Prédiction ---
+        prediction = model.predict(entree)[0]
+
+        # Interprétation
+        resultat = "Pluie 🌧️" if prediction == 1 else "Pas de pluie ☀️"
+        image = "images/rain.png" if prediction == 1 else "images/sun.png"
+
+        # --- 5️⃣ Contexte pour le template ---
+        context = {
+            "resultat": resultat,
+            "img": image,
+            "input_data": {
+                "temperature": temperature,
+                "humidite": humidite,
+                "vent": vent,
+                "pression": pression
+            }
+        }
+
+        return render(request, 'rain_results.html', context)
+
+    # GET -> afficher le formulaire
+    return render(request, 'rain_form.html')
+#prediction pour regression 
+
+# -------------------------------
+# View : prédiction Performance Index
+# -------------------------------
+def rf_student_prediction(request):
+    """
+    Gère la prédiction du Performance Index d'un étudiant.
+    """
+
+    if request.method == 'POST':
+        try:
+            hours_studied = float(request.POST.get('hours_studied'))
+            previous_scores = float(request.POST.get('previous_scores'))
+            extracurricular = request.POST.get('extracurricular')
+            sleep_hours = float(request.POST.get('sleep_hours'))
+            sample_papers = float(request.POST.get('sample_papers'))
+
+            # Convertir Yes/No en 1/0
+            extracurricular = 1 if extracurricular == "Yes" else 0
+
+        except (ValueError, TypeError):
+            print("Erreur : données invalides.")
+            return render(request, 'erreur_modele.html')
+
+        # Charger le modèle sauvegardé
+        model = load_model('rf_reg_model.pkl')
+        
+        # Construire la DataFrame pour la prédiction
+        features = [
+            "Hours Studied",
+            "Previous Scores",
+            "Extracurricular Activities",
+            "Sleep Hours",
+            "Sample Question Papers Practiced"
+        ]
+        entree = pd.DataFrame(
+            [[hours_studied, previous_scores, extracurricular, sleep_hours, sample_papers]],
+            columns=features
+        )
+
+        # Prédiction
+        prediction = round(model.predict(entree)[0], 2)
+
+        # Interprétation
+        if prediction >= 80:
+            niveau = "Excellent ⭐⭐⭐"
+            img = "images/study.jpg"
+        elif prediction >= 60:
+            niveau = "Bon 👍"
+            img = "images/study.jpg"
+        elif prediction >= 40:
+            niveau = "Moyen 😕"
+            img = "images/student.jpeg"
+        else:
+            niveau = "Faible ⚠️"
+            img = "images/badstudent.jpg"
+
+        # Préparer les données à afficher dans le template
+        input_data_display = {
+            "hours_studied": hours_studied,
+            "previous_scores": previous_scores,
+            "extracurricular": "Yes" if extracurricular == 1 else "No",
+            "sleep_hours": sleep_hours,
+            "sample_papers": sample_papers
+        }
+
+        context = {
+            "prediction": prediction,  # score réel de la régression
+            "resultat": niveau,        # texte interprété
+            "img": img,                # image correspondante
+            "input_data": input_data_display
+        }
+
+        return render(request, 'student_results.html', context)
+
+    # GET -> afficher le formulaire
+    return render(request, 'student_form.html')
+
+def XGBoost_details(request):
+    return render(request, 'XGBoost_details.html')
+def XGBoost_atelier(request):
+    return render(request, 'XGBoost_atelier.html')
     

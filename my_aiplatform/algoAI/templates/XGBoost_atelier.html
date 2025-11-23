@@ -1,0 +1,23 @@
+{% include "includes/header.html" %}
+{% load static %}
+<div class="container">
+    <h2 class="mb-4">Atelier Pratique - Classification du meteo </h2>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Dataset de pluie</h3>
+            <p>'objectif de cette démonstration est de vous montrer comment entraîner un modèle XGBoost pour classifier les données selon différentes caractéristiques. Le modèle, déjà pré-entraîné et sauvegardé, sera utilisé pour effectuer des prédictions à partir des données saisies par l’utilisateur via le formulaire de l’application. Une fois l’utilisateur clique sur le bouton "Tester le modèle", les valeurs sont envoyées au modèle, qui retourne la catégorie correspondante. Cette approche est similaire à celle d’autres projets de classification, comme le cas « Rain / No Rain », où le modèle prédit la pluie ou non selon les données météo fournies par l’utilisateur.</p>
+        </div>
+        <div class="col-md-6">
+            <img src="{% static 'images/rain.png' %}" width="40%">
+            <img src="{% static 'images/norain.png' %}" width="40%">
+        </div>
+    </div>
+    <a class="btn btn-success col-12 mt-2 mb-2" href="{% url 'ran_forest_tester' %}">Tester le modèle</a>
+    <iframe src="{% static 'pdfs/course_demonstration.pdf' %}" width="100%" height="600px" style="border:1px solide #ccc;">
+        Ce navigateur ne support pas PDFs. veuillez le télécharger :
+        <a href="{% static 'pdfs/course_demonstration.pdf' %}"> Télécharger PDF</a>
+    </iframe>
+</div>
+
+
+{% include "includes/footer.html" %}
