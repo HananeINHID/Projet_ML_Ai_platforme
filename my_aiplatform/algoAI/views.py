@@ -12,6 +12,11 @@ def index(request):
     """
     return render(request, 'index.html')
 
+# VUE À PROPOS
+def about(request):
+    """Affiche la page À Propos (Équipe, Version, Contact)."""
+    return render(request, 'about.html')
+
 def regLog_details(request):
     """
     Affiche la page de détails sur l'algorithme de régression logistique.

@@ -1,0 +1,91 @@
+{% include "includes/header.html" %}
+{% load static %}
+
+<div class="container py-5">
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto text-center">
+            <h1 class="display-4 fw-bold mb-4">À Propos du Projet</h1>
+            <p class="lead text-muted">
+                Ce projet a été réalisé dans le cadre du module "Intelligence Artificielle & Machine Learning" encadré par <strong>Pr. Mohammed AMEKSA</strong>.
+            </p>
+            <p>
+                L'objectif est de démocratiser la compréhension des algorithmes complexes (Régression Logistique, Arbre de Décision, SVM, XGBoost, Random Forest, etc...)
+                à travers une interface web interactive permettant la visualisation et le test en temps réel.
+            </p>
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <div id="equipe" class="row mb-5">
+        <h2 class="text-center mb-4"><i class="bi bi-people text-primary"></i> Notre Équipe : TechQueens AI</h2>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm text-center p-4">
+                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px; font-size: 2rem;">
+                    HI
+                </div>
+                <h4>Hanane Inhid</h4>
+                <p>Etudiante en IASD/FSSM</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm text-center p-4">
+                <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px; font-size: 2rem;">
+                    SE
+                </div>
+                <h4>Salma El Angui</h4>
+                <p>Etudiante en IASD/FSSM</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm text-center p-4">
+                <div class="rounded-circle bg-warning text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px; font-size: 2rem;">
+                    KE
+                </div>
+                <h4>Khadija Elboudhiri</h4>
+                <p>Etudiante en IASD/FSSM</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6" id="contact">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-dark text-white">
+                    <i class="bi bi-envelope"></i> Contact
+                </div>
+                <div class="card-body">
+                    <p>Pour toute question concernant ce projet universitaire :</p>
+                    <ul class="list-unstyled">
+                        <li><strong>Email :</strong> contact@plateforme-ia.local</li>
+                        <li><strong>Université :</strong> UCA (Cadi Ayyad), Marrakech</li>
+                        <li><strong>Département :</strong> Informatique</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6" id="version">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <i class="bi bi-journal-text"></i> Version & Changelog
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Version 1.0 (Actuelle)
+                            <span class="badge bg-success">Stable</span>
+                        </li>
+                        <li class="list-group-item small text-muted">
+                            - Intégration de modèles ML<br>
+                            - Interface Bootstrap Responsive<br>
+                            - Visualisation des arbres de décision
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "includes/footer.html" %}
