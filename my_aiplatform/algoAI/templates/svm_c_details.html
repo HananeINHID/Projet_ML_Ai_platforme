@@ -1,0 +1,31 @@
+{% include "includes/header.html" %}
+{% load static %}
+<div class="container">
+    <h2 class="mb-4">Algorithme de Support Vector Machines (Classification)</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Détails:</h3>
+            <p> Les Support Vector Machines (SVM) sont des algorithmes d'apprentissage supervisé utilisés pour la classification et la régression. </p> 
+            <p>fonctionnent en trouvant l'hyperplan qui maximise la marge entre les différentes classes dans un espace à plusieurs dimensions.</p>
+            <p>Les SVM sont particulièrement efficaces pour les problèmes de classification binaire et peuvent être adaptés pour gérer des classes multiples. </p>
+            <p> utilisent des noyaux (kernels) pour transformer les données non linéaires en un espace où une séparation linéaire est possible.</p>
+        </div>
+        <div class="col-md-6">
+            <h3>Caractéristiques:</h3>
+            <ul>
+                <li>Capacité à gérer des données non linéaires grâce aux fonctions noyaux.</li>
+                <li>Robustesse face aux données de haute dimension.</li>
+                <li>Utilisation efficace de la mémoire en se concentrant sur les vecteurs de support.</li>
+                <li>Peut être utilisé pour la classification binaire et multi-classes.</li>
+                <li>Possibilité de régularisation pour éviter le surapprentissage.</li>
+            </ul>
+        </div>
+    </div>
+    <div>
+        <h3 class="mt-4">Visualisation de l'SVM </h3>
+        <iframe src="{% static 'pdfs/svm.pdf' %}" width="100%" height="600px" style="border:1px solid #ccc;">
+            <a href="{% static 'pdfs/svm.pdf' %}">Télécharger PDF</a>
+        </iframe>
+    </div>
+</div>
+{% include "includes/footer.html" %}
