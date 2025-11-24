@@ -50,4 +50,10 @@ urlpatterns = [
     # XGBoost (Classification)
     path('XGBoost_details/', views.XGBoost_details, name='XGBoost_details'),
     path('XGBoost_atelier/', views.XGBoost_atelier, name='XGBoost_atelier'),
+    path('XGboost_prediction/', views.rf_prediction, name='XGboost_prediction'),
+    path('XGboost_tester/', views.XGboost_tester, name='XGboost_tester'),
+
+
+
+]
 ]

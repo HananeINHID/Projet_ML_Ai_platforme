@@ -592,3 +592,61 @@ def XGBoost_details(request):
 
 def XGBoost_atelier(request):
     return render(request, 'XGBoost_atelier.html')
+def XGboost_tester(request):
+    return render(request, 'xgrain_form.html')
+#XGBOOST PREDICTION LOGIC 
+def XGboost_prediction(request):
+    """
+    Gère la prédiction pluie / pas de pluie.
+    """
+
+    if request.method == 'POST':
+
+        # --- 1️⃣ Récupération des données du formulaire ---
+        try:
+            temperature = float(request.POST.get('temperature'))
+            humidite = float(request.POST.get('humidite'))
+            vent = float(request.POST.get('vent'))
+            pression = float(request.POST.get('pression'))
+        except (ValueError, TypeError):
+            print("Erreur : données invalides.")
+            return render(request, 'erreur_modele.html')
+
+        # --- 2️⃣ Charger le modèle Random Forest ---
+        model = load_models('XGboost_class.pkl')
+
+        if model is None:
+            print("Erreur : Impossible de charger random_forest.pkl")
+            return render(request, 'erreur_modele.html')
+
+        # --- 3️⃣ Construire la DataFrame pour la prédiction ---
+        features = ["Temperature_C", "Humidite_%", "Vent_kmh", "Pression_hPa"]
+        entree = pd.DataFrame(
+            [[temperature, humidite, vent, pression]],
+            columns=features
+        )
+
+        # --- 4️⃣ Prédiction ---
+        prediction = model.predict(entree)[0]
+
+        # Interprétation
+        resultat = "Pluie 🌧️" if prediction == 1 else "Pas de pluie ☀️"
+        image = "images/rain.png" if prediction == 1 else "images/sun.png"
+
+        # --- 5️⃣ Contexte pour le template ---
+        context = {
+            "resultat": resultat,
+            "img": image,
+            "input_data": {
+                "temperature": temperature,
+                "humidite": humidite,
+                "vent": vent,
+                "pression": pression
+            }
+        }
+
+        return render(request, 'xgrain_results.html', context)
+
+    # GET -> afficher le formulaire
+    return render(request, 'xgrain_form.html')
+    return render(request, 'XGBoost_atelier.html')
