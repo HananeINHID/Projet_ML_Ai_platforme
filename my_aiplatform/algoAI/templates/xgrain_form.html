@@ -1,0 +1,64 @@
+{% include "includes/header.html" %}
+{% load static %}
+
+<div class="container">
+    <h2 class="mb-4">Test du modèle : Prédiction de pluie 🌦️</h2>
+    <div class="ps-2 card">
+        <div class="card-title">
+            <img src="{% static 'images/background.jpg' %}" width="100%" alt="Illustration Rain">
+        </div>
+        <div class="card-body">
+            <form method="post" action="{% url 'XGboost_prediction' %}" class="ps-4 pe-4 pt-4 pb-4">
+                {% csrf_token %}
+
+                <div class="mb-4">
+                    <label for="temperature" class="form-label">Température (°C)</label>
+                    <input type="range" class="form-range" min="0" max="50" step="1" id="temperature" name="temperature"
+                        value="20" oninput="temperatureValue.value=this.value">
+                    <span class="slider-value" id="temperatureValue">20</span>
+                </div>
+
+                <div class="mb-4">
+                    <label for="humidity" class="form-label">Humidité (%)</label>
+                    <input type="range" class="form-range" min="0" max="100" step="1" id="humidity" name="humidite"
+                        value="50" oninput="humidityValue.value=this.value">
+                    <span class="slider-value" id="humidityValue">50</span>
+                </div>
+
+                <div class="mb-4">
+    <label for="vent" class="form-label">Vent (km/h)</label>
+    <input type="range" class="form-range" min="0" max="100" step="1" id="vent" name="vent"
+        value="10" oninput="windValue.innerText = this.value">
+    <span class="slider-value" id="windValue">10</span>
+</div>
+
+
+                <div class="mb-4">
+    <label for="pression" class="form-label">Pression (hPa)</label>
+    <input type="range" class="form-range" min="950" max="1050" step="1" id="pressure" name="pression"
+        value="1013" oninput="pressureValue.innerText = this.value">
+    <span class="slider-value" id="pressureValue">1013</span>
+</div>
+
+
+                <button type="submit" class="btn btn-primary col-12">Predict</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function(){
+        temperatureValue.textContent = temperature.value;
+        humidityValue.textContent = humidity.value;
+        windValue.textContent = wind.value;
+        pressureValue.textContent = pressure.value;
+    });
+
+    temperature.oninput = () => temperatureValue.textContent = temperature.value;
+    humidity.oninput = () => humidityValue.textContent = humidity.value;
+    wind.oninput = () => windValue.textContent = wind.value;
+    pressure.oninput = () => pressureValue.textContent = pressure.value;
+</script>
+
+{% include "includes/footer.html" %}
