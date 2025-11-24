@@ -1,0 +1,135 @@
+{% include "includes/header.html" %}
+{% load static %}
+<div class="container">
+    <h2 class="mb-4">Tester l'Arbre de Décision (Météo)</h2>
+    
+    <div class="card shadow-sm">
+        <div class="card-header p-0">
+           <div class="card-header p-0" >
+            <div class="d-flex flex-row justify-content-between flex-nowrap">
+                <img src="{% static 'images/pluie1.jpg' %}" class="img-fluid" alt="Météo - pluie"
+                     style="width:33%; height:auto; object-fit:cover;">
+                <img src="{% static 'images/rainbow.jpg' %}" class="img-fluid" alt="Météo - arc-en-ciel"
+                     style="width:33%; height:auto; object-fit:cover;">
+                <img src="{% static 'images/soleil1.jpg' %}" class="img-fluid" alt="Météo - soleil"
+                     style="width:33%; height:auto; object-fit:cover;">
+            </div>
+        </div>
+        </div>
+        
+        <div class="card-body">
+            <form method="post" action="{% url 'svm_c_prediction' %}" class="px-3 px-md-4 py-4">
+                {% csrf_token %}
+                
+                <p class="lead text-center mb-4">Ajustez les curseurs pour définir les conditions météo</p>
+                
+                <!-- Température avec slider -->
+                <div class="mb-4">
+                    <label for="temperature" class="form-label fw-bold d-flex justify-content-between">
+                        <span>Température</span>
+                        <span class="badge bg-primary fs-6" id="temperatureValue">20.0°C</span>
+                    </label>
+                    <input type="range" class="form-range" id="temperature" name="Temperature_C" 
+                           min="-10" max="50" step="0.5" value="20.0" required>
+                    <div class="d-flex justify-content-between text-muted small">
+                        <span>-10°C</span>
+                        <span>50°C</span>
+                    </div>
+                </div>
+                
+                <!-- Humidité avec slider -->
+                <div class="mb-4">
+                    <label for="humidite" class="form-label fw-bold d-flex justify-content-between">
+                        <span>Humidité</span>
+                        <span class="badge bg-info fs-6" id="humiditeValue">50%</span>
+                    </label>
+                    <input type="range" class="form-range" id="humidite" name="Humidite_%" 
+                           min="0" max="100" step="1" value="50" required>
+                    <div class="d-flex justify-content-between text-muted small">
+                        <span>0%</span>
+                        <span>100%</span>
+                    </div>
+                </div>
+
+                <!-- Vent avec slider -->
+                <div class="mb-4">
+                    <label for="vent" class="form-label fw-bold d-flex justify-content-between">
+                        <span>Vitesse du Vent</span>
+                        <span class="badge bg-warning fs-6" id="ventValue">10 km/h</span>
+                    </label>
+                    <input type="range" class="form-range" id="vent" name="Vent_kmh" 
+                           min="0" max="100" step="1" value="10" required>
+                    <div class="d-flex justify-content-between text-muted small">
+                        <span>0 km/h</span>
+                        <span>100 km/h</span>
+                    </div>
+                </div>
+
+                <!-- Pression avec slider -->
+                <div class="mb-4">
+                    <label for="pression" class="form-label fw-bold d-flex justify-content-between">
+                        <span>Pression Atmosphérique</span>
+                        <span class="badge bg-success fs-6" id="pressionValue">1013 hPa</span>
+                    </label>
+                    <input type="range" class="form-range" id="pression" name="Pression_hPa" 
+                           min="950" max="1050" step="1" value="1013" required>
+                    <div class="d-flex justify-content-between text-muted small">
+                        <span>950 hPa</span>
+                        <span>1050 hPa</span>
+                    </div>
+                </div>
+
+                <!-- Bouton de soumission -->
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg px-5">
+                        <i class="fas fa-bolt me-2"></i>Générer la Prédiction
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Mise à jour en temps réel des valeurs
+    document.addEventListener('DOMContentLoaded', function() {
+        const sliders = ['temperature', 'humidite', 'vent', 'pression'];
+        
+        sliders.forEach(sliderId => {
+            const slider = document.getElementById(sliderId);
+            const valueDisplay = document.getElementById(sliderId + 'Value');
+            
+            // Mise à jour initiale
+            updateSliderValue(slider, valueDisplay);
+            
+            // Mise à jour lors du déplacement
+            slider.addEventListener('input', function() {
+                updateSliderValue(slider, valueDisplay);
+            });
+        });
+        
+        function updateSliderValue(slider, display) {
+            let value = slider.value;
+            let unit = '';
+            
+            switch(slider.id) {
+                case 'temperature':
+                    unit = '°C';
+                    break;
+                case 'humidite':
+                    unit = '%';
+                    break;
+                case 'vent':
+                    unit = ' km/h';
+                    break;
+                case 'pression':
+                    unit = ' hPa';
+                    break;
+            }
+            
+            display.textContent = value + unit;
+        }
+    });
+</script>
+
+{% include "includes/footer.html" %}

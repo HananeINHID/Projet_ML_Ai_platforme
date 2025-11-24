@@ -1,0 +1,44 @@
+{% include "includes/header.html" %}
+{% load static %}
+<div class="container">
+    
+    <h2 class="mb-4">Atelier Pratique - Arbre de Décision (Student Performance)</h2>
+    
+    <div class="row align-items-center">
+        <div class="col-lg-6 mb-4">
+            <h3>Dataset Student Performance</h3>
+            <p>L'objectif de cet atelier est d'entraîner un modèle d'<strong>Arbre de Décision (Régression)</strong> pour
+            prédire le Performance Index des étudiants basé sur leurs habitudes d'étude, sommeil, et activités.</p>
+            <p>Ce modèle de régression prédit une valeur continue entre 0 et 100 représentant la performance académique.</p>
+            
+        </div>
+        
+        <div class="col-lg-6 mb-4">
+            <img src="{% static 'images/student.jpg' %}" class="img-fluid rounded shadow-sm" alt="Student Performance" style="width:47%; object-fit: contain;">
+            <img src="{% static 'images/perfor.jpg' %}" class="img-fluid rounded shadow-sm" alt="Performance" style="width:47%;  object-fit: contain;">
+        </div>
+    </div>
+    
+    <!-- Bouton de test -->
+    <div class="text-center mb-4">
+        <a class="btn btn-success btn-lg px-5" href="{% url 'tree_r_tester' %}">
+            <i class="fas fa-chart-line me-2"></i>Tester le modèle
+        </a>
+    </div>
+    
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h5 class="mb-0">Documentation - Arbre de Décision (Régression)</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="ratio ratio-16x9">
+                <iframe src="{% static 'pdfs/demonstration_dt.pdf' %}" style="border:1px solid #ccc;">
+                    Votre navigateur ne supporte pas les PDFs. 
+                    <a href="{% static 'pdfs/demonstration_dt.pdf' %}">Télécharger le PDF</a>
+                </iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "includes/footer.html" %}

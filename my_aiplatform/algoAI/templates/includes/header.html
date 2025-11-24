@@ -1,29 +1,191 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>AI Platform - Accueil</title>
+    <title>AI Platform - Plateforme d'Intelligence Artificielle</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Bootstrap CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        /* 
+         * Custom styles for AI Platform header/navbar.
+         * Purpose: Enhance branding, navigation, dropdowns, and badges.
+         * Scope: Applies only to header and navigation elements in this template.
+         * Author: [Your Name or Team]
+         * Last updated: [Date]
+         */
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .nav-link {
+            font-weight: 500;
+            margin: 0 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+        }
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+        }
+        .dropdown-item {
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+        .dropdown-item:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateX(5px);
+        }
+        .badge-new {
+            background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+            font-size: 0.6rem;
+            margin-left: 5px;
+        }
+    </style>
 </head>
 <body>
-    <!-- Header/Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow">
         <div class="container">
-            <a class="navbar-brand" href="/">AI Platform</a>
+            <!-- Logo et Nom -->
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'index' %}">
+                <i class="bi bi-cpu me-2"></i>
+                Plateforme IA
+            </a>
+
+            <!-- Bouton toggle mobile -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
+            <!-- Menu principal -->
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="/">Accueil</a>
+                        <a class="nav-link active" href="{% url 'index' %}">
+                            <i class="bi bi-house me-1"></i>Accueil
+                        </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">À propos</a>
+                    
+                    <!-- Menu déroulant Algorithmes -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-diagram-3 me-1"></i>Algorithmes
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'regLog_details' %}">
+                                <i class="bi bi-graph-up me-2"></i>Régression Logistique
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'tree_r_details' %}">
+                                <i class="bi bi-diagram-2 me-2"></i>Arbre de Décision (Régression)
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'svm_c_details' %}">
+                                <i class="bi bi-shield-shaded me-2"></i>SVM (Classification)
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'xgboost_r_details' %}">
+                                <i class="bi bi-lightning-charge me-2"></i>XGBoost (Régression)
+                            </a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Menu déroulant Ateliers -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-code-slash me-1"></i>Ateliers Pratiques
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'regLog_atelier' %}">
+                                <i class="bi bi-cloud-rain me-2"></i> Régression Logistique - Météo
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'tree_r_atelier' %}">
+                                <i class="bi bi-mortarboard me-2"></i>Arbre de décision (régression) - Performance Étudiante
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'svm_c_atelier' %}">
+                                <i class="bi bi-cloud-sun me-2"></i>Support Vector Machines (classification) - Météo
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'xgboost_r_atelier' %}">
+                                <i class="bi bi-graph-up-arrow me-2"></i>XGBoost (régression) - Performance Étudiante
+                            </a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Menu déroulant Tester les Modèles -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-rocket-takeoff me-1"></i>Tester les Modèles
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'regLog_tester' %}">
+                                <i class="bi bi-cloud-rain me-2"></i>Régression Logistique
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'tree_r_tester' %}">
+                                <i class="bi bi-mortarboard me-2"></i>Arbre de Décision (Régression)
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'svm_c_tester' %}">
+                                <i class="bi bi-shield-shaded me-2"></i>SVM (Classification)
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'xgboost_r_tester' %}">
+                                <i class="bi bi-lightning-charge me-2"></i>XGBoost (Régression)
+                            </a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="{% url 'about' %}">
+                            <i class="bi bi-info-circle me-1"></i>À Propos
+                        </a>
                     </li>
                 </ul>
+                    </span>
+                </div>
             </div>
         </div>
     </nav>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script pour le header sticky -->
+    <script>
+        // Ajout d'une ombre au scroll avec optimisation requestAnimationFrame
+        let lastKnownScrollY = 0;
+        let ticking = false;
+
+        function updateNavbarShadow(scrollY) {
+            const navbar = document.querySelector('.navbar');
+            if (scrollY > 10) {
+                navbar.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.1)';
+            } else {
+                navbar.style.boxShadow = 'none';
+            }
+        }
+
+        window.addEventListener('scroll', function() {
+            lastKnownScrollY = window.scrollY;
+            if (!ticking) {
+                window.requestAnimationFrame(function() {
+                    updateNavbarShadow(lastKnownScrollY);
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+    </script>
+<!-- Ajoute un script bootstrap JS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

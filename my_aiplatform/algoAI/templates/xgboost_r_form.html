@@ -1,0 +1,129 @@
+{% include "includes/header.html" %}
+{% load static %}
+<div class="container">
+    <h2 class="mb-4 text-center">XGBoost Regression - Performance Étudiante</h2>
+    <p class="lead text-center mb-4">Prédisez la performance académique avec l'algorithme XGBoost</p>
+    
+    <div class="card border-0 shadow">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-1">Formulaire de Prédiction XGBoost</h5>
+            <p class="mb-0 small">Algorithme avancé de Gradient Boosting</p>
+        </div>
+        <div class="card-body">
+            <form method="post" action="{% url 'xgboost_r_prediction' %}">
+                {% csrf_token %}
+                
+                <!-- Section Performance Académique -->
+                <div class="bg-light rounded p-3 mb-4">
+                    <h6 class="text-primary mb-3">Performance Académique</h6>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="hours_studied" class="form-label fw-bold">
+                                Heures d'Étude Quotidiennes
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="hours_studied" 
+                                       name="hours_studied" min="1" max="20" step="0.5" value="5.0" required>
+                                <span class="input-group-text">heures</span>
+                            </div>
+                            <div class="form-text">Temps consacré aux études chaque jour</div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="previous_scores" class="form-label fw-bold">
+                                Moyenne Générale
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="previous_scores" 
+                                       name="previous_scores" min="40" max="100" step="0.1" value="75.0" required>
+                                <span class="input-group-text">/100</span>
+                            </div>
+                            <div class="form-text">Moyenne des résultats précédents</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section Mode de Vie -->
+                <div class="bg-light rounded p-3 mb-4">
+                    <h6 class="text-primary mb-3">Mode de Vie</h6>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="sleep_hours" class="form-label fw-bold">
+                                Heures de Sommeil
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="sleep_hours" 
+                                       name="sleep_hours" min="4" max="12" step="0.5" value="7.5" required>
+                                <span class="input-group-text">h/nuit</span>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <label for="extracurricular" class="form-label fw-bold">
+                                Activités Extra-scolaires
+                            </label>
+                            <select class="form-select" id="extracurricular" name="extracurricular" required>
+                                <option value="1">Oui</option>
+                                <option value="0">Non</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <label for="sample_papers" class="form-label fw-bold">
+                                Examens Pratiqués
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="sample_papers" 
+                                       name="sample_papers" min="0" max="20" step="1" value="5" required>
+                                <span class="input-group-text">tests</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Boutons d'action -->
+                <div class="text-center mt-4 pt-3 border-top">
+                    <button type="submit" class="btn btn-primary btn-lg me-3">
+                        Lancer la Prédiction XGBoost
+                    </button>
+                    <button type="reset" class="btn btn-outline-secondary btn-lg">
+                        Effacer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Info Card sur XGBoost -->
+    <div class="card bg-gradient mt-4 border-0">
+        <div class="card-body text-white">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h5>À propos de XGBoost</h5>
+                    <p class="mb-3">XGBoost (Extreme Gradient Boosting) est un algorithme avancé d'apprentissage automatique qui combine plusieurs modèles faibles pour créer un prédicteur robuste et précis.</p>
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>Avantages :</strong>
+                            <ul class="mb-0">
+                                <li>Haute précision</li>
+                                <li>Résistant au overfitting</li>
+                                <li>Rapide et efficace</li>
+                            </ul>
+                        </div>
+                        <div class="col-6">
+                            <strong>Utilisation :</strong>
+                            <ul class="mb-0">
+                                <li>Compétitions Kaggle</li>
+                                <li>Projets industriels</li>
+                                <li>Données structurées</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+    
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "includes/footer.html" %}

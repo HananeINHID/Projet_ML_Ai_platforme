@@ -1,0 +1,50 @@
+{% include "includes/header.html" %}
+{% load static %}
+<div class="container">
+    <h2 class="mb-4 text-center">SVM (Classification) - Résultats de la Prévision Météo </h2>
+    <div class="card mb-3">
+        <div class="card-header">
+            <strong>Résultat de la Prévision Météo</strong>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="card-title"> Prévision :
+                        <span class="badge bg-primary">{{ prediction_texte }}</span>
+                    </h5>
+                    <img src="{% static prediction_image %}" class="img thumbnail card-img-top" style="width:350px">
+                </div>
+                <div class="col-md-6">
+                    <p class="card-text">
+                        La prévision est basée sur les caractéristiques suivantes : </p>
+                    {% for key, value in initial_data.items %}
+                        <div><strong>{{key}}:</strong> {{value}}</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Bouton pour revenir au formulaire -->
+        <div class="card-footer text-center">
+            <a href="{% url 'svm_c_tester' %}" class="btn btn-primary">Faire une autre prévision</a>
+        </div>
+        <div class="card-footer text-center">
+            <a href="{% url 'index' %}" class="btn btn-primary">Retour à la page d'accueil</a>
+        </div>
+    </div>
+</div>
+<style>
+    .card-img-top {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    @media screen and (max-width: 576px) {
+        .card-img-top {
+            width: 100%;
+            height: auto;
+        }
+    }
+
+</style>
+{% include "includes/footer.html" %}
