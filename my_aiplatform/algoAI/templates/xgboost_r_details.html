@@ -1,0 +1,30 @@
+{% include "includes/header.html" %}
+{% load static %}
+<div class="container">
+    <h2 class="mb-4">Algorithme XGBoost (Gradient Boosting) - Régression</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Détails:</h3>
+            <p>XGBoost (Extreme Gradient Boosting) est une bibliothèque d'apprentissage automatique optimisée pour la vitesse et la performance. </p>
+            <p>Il implémente l'algorithme de gradient boosting, qui combine plusieurs modèles faibles (généralement des arbres de décision) pour créer un modèle fort et robuste.</p>
+            <p>XGBoost est largement utilisé pour les tâches de régression et de classification en raison de sa capacité à gérer efficacement les données volumineuses et complexes.</p>
+        </div>
+        <div class="col-md-6">
+            <h3>Caractéristiques:</h3>
+            <ul>
+                <li>Haute performance grâce à des optimisations avancées.</li>
+                <li>Gestion efficace des données manquantes.</li>
+                <li>Supporte la régularisation pour éviter le surapprentissage.</li>
+                <li>Capacité à gérer des données volumineuses et complexes.</li>
+                <li>Flexibilité avec divers objectifs de perte et fonctions d'évaluation.</li>
+            </ul>
+        </div>
+    </div>
+    <div>
+        <h3 class="mt-4">Visualisation de XGBoost</h3>
+        <iframe src="{% static 'pdfs/xgboost.pdf' %}" width="100%" height="600px" style="border:1px solid #ccc;">
+            <a href="{% static 'pdfs/xgboost.pdf' %}">Télécharger PDF</a>
+        </iframe>
+    </div>
+</div>
+{% include "includes/footer.html" %}

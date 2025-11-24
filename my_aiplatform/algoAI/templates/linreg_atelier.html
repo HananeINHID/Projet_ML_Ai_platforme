@@ -1,0 +1,44 @@
+{% include "includes/header.html" %}
+{% load static %}
+<div class="container">
+    
+    <h2 class="mb-4">Atelier Pratique - Régression Linéaire</h2>
+    
+    <div class="row align-items-center">
+        <div class="col-lg-6 mb-4">
+            <h3>Présentation</h3>
+            <p>L'objectif de cet atelier est d'entraîner un modèle de <strong>Régression Linéaire</strong> pour
+            prédire des valeurs numériques continues à partir de données d'entrée. Ce modèle est particulièrement adapté aux problèmes de prédiction numérique et permet de faire des prévisions précises.</p>
+            <p>Le modèle a été entraîné et sauvegardé. Il pourra être utilisé pour générer des prédictions à partir des données fournies par l'utilisateur via le formulaire de test.</p>
+        </div>
+        
+        <div class="col-lg-6 mb-4">
+            <img src="{% static 'images/student.jpg' %}" class="img-fluid rounded shadow-sm" alt="Student Performance" style="width:47%; object-fit: contain;">
+            <img src="{% static 'images/perfor.jpg' %}" class="img-fluid rounded shadow-sm" alt="Performance" style="width:47%;  object-fit: contain;">
+        </div>
+    </div>
+    
+    <!-- Bouton de test -->
+    <div class="text-center mb-4">
+        <a class="btn btn-success btn-lg px-5" href="{% url 'linreg_tester' %}">
+            <i class="fas fa-chart-line me-2"></i>Tester le modèle
+        </a>
+    </div>
+    
+    <!-- Documentation PDF -->
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h5 class="mb-0">Documentation - Régression Linéaire</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="ratio ratio-16x9">
+                <iframe src="{% static 'pdfs/demonstration_linreg.pdf' %}" style="border:1px solid #ccc;">
+                    Votre navigateur ne supporte pas les PDFs. 
+                    <a href="{% static 'pdfs/demonstration_linreg.pdf' %}">Télécharger le PDF</a>
+                </iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "includes/footer.html" %}

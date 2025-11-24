@@ -1,0 +1,110 @@
+{% include "includes/header.html" %}
+{% load static %}
+<div class="container">
+    <h2 class="mb-4">Atelier: Arbre de Décision - Régression</h2>
+    <p class="lead mb-4">Prédisez le Performance Index des étudiants basé sur leurs habitudes d'étude</p>
+    
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Formulaire de Prédiction - Performance Étudiante</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" action="{% url 'tree_r_prediction' %}" class="px-3 px-md-4 py-4">
+                {% csrf_token %}
+                
+                <div class="row">
+                    <!-- Hours Studied -->
+                    <div class="col-md-6 mb-4">
+                        <label for="hours_studied" class="form-label fw-bold">
+                            Heures d'Étude
+                        </label>
+                        <input type="number" step="0.5" class="form-control" id="hours_studied" 
+                               name="hours_studied" min="1" max="20" value="5.0" required
+                               placeholder="Ex: 5.0 heures">
+                        <div class="form-text">Nombre d'heures étudiées par jour (1-20h)</div>
+                    </div>
+                    
+                    <!-- Previous Scores -->
+                    <div class="col-md-6 mb-4">
+                        <label for="previous_scores" class="form-label fw-bold">
+                            Notes Précédentes
+                        </label>
+                        <input type="number" step="0.1" class="form-control" id="previous_scores" 
+                               name="previous_scores" min="40" max="100" value="75.0" required
+                               placeholder="Ex: 75.0">
+                        <div class="form-text">Moyenne des notes précédentes (40-100)</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Extracurricular Activities -->
+                    <div class="col-md-6 mb-4">
+                        <label for="extracurricular" class="form-label fw-bold">
+                            Activités Extra-scolaires
+                        </label>
+                        <select class="form-select" id="extracurricular" name="extracurricular" required>
+                            <option value="1">Oui</option>
+                            <option value="0">Non</option>
+                        </select>
+                        <div class="form-text">L'étudiant participe à des activités extra-scolaires</div>
+                    </div>
+                    
+                    <!-- Sleep Hours -->
+                    <div class="col-md-6 mb-4">
+                        <label for="sleep_hours" class="form-label fw-bold">
+                            Heures de Sommeil
+                        </label>
+                        <input type="number" step="0.5" class="form-control" id="sleep_hours" 
+                               name="sleep_hours" min="4" max="12" value="7.5" required
+                               placeholder="Ex: 7.5 heures">
+                        <div class="form-text">Heures de sommeil par nuit (4-12h)</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Sample Question Papers Practiced -->
+                    <div class="col-md-6 mb-4">
+                        <label for="sample_papers" class="form-label fw-bold">
+                            Examens Blancs Réalisés
+                        </label>
+                        <input type="number" step="1" class="form-control" id="sample_papers" 
+                               name="sample_papers" min="0" max="20" value="5" required
+                               placeholder="Ex: 5 examens">
+                        <div class="form-text">Nombre d'examens blancs pratiqués (0-20)</div>
+                    </div>
+                </div>
+
+                <!-- Bouton de soumission -->
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg px-5">
+                        <i class="fas fa-chart-line me-2"></i>Prédire la Performance
+                    </button>
+                    <button type="reset" class="btn btn-outline-secondary btn-lg px-5 ms-2">
+                        <i class="fas fa-redo me-2"></i>Réinitialiser
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Informations sur le dataset -->
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="mb-0">À propos du Dataset</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Dataset:</strong> Student Performance</p>
+            <p><strong>Objectif:</strong> Prédire le Performance Index (0-100) des étudiants</p>
+            <p><strong>Variables utilisées:</strong></p>
+            <ul>
+                <li>Hours Studied - Heures d'étude quotidiennes</li>
+                <li>Previous Scores - Performance académique antérieure</li>
+                <li>Extracurricular Activities - Participation aux activités</li>
+                <li>Sleep Hours - Durée du sommeil</li>
+                <li>Sample Question Papers - Pratique des examens</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% include "includes/footer.html" %}
