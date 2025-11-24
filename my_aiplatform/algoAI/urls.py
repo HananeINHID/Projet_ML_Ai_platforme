@@ -11,6 +11,12 @@ urlpatterns = [
     path('regLog_tester/', views.regLog_tester, name='regLog_tester'),
     path('regLog_prediction/', views.regLog_prediction, name='regLog_prediction'),
     
+    # Linear Regression
+    path('linreg_details/', views.linreg_details, name='linreg_details'),
+    path('linreg_atelier/', views.linreg_atelier, name='linreg_atelier'),
+    path('linreg_tester/', views.linreg_tester, name='linreg_tester'),
+    path('linreg_prediction/', views.linreg_prediction, name='linreg_prediction'),
+
     # Arbre de Décision (Regression)
     path('tree_r_details/', views.tree_r_details, name='tree_r_details'),
     path('tree_r_atelier/', views.tree_r_atelier, name='tree_r_atelier'),

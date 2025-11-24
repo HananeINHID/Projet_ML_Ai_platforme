@@ -411,6 +411,97 @@ def rf_prediction(request):
     # GET -> afficher le formulaire
     return render(request, 'rain_form.html')
 
+# --- VUES POUR LA RÉGRESSION LINÉAIRE ---
+
+def linreg_details(request):
+    """Affiche la page de détails sur l'algorithme de Régression Linéaire."""
+    return render(request, 'linreg_details.html')
+
+def linreg_atelier(request):
+    """Affiche la page d'atelier pour la Régression Linéaire."""
+    return render(request, 'linreg_atelier.html')
+
+def linreg_tester(request):
+    """Affiche le formulaire de test pour la Régression Linéaire (student_form.html)."""
+    return render(request, 'student_form.html')
+
+def linreg_prediction(request):
+    """Gère la prédiction avec le modèle de Régression Linéaire."""
+
+    if request.method == 'POST':
+        try:
+            # Récupération des données depuis le formulaire
+            hours_studied = float(request.POST.get('hours_studied'))
+            previous_scores = float(request.POST.get('previous_scores'))
+            extracurricular = request.POST.get('extracurricular')
+            sleep_hours = float(request.POST.get('sleep_hours'))
+            sample_papers = float(request.POST.get('sample_papers'))
+
+            # Convertir Yes/No en 1/0
+            extracurricular = 1 if extracurricular == "Yes" else 0
+
+        except (ValueError, TypeError):
+            print("Erreur : données invalides.")
+            return render(request, 'erreur_modele.html')
+
+        # Charger le modèle de Régression Linéaire
+        model = load_model('linear_regression_model.pkl')
+        if model is None:
+            print("Erreur : le fichier linear_regression_model.pkl est introuvable.")
+            return render(request, 'erreur_modele.html')
+
+        # Préparation des données sous forme de DataFrame
+        features = [
+            "Hours Studied",
+            "Previous Scores",
+            "Extracurricular Activities",
+            "Sleep Hours",
+            "Sample Question Papers Practiced"
+        ]
+        entree = pd.DataFrame(
+            [[hours_studied, previous_scores, extracurricular, sleep_hours, sample_papers]],
+            columns=features
+        )
+
+        # Prédiction
+        prediction = round(model.predict(entree)[0], 2)
+
+        # Interprétation simple
+        if prediction >= 80:
+            niveau = "Excellent ⭐⭐⭐"
+            img = "images/study.jpg"
+        elif prediction >= 60:
+            niveau = "Bon 👍"
+            img = "images/study.jpg"
+        elif prediction >= 40:
+            niveau = "Moyen 😕"
+            img = "images/student.jpeg"
+        else:
+            niveau = "Faible ⚠️"
+            img = "images/badstudent.jpg"
+
+        # Préparer le contexte pour le template
+        input_data_display = {
+            "hours_studied": hours_studied,
+            "previous_scores": previous_scores,
+            "extracurricular": "Yes" if extracurricular == 1 else "No",
+            "sleep_hours": sleep_hours,
+            "sample_papers": sample_papers
+        }
+
+        context = {
+            "prediction": prediction,
+            "resultat": niveau,
+            "img": img,
+            "input_data": input_data_display
+        }
+
+        return render(request, 'student_results.html', context)
+
+    # GET -> afficher le formulaire
+    return render(request, 'student_form.html')
+
+
 # VUES POUR RANDOM FOREST (REGRESSION)
 def ran_forest_reg_details(request):
     return render(request, 'ran_forest_reg_details.html')
