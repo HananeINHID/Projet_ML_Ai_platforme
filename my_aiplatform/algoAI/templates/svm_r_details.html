@@ -1,0 +1,36 @@
+{% include "includes/header.html" %} 
+{% load static %}
+
+<div class="container">
+    <h2 class="mb-4">Algorithme de Support Vector Machines (Régression)</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Détails :</h3>
+            <p>Les Support Vector Machines pour la régression (SVR) sont une variante des SVM conçue pour prédire des valeurs continues plutôt que des classes.</p>
+            <p>Le SVR cherche à trouver une fonction qui s'éloigne le moins possible des points d'entraînement, tout en respectant une zone de tolérance appelée <strong>ε-tube</strong>.</p>
+            <p>Au lieu de maximiser une marge entre classes (comme en classification), le SVR tente de maintenir les erreurs à l'intérieur de ce tube tout en limitant les points en dehors (slack variables).</p>
+            <p>Comme les SVM classiques, le SVR peut utiliser des noyaux (kernels) pour modéliser des relations non linéaires.</p>
+        </div>
+
+        <div class="col-md-6">
+            <h3>Caractéristiques :</h3>
+            <ul>
+                <li>Prédiction de valeurs continues (problèmes de régression).</li>
+                <li>Contrôle des erreurs avec le paramètre ε (zone sans pénalité).</li>
+                <li>Très efficace pour les données non linéaires grâce aux kernels.</li>
+                <li>Robuste face au surapprentissage grâce à la régularisation.</li>
+                <li>Capacité à modéliser des relations complexes entre variables.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div>
+        <h3 class="mt-4">Visualisation du SVR</h3>
+        <iframe src="{% static 'pdfs/svm_regression.pdf' %}" width="100%" height="600px" style="border:1px solid #ccc;">
+            <a href="{% static 'pdfs/svm_regression.pdf' %}">Télécharger PDF</a>
+        </iframe>
+    </div>
+</div>
+
+{% include "includes/footer.html" %}

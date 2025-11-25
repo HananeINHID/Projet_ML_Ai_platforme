@@ -213,6 +213,87 @@ def tree_r_prediction(request):
     
     return render(request, 'tree_r_form.html')
 
+#  VUES POUR L'ARBRE DE DÉCISION (CLASSIFICATION)
+
+def tree_c_details(request):
+    """
+    Affiche la page de détails sur l'algorithme Arbre de Décision (Classification).
+    """
+    return render(request, 'tree_c_details.html')
+
+
+def tree_c_atelier(request):
+    """
+    Affiche la page d'atelier pratique pour l'Arbre de Décision (Classification).
+    """
+    return render(request, 'tree_c_atelier.html')
+
+
+def tree_c_tester(request):
+    """
+    Affiche le formulaire de test (meteo_form.html) pour la prédiction.
+    """
+    return render(request, 'meteo_form.html')
+
+
+def tree_c_prediction(request):
+    """
+    Gère la logique de prédiction pour l'Arbre de Décision (Classification).
+    """
+    if request.method == 'POST':
+        try:
+            # Récupération des données du formulaire
+            temperature = float(request.POST.get('Temperature_C'))
+            humidity = float(request.POST.get('Humidite_%'))
+            wind_speed = float(request.POST.get('Vent_kmh'))
+            pressure = float(request.POST.get('Pression_hPa'))
+        except (ValueError, TypeError):
+            return render(request, 'meteo_form.html', {'error': "Veuillez saisir des valeurs valides."})
+
+        # Chargement du modèle Arbre de Décision Classification
+        model_tree_c = load_models('model_tree_c.pkl')
+
+        if model_tree_c is None:
+            return render(request, 'meteo_form.html', {'error': "Erreur de chargement du modèle."})
+
+        # Préparation des données pour la prédiction
+        raw_data = np.array([[temperature, humidity, wind_speed, pressure]])
+        prediction = model_tree_c.predict(raw_data)
+        predicted_class = prediction[0]
+
+        # Interprétation
+        type_prediction = {0: 'Non Pluie', 1: 'Pluie'}
+        pred_texte = type_prediction.get(predicted_class, "Inconnu")
+
+        # Choix d'image en fonction du résultat et de la température
+        if pred_texte == "Pluie":
+            img_path = 'images/pluie.jpg'
+        else:
+            if temperature <= 5:
+                img_path = 'images/froid.jpeg'
+            elif temperature <= 15:
+                img_path = 'images/temps_cloudy.webp'
+            else:
+                img_path = 'images/soleil.png'
+
+        # Préparation du contexte pour le template
+        input_data = {
+            'Température (°C)': temperature,
+            'Humidité (%)': humidity,
+            'Vent (km/h)': wind_speed,
+            'Pression (hPa)': pressure
+        }
+        context = {
+            'prediction_texte': pred_texte,
+            'prediction_image': img_path,
+            'initial_data': input_data
+        }
+
+        return render(request, 'meteo_results.html', context)
+
+    # Si GET → afficher le formulaire
+    return render(request, 'meteo_form.html')
+
 # VUES POUR SVM (CLASSIFICATION)
 
 def svm_c_details(request):
@@ -445,8 +526,8 @@ def linreg_prediction(request):
             return render(request, 'erreur_modele.html')
 
         # Charger le modèle de Régression Linéaire
-        model = load_model('linear_regression_model.pkl')
-        if model is None:
+        model_lr = load_model('linear_regression_model.pkl')
+        if model_lr is None:
             print("Erreur : le fichier linear_regression_model.pkl est introuvable.")
             return render(request, 'erreur_modele.html')
 
@@ -464,7 +545,100 @@ def linreg_prediction(request):
         )
 
         # Prédiction
-        prediction = round(model.predict(entree)[0], 2)
+        prediction = round(model_lr.predict(entree)[0], 2)
+
+        # Interprétation simple
+        if prediction >= 80:
+            niveau = "Excellent ⭐⭐⭐"
+            img = "images/study.jpg"
+        elif prediction >= 60:
+            niveau = "Bon 👍"
+            img = "images/study.jpg"
+        elif prediction >= 40:
+            niveau = "Moyen 😕"
+            img = "images/student.jpeg"
+        else:
+            niveau = "Faible ⚠️"
+            img = "images/badstudent.jpg"
+
+        # Préparer le contexte pour le template
+        input_data_display = {
+            "hours_studied": hours_studied,
+            "previous_scores": previous_scores,
+            "extracurricular": "Yes" if extracurricular == 1 else "No",
+            "sleep_hours": sleep_hours,
+            "sample_papers": sample_papers
+        }
+
+        context = {
+            "prediction": prediction,
+            "resultat": niveau,
+            "img": img,
+            "input_data": input_data_display
+        }
+
+        return render(request, 'student_results.html', context)
+
+    # GET -> afficher le formulaire
+    return render(request, 'student_form.html')
+
+# --- VUES POUR SVM (RÉGRESSION) ---
+
+def svm_r_details(request):
+    """Affiche la page de détails sur l'algorithme SVM pour la régression."""
+    return render(request, 'svm_r_details.html')
+
+
+def svm_r_atelier(request):
+    """Affiche la page d'atelier pour SVM Régression."""
+    return render(request, 'svm_r_atelier.html')
+
+
+def svm_r_tester(request):
+    """Affiche le formulaire de test pour SVM Régression (student_form.html)."""
+    return render(request, 'student_form.html')
+
+
+def svm_r_prediction(request):
+    """Gère la prédiction avec le modèle SVM Régression."""
+
+    if request.method == 'POST':
+        try:
+            # Récupération des données depuis le formulaire
+            hours_studied = float(request.POST.get('hours_studied'))
+            previous_scores = float(request.POST.get('previous_scores'))
+            extracurricular = request.POST.get('extracurricular')
+            sleep_hours = float(request.POST.get('sleep_hours'))
+            sample_papers = float(request.POST.get('sample_papers'))
+
+            # Convertir Yes/No en 1/0
+            extracurricular = 1 if extracurricular == "Yes" else 0
+
+        except (ValueError, TypeError):
+            print("Erreur : données invalides.")
+            return render(request, 'erreur_modele.html')
+
+        # Charger le modèle SVM Régression
+        model_svm_r = load_model('svm_regression_model.pkl')  # <- nom du fichier modifié
+        if model_svm_r is None:
+            print("Erreur : le fichier svm_regression_model.pkl est introuvable.")
+            return render(request, 'erreur_modele.html')
+
+        # Préparer les données sous forme de DataFrame
+        features = [
+            "Hours Studied",
+            "Previous Scores",
+            "Extracurricular Activities",
+            "Sleep Hours",
+            "Sample Question Papers Practiced"
+        ]
+        entree = pd.DataFrame(
+            [[hours_studied, previous_scores, extracurricular, sleep_hours, sample_papers]],
+            columns=features
+        )
+
+        # Prédiction
+        prediction = round(model_svm_r.predict(entree)[0], 2)
 
         # Interprétation simple
         if prediction >= 80:
@@ -533,7 +707,7 @@ def rf_student_prediction(request):
             return render(request, 'erreur_modele.html')
 
         # Charger le modèle sauvegardé
-        model = load_model('rf_reg_model.pkl')
+        model_rl = load_model('rf_reg_model.pkl')
         
         # Construire la DataFrame pour la prédiction
         features = [
@@ -549,7 +723,7 @@ def rf_student_prediction(request):
         )
 
         # Prédiction
-        prediction = round(model.predict(entree)[0], 2)
+        prediction = round(model_rl.predict(entree)[0], 2)
 
         # Interprétation
         if prediction >= 80:
