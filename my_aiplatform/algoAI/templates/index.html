@@ -1,37 +1,35 @@
 {% load static %}
 {% include "includes/header.html" %}
 
-<div class="container mt-4">
-    <h2 class="mb-4 text-center">Les Algorithmes d'Intelligence Artificielle</h2>
-    
+<div class="container">
+    <h2 class="mb-4">Les Algorithmes</h2>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        <!-- Carte 1: Régression Logistique -->
+
+        <!-- Régression Logistique -->
         <div class="col">
             <div class="card h-100 shadow-sm">
                 <h5 class="card-header bg-primary text-white">Régression Logistique</h5>
+                <img src="{% static 'images/regression_logistique.jpg' %}" class="card-img-top" alt="Régression Logistique" style="height:200px; object-fit:cover;">
                 <div class="card-body d-flex flex-column">
-                    <img src="{% static 'images/regression_logistique.jpg' %}" class="card-img-top" alt="Régression Logistique" style="height: 200px; object-fit: cover;">
-                    <div class="card-text mt-3 flex-grow-1">
-                        <p class="mb-2"><strong>Type :</strong> Classification</p>
-                        <p>Algorithme d'apprentissage supervisé utilisé pour la classification binaire, particulièrement efficace pour les problèmes de prédiction de catégories.</p>
-                    </div>
-                    <div class="card-footer bg-transparent mt-auto">
-                        <a class="btn btn-info col-12 mb-2" href="{% url 'regLog_details' %}">
-                            <i class="bi bi-info-circle"></i> Plus de détails
-                        </a>
-                        <a class="btn btn-success col-12" href="{% url 'regLog_atelier' %}">
-                            <i class="bi bi-cloud-rain"></i> Prédiction Météo
-                        </a>
+                    <p>Algorithme d'apprentissage supervisé utilisé pour la classification binaire, particulièrement efficace pour les problèmes de prédiction de catégories.</p>
+                    <div class="mt-auto">
+                        <a class="btn btn-info w-100 mb-2" href="{% url 'regLog_details' %}"><i class="bi bi-info-circle"></i> Plus de détails</a>
+                        <a class="btn btn-success w-100" href="{% url 'regLog_atelier' %}"><i class="bi bi-cloud-rain"></i> Prédiction Météo</a>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <!-- Carte 2: Régression Linéaire -->
+
+        <!-- Régression Linéaire -->
         <div class="col">
             <div class="card h-100 shadow-sm">
                 <h5 class="card-header bg-warning text-white">Régression Linéaire</h5>
+                <img src="{% static 'images/linear_regression.jpg' %}" class="card-img-top" alt="Régression Linéaire" style="height:200px; object-fit:cover;">
                 <div class="card-body d-flex flex-column">
+                    <p>Algorithme d'apprentissage supervisé qui permet de prédire des valeurs numériques continues à partir de données.</p>
+                    <div class="mt-auto">
+                        <a class="btn btn-info w-100 mb-2" href="{% url 'linreg_details' %}"><i class="bi bi-info-circle"></i> Plus de détails</a>
+                        <a class="btn btn-success w-100" href="{% url 'linreg_atelier' %}"><i class="bi bi-bar-chart-line"></i> Performance Étudiante</a>
                     <img src="{% static 'images/linear_regression.jpg' %}" class="card-img-top" alt="Régression Linéaire" style="height: 200px; object-fit: cover;">
                     <div class="card-text mt-3 flex-grow-1">
                         <p class="mb-2"><strong>Type :</strong> Régression</p>
@@ -50,162 +48,97 @@
             </div>
         </div>
 
-        <!-- Carte 3: Arbre de Décision -->
+        <!-- Arbre de Décision (Régression) -->"
         <div class="col">
             <div class="card h-100 shadow-sm">
                 <h5 class="card-header bg-success text-white">Arbre de Décision (Régression)</h5>
+                <img src="{% static 'images/tree_r.png' %}" class="card-img-top" alt="Arbre de Décision" style="height:200px; object-fit:cover;">
                 <div class="card-body d-flex flex-column">
-                    <img src="{% static 'images/tree_r.png' %}" class="card-img-top" alt="Arbre de Décision" style="height: 200px; object-fit: cover;">
-                    <div class="card-text mt-3 flex-grow-1">
-                        <p class="mb-2"><strong>Type :</strong> Régression</p>
-                        <p>Algorithme qui segmente l'espace des features en régions et prédit une valeur constante dans chaque région. Idéal pour les problèmes de prédiction numérique.</p>
-                    </div>
-                    <div class="card-footer bg-transparent mt-auto">
-                        <a class="btn btn-info col-12 mb-2" href="{% url 'tree_r_details' %}">
-                            <i class="bi bi-info-circle"></i> Plus de détails
-                        </a>
-                        <a class="btn btn-success col-12" href="{% url 'tree_r_atelier' %}">
-                            <i class="bi bi-mortarboard"></i> Performance Étudiante
-                        </a>
+                    <p>Prédiction de la performance des étudiants en utilisant le dataset Student Performance. Segmente l'espace des features en régions.</p>
+                    <div class="mt-auto">
+                        <a class="btn btn-info w-100 mb-2" href="{% url 'tree_r_details' %}"><i class="bi bi-info-circle"></i> Plus de détails</a>
+                        <a class="btn btn-success w-100" href="{% url 'tree_r_atelier' %}"><i class="bi bi-mortarboard"></i> Performance Étudiante</a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Carte 4: SVM Classification -->
+        <!-- SVM (Classification) -->
         <div class="col">
             <div class="card h-100 shadow-sm">
                 <h5 class="card-header bg-warning text-dark">SVM (Classification)</h5>
+                <img src="{% static 'images/svm_c.png' %}" class="card-img-top" alt="SVM Classification" style="height:200px; object-fit:cover;">
                 <div class="card-body d-flex flex-column">
-                    <img src="{% static 'images/svm_c.png' %}" class="card-img-top" alt="SVM Classification" style="height: 200px; object-fit: cover;">
-                    <div class="card-text mt-3 flex-grow-1">
-                        <p class="mb-2"><strong>Type :</strong> Classification</p>
-                        <p>Support Vector Machines trouve l'hyperplan optimal qui sépare les classes avec la marge maximale. Excellent pour les problèmes de classification complexes.</p>
-                    </div>
-                    <div class="card-footer bg-transparent mt-auto">
-                        <a class="btn btn-info col-12 mb-2" href="{% url 'svm_c_details' %}">
-                            <i class="bi bi-info-circle"></i> Plus de détails
-                        </a>
-                        <a class="btn btn-success col-12" href="{% url 'svm_c_atelier' %}">
-                            <i class="bi bi-cloud-sun"></i> Prédiction Météo
-                        </a>
+                    <p>Support Vector Machines trouve l'hyperplan optimal qui sépare les classes avec la marge maximale.</p>
+                    <div class="mt-auto">
+                        <a class="btn btn-info w-100 mb-2" href="{% url 'svm_c_details' %}"><i class="bi bi-info-circle"></i> Plus de détails</a>
+                        <a class="btn btn-success w-100" href="{% url 'svm_c_atelier' %}"><i class="bi bi-cloud-sun"></i> Prédiction Météo</a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Carte 5: XGBoost Regression -->
+        <!-- XGBoost (Régression) -->
         <div class="col">
             <div class="card h-100 shadow-sm">
-                <h5 class="card-header bg-danger text-white">XGBoost (Régression)</h5>
+                <h5 class="card-header bg-danger text-white">XGBoost (Regression)</h5>
+                <img src="{% static 'images/xgboost_r.png' %}" class="card-img-top" alt="XGBoost Regression" style="height:200px; object-fit:contain; background-color:#f8f9fa;">
                 <div class="card-body d-flex flex-column">
-                    <img src="{% static 'images/xgboost_r.png' %}" class="card-img-top" alt="XGBoost Regression" style="height: 200px; object-fit: contain; background-color: #f8f9fa;">
-                    <div class="card-text mt-3 flex-grow-1">
-                        <p class="mb-2"><strong>Type :</strong> Régression</p>
-                        <p>Algorithme de boosting avancé qui combine plusieurs modèles faibles pour créer un prédicteur robuste. Réputé pour sa performance et sa vitesse.</p>
-                    </div>
-                    <div class="card-footer bg-transparent mt-auto">
-                        <a class="btn btn-info col-12 mb-2" href="{% url 'xgboost_r_details' %}">
-                            <i class="bi bi-info-circle"></i> Plus de détails
-                        </a>
-                        <a class="btn btn-success col-12" href="{% url 'xgboost_r_atelier' %}">
-                            <i class="bi bi-mortarboard"></i> Performance Étudiante
-                        </a>
+                    <p>Algorithme de boosting avancé qui combine plusieurs modèles faibles pour créer un prédicteur robuste.</p>
+                    <div class="mt-auto">
+                        <a class="btn btn-info w-100 mb-2" href="{% url 'xgboost_r_details' %}"><i class="bi bi-info-circle"></i> Plus de détails</a>
+                        <a class="btn btn-success w-100" href="{% url 'xgboost_r_atelier' %}"><i class="bi bi-graph-up-arrow"></i> Tester le Modèle</a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Carte 6: Random Forest Classification -->
+        <!-- Random Forest (Classification) -->
         <div class="col">
             <div class="card h-100 shadow-sm">
                 <h5 class="card-header bg-info text-white">Random Forest (Classification)</h5>
+                <img src="{% static 'images/random_forest.jpg' %}" class="card-img-top" alt="Random Forest Classification" style="height:200px; object-fit:cover;">
                 <div class="card-body d-flex flex-column">
-                    <img src="{% static 'images/random_forest.jpg' %}" class="card-img-top" alt="Random Forest Classification" style="height: 200px; object-fit: cover;">
-                    <div class="card-text mt-3 flex-grow-1">
-                        <p class="mb-2"><strong>Type :</strong> Classification</p>
-                        <p>Algorithme d'ensemble qui combine plusieurs arbres de décision pour améliorer la précision et réduire le surapprentissage.</p>
+                    <p>Algorithme d'ensemble qui combine plusieurs arbres de décision pour améliorer la précision et réduire le surapprentissage.</p>
+                    <div class="mt-auto"></div>
+                        <a class="btn btn-info w-100 mb-2" href="{% url 'ran_forest_details' %}"><i class="bi bi-info-circle"></i> Plus de détails</a>
+                        <a class="btn btn-success w-100" href="{% url 'ran_forest_atelier' %}"><i class="bi bi-shield-check"></i> Tester le Modèle</a>
                     </div>
-                    <div class="card-footer bg-transparent mt-auto">
-                        <a class="btn btn-info col-12 mb-2" href="#">
-                            <i class="bi bi-info-circle"></i> Plus de détails
-                        </a>
-                        <a class="btn btn-success col-12" href="#">
-                            <i class="bi bi-cloud-sun"></i> Prédiction Météo
-                        </a>
+                </div>
+        </div>
+
+        <!-- Random Forest (Régression) -->
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <h5 class="card-header bg-secondary text-white">Random Forest (Regression)</h5>
+                <img src="{% static 'images/random_forest_regression.jpeg' %}" class="card-img-top" alt="Random Forest Regression" style="height:200px; object-fit:cover;">
+                <div class="card-body d-flex flex-column">
+                    <p>Version de Random Forest adaptée aux problèmes de régression, utilisant la moyenne des prédictions de multiples arbres.</p>
+                    <div class="mt-auto">
+                        <a class="btn btn-info w-100 mb-2" href="{% url 'ran_forest_reg_details'%}"><i class="bi bi-info-circle"></i> Plus de détails</a>
+                        <a class="btn btn-success w-100" href="{% url 'ran_forest_reg_atelier' %}"><i class="bi bi-calculator"></i> Tester le Modèle</a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Carte 7: Random Forest Regression -->
+        <!-- XGBoost (Classification) -->
         <div class="col">
             <div class="card h-100 shadow-sm">
-                <h5 class="card-header bg-secondary text-white">Random Forest (Régression)</h5>
+                <h5 class="card-header bg-dark text-white">XGBoost (Classification)</h5>
+                <img src="{% static 'images/XGBoost.jpg' %}" class="card-img-top" alt="XGBoost Classification" style="height:200px; object-fit:cover;">
                 <div class="card-body d-flex flex-column">
-                    <img src="{% static 'images/random_forest_regression.jpeg' %}" class="card-img-top" alt="Random Forest Regression" style="height: 200px; object-fit: cover;">
-                    <div class="card-text mt-3 flex-grow-1">
-                        <p class="mb-2"><strong>Type :</strong> Régression</p>
-                        <p>Version de Random Forest adaptée aux problèmes de régression, utilisant la moyenne des prédictions de multiples arbres de décision.</p>
-                    </div>
-                    <div class="card-footer bg-transparent mt-auto">
-                        <a class="btn btn-info col-12 mb-2" href="#">
-                            <i class="bi bi-info-circle"></i> Plus de détails
-                        </a>
-                        <a class="btn btn-success col-12" href="#">
-                            <i class="bi bi-mortarboard"></i> Performance Étudiante
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-
-    <!-- Carte 8: SVM Regression -->
-        <div class="col">
-            <div class="card h-100 shadow-sm">
-                <h5 class="card-header" style="background-color: #001552; color: white;">SVM (Regression)</h5>
-                <div class="card-body d-flex flex-column">
-                    <img src="{% static 'images/svm_r.png' %}" class="card-img-top" alt="SVM Regression" style="height: 200px; object-fit: cover;">
-                    <div class="card-text mt-3 flex-grow-1">
-                        <p class="mb-2"><strong>Type :</strong> Regression</p>
-                        <p>Support Vector Machines trouve la fonction optimale qui prédit les valeurs continues avec la marge maximale. Excellent pour les problèmes de régression complexes.</p>
-                    </div>
-                    <div class="card-footer bg-transparent mt-auto">
-                        <a class="btn btn-info col-12 mb-2" href="{% url 'svm_r_details' %}">
-                            <i class="bi bi-info-circle"></i> Plus de détails
-                        </a>
-                        <a class="btn btn-success col-12" href="{% url 'svm_r_atelier' %}">
-                            <i class="bi bi-mortarboard"></i> Performance Étudiante
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    <!-- Carte 9: Arbre de Décision (Classification) -->
-        <div class="col">
-            <div class="card h-100 shadow-sm">
-                <!-- Header vert foncé pour classification -->
-                <h5 class="card-header bg-primary text-white">Arbre de Décision (Classification)</h5>
-                <div class="card-body d-flex flex-column">
-                    <img src="{% static 'images/tree_c.png' %}" class="card-img-top" alt="Arbre de Décision Classification" style="height: 200px; object-fit: cover;">
-                    <div class="card-text mt-3 flex-grow-1">
-                        <p class="mb-2"><strong>Type :</strong> Classification</p>
-                        <p>Algorithme qui segmente l'espace des features en régions et prédit une classe majoritaire dans chaque région. Idéal pour les problèmes de classification binaire ou multi-classe.</p>
-                    </div>
-                    <div class="card-footer bg-transparent mt-auto">
-                        <a class="btn btn-info col-12 mb-2" href="{% url 'tree_c_details' %}">
-                            <i class="bi bi-info-circle"></i> Plus de détails
-                        </a>
-                        <a class="btn btn-success col-12" href="{% url 'tree_c_atelier' %}">
-                            <i class="bi bi-cloud-sun"></i> Prédiction Météo
-                        </a>
+                    <p>Algorithme de classification qui construit plusieurs arbres de décision séquentiellement pour améliorer la précision.</p>
+                    <div class="mt-auto">
+                        <a class="btn btn-info w-100 mb-2" href="{% url 'XGBoost_details' %}"><i class="bi bi-info-circle"></i> Plus de détails</a>
+                        <a class="btn btn-success w-100" href="{% url 'XGBoost_atelier' %}"><i class="bi bi-graph-up-arrow"></i> Exemple de Classification</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
 
 
     <!-- Section d'information -->
@@ -214,7 +147,7 @@
             <div class="alert alert-info">
                 <h4 class="alert-heading">📊 Explorez nos Algorithmes</h4>
                 <p class="mb-0">
-                    Cette plateforme vous permet de découvrir et tester différents algorithmes d'apprentissage automatique. 
+                    Cette plateforme vous permet de découvrir et tester différents algorithmes d'apprentissage automatique.
                     Chaque algorithme est accompagné d'explications détaillées et d'ateliers pratiques pour une meilleure compréhension.
                 </p>
             </div>
