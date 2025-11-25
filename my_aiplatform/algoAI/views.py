@@ -145,6 +145,64 @@ def tree_r_prediction(request):
     
     return render(request, 'tree_r_form.html')
 
+# --- ARBRE DE DÉCISION (CLASSIFICATION) ---
+
+def tree_c_details(request):
+    return render(request, 'tree_c_details.html')
+
+def tree_c_atelier(request):
+    return render(request, 'tree_c_atelier.html')
+
+def tree_c_tester(request):
+    return render(request, 'meteo_form.html')
+
+def tree_c_prediction(request):
+    if request.method == 'POST':
+        try:
+            temperature = float(request.POST.get('Temperature_C'))
+            humidity = float(request.POST.get('Humidite_%'))
+            wind_speed = float(request.POST.get('Vent_kmh'))
+            pressure = float(request.POST.get('Pression_hPa'))
+        except (ValueError, TypeError):
+            return render(request, 'meteo_form.html', {'error': "Veuillez saisir des valeurs valides."})
+
+        model_tree_c = load_models('model_tree_c.pkl')
+        if model_tree_c is None:
+            return render(request, 'meteo_form.html', {'error': "Erreur de chargement du modèle."})
+
+        raw_data = np.array([[temperature, humidity, wind_speed, pressure]])
+        prediction = model_tree_c.predict(raw_data)
+        predicted_class = prediction[0]
+
+        type_prediction = {0: 'Non Pluie', 1: 'Pluie'}
+        pred_texte = type_prediction.get(predicted_class, "Inconnu")
+
+        if pred_texte == "Pluie":
+            img_path = 'images/pluie.jpg'
+        else:
+            if temperature <= 5:
+                img_path = 'images/froid.jpeg'
+            elif temperature <= 15:
+                img_path = 'images/temps_cloudy.webp'
+            else:
+                img_path = 'images/soleil.png'
+
+        input_data = {
+            'Température (°C)': temperature,
+            'Humidité (%)': humidity,
+            'Vent (km/h)': wind_speed,
+            'Pression (hPa)': pressure
+        }
+        context = {
+            'prediction_texte': pred_texte,
+            'prediction_image': img_path,
+            'initial_data': input_data
+        }
+
+        return render(request, 'meteo_results.html', context)
+
+    return render(request, 'meteo_form.html')
+
 # --- SVM (CLASSIFICATION) ---
 
 def svm_c_details(request):
@@ -204,6 +262,83 @@ def svm_c_prediction(request):
     
     return render(request, 'svm_c_form.html')
 
+# --- SVM (RÉGRESSION) ---
+
+def svm_r_details(request):
+    return render(request, 'svm_r_details.html')
+
+def svm_r_atelier(request):
+    return render(request, 'svm_r_atelier.html')
+
+def svm_r_tester(request):
+    return render(request, 'student_form.html')
+
+def svm_r_prediction(request):
+    if request.method == 'POST':
+        try:
+            hours_studied = float(request.POST.get('hours_studied'))
+            previous_scores = float(request.POST.get('previous_scores'))
+            extracurricular = request.POST.get('extracurricular')
+            sleep_hours = float(request.POST.get('sleep_hours'))
+            sample_papers = float(request.POST.get('sample_papers'))
+
+            extracurricular = 1 if extracurricular == "Yes" else 0
+
+        except (ValueError, TypeError):
+            print("Erreur : données invalides.")
+            return render(request, 'erreur_modele.html')
+
+        model_svm_r = load_model('svm_regression_model.pkl')
+        if model_svm_r is None:
+            print("Erreur : le fichier svm_regression_model.pkl est introuvable.")
+            return render(request, 'erreur_modele.html')
+
+        features = [
+            "Hours Studied",
+            "Previous Scores",
+            "Extracurricular Activities",
+            "Sleep Hours",
+            "Sample Question Papers Practiced"
+        ]
+        entree = pd.DataFrame(
+            [[hours_studied, previous_scores, extracurricular, sleep_hours, sample_papers]],
+            columns=features
+        )
+
+        prediction = round(model_svm_r.predict(entree)[0], 2)
+
+        if prediction >= 80:
+            niveau = "Excellent ⭐⭐⭐"
+            img = "images/study.jpg"
+        elif prediction >= 60:
+            niveau = "Bon 👍"
+            img = "images/study.jpg"
+        elif prediction >= 40:
+            niveau = "Moyen 😕"
+            img = "images/student.jpeg"
+        else:
+            niveau = "Faible ⚠️"
+            img = "images/badstudent.jpg"
+
+        input_data_display = {
+            "hours_studied": hours_studied,
+            "previous_scores": previous_scores,
+            "extracurricular": "Yes" if extracurricular == 1 else "No",
+            "sleep_hours": sleep_hours,
+            "sample_papers": sample_papers
+        }
+
+        context = {
+            "prediction": prediction,
+            "resultat": niveau,
+            "img": img,
+            "input_data": input_data_display
+        }
+
+        return render(request, 'student_results.html', context)
+
+    return render(request, 'student_form.html')
+
 # --- XGBOOST (RÉGRESSION) ---
 
 def xgboost_r_details(request):
@@ -245,6 +380,58 @@ def xgboost_r_prediction(request):
         }
         return render(request, 'xgboost_r_results.html', context)
     return render(request, 'xgboost_r_form.html')
+
+# --- XGBOOST (CLASSIFICATION) ---
+
+def XGBoost_details(request):
+    return render(request, 'XGBoost_details.html')
+
+def XGBoost_atelier(request):
+    return render(request, 'XGBoost_atelier.html')
+
+def XGboost_tester(request):
+    return render(request, 'xgrain_form.html')
+
+def XGboost_prediction(request):
+    if request.method == 'POST':
+        try:
+            temperature = float(request.POST.get('temperature'))
+            humidite = float(request.POST.get('humidite'))
+            vent = float(request.POST.get('vent'))
+            pression = float(request.POST.get('pression'))
+        except (ValueError, TypeError):
+            print("Erreur : données invalides.")
+            return render(request, 'erreur_modele.html')
+
+        model = load_models('XGboost_class.pkl')
+        if model is None:
+            print("Erreur : Impossible de charger XGboost_class.pkl")
+            return render(request, 'erreur_modele.html')
+
+        features = ["Temperature_C", "Humidite_%", "Vent_kmh", "Pression_hPa"]
+        entree = pd.DataFrame(
+            [[temperature, humidite, vent, pression]],
+            columns=features
+        )
+
+        prediction = model.predict(entree)[0]
+        resultat = "Pluie 🌧️" if prediction == 1 else "Pas de pluie ☀️"
+        image = "images/rain.png" if prediction == 1 else "images/sun.png"
+
+        context = {
+            "resultat": resultat,
+            "img": image,
+            "input_data": {
+                "temperature": temperature,
+                "humidite": humidite,
+                "vent": vent,
+                "pression": pression
+            }
+        }
+
+        return render(request, 'xgrain_results.html', context)
+
+    return render(request, 'xgrain_form.html')
 
 # --- RANDOM FOREST (CLASSIFICATION) ---
 
@@ -373,58 +560,6 @@ def rf_student_prediction(request):
         return render(request, 'student_results.html', context)
 
     return render(request, 'student_form.html')
-
-# --- XGBOOST (CLASSIFICATION) ---
-
-def XGBoost_details(request):
-    return render(request, 'XGBoost_details.html')
-
-def XGBoost_atelier(request):
-    return render(request, 'XGBoost_atelier.html')
-
-def XGboost_tester(request):
-    return render(request, 'xgrain_form.html')
-
-def XGboost_prediction(request):
-    if request.method == 'POST':
-        try:
-            temperature = float(request.POST.get('temperature'))
-            humidite = float(request.POST.get('humidite'))
-            vent = float(request.POST.get('vent'))
-            pression = float(request.POST.get('pression'))
-        except (ValueError, TypeError):
-            print("Erreur : données invalides.")
-            return render(request, 'erreur_modele.html')
-
-        model = load_models('XGboost_class.pkl')
-        if model is None:
-            print("Erreur : Impossible de charger XGboost_class.pkl")
-            return render(request, 'erreur_modele.html')
-
-        features = ["Temperature_C", "Humidite_%", "Vent_kmh", "Pression_hPa"]
-        entree = pd.DataFrame(
-            [[temperature, humidite, vent, pression]],
-            columns=features
-        )
-
-        prediction = model.predict(entree)[0]
-        resultat = "Pluie 🌧️" if prediction == 1 else "Pas de pluie ☀️"
-        image = "images/rain.png" if prediction == 1 else "images/sun.png"
-
-        context = {
-            "resultat": resultat,
-            "img": image,
-            "input_data": {
-                "temperature": temperature,
-                "humidite": humidite,
-                "vent": vent,
-                "pression": pression
-            }
-        }
-
-        return render(request, 'xgrain_results.html', context)
-
-    return render(request, 'xgrain_form.html')
 
 # --- RÉGRESSION LINÉAIRE ---
 

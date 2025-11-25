@@ -1,0 +1,31 @@
+{% include "includes/header.html" %}
+{% load static %}
+
+<div class="container">
+    
+    <h2 class="mb-4">Atelier Pratique - Arbre de Décision - Classification (Météo)</h2>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Dataset Météo</h3>
+            <p>Le dataset météo contient des enregistrements journaliers de conditions météorologiques, y compris la température, l'humidité, le vent et la pression. L'objectif est de **prédire une classe** (par exemple Ensoleillé, Pluvieux, Nuageux) en fonction de ces caractéristiques.</p>
+            <p>Les Arbres de Décision pour la classification segmentent l'espace des features en régions et assignent à chaque région la classe majoritaire. L'arbre apprend des règles de décision hiérarchiques pour séparer les différentes classes.</p>
+            <p>Dans cet atelier, nous allons explorer comment entraîner un modèle d'Arbre de Décision sur ce dataset, évaluer ses performances avec des métriques de classification comme **Accuracy, F1-score, ou Matrice de Confusion**, et visualiser les résultats.</p>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <img src="{% static 'images/tstudent.png' %}" class="img-fluid rounded shadow-sm" alt="Decision Tree Classification" style="width:47%; object-fit: contain;">
+            <img src="{% static 'images/perfor.jpg' %}" class="img-fluid rounded shadow-sm" alt="Performance" style="width:47%; object-fit: contain;">
+        </div>
+    </div>
+    
+    <!-- Pointez vers l'URL de test de classification -->
+    <a class="btn btn-success col-12 mt-2 mb-2" href="{% url 'tree_c_tester' %}">Tester le modèle</a>
+    <div class="card">
+        <iframe src="{% static 'pdfs/demonstration_tree_classification.pdf' %}" width="100%" height="600px" style="border:1px solid #ccc;">
+            Ce navigateur ne supporte pas les PDFs. Veuillez le télécharger :
+            <a href="{% static 'pdfs/demonstration_tree_classification.pdf' %}">Télécharger PDF</a>
+        </iframe>
+    </div>
+</div>
+
+{% include "includes/footer.html" %}

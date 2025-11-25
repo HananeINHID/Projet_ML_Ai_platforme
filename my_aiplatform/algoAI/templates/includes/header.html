@@ -88,7 +88,10 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'regLog_details' %}">
-                                <i class="bi bi-graph-up me-2"></i>Régression Logistique
+                                <i class="bi bi-list-check me-2"></i>Régression Logistique
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'linreg_details' %}">
+                                <i class="bi bi-graph-up-arrow me-2"></i>Régression Linéaire
                             </a></li>
                             <li><a class="dropdown-item" href="{% url 'tree_r_details' %}">
                                 <i class="bi bi-diagram-2 me-2"></i>Arbre de Décision (Régression)
@@ -98,6 +101,12 @@
                             </a></li>
                             <li><a class="dropdown-item" href="{% url 'xgboost_r_details' %}">
                                 <i class="bi bi-lightning-charge me-2"></i>XGBoost (Régression)
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'svm_r_details' %}">
+                                <i class="bi bi-activity me-2"></i>SVM (Régression)
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'tree_c_details' %}">
+                                <i class="bi bi-diagram-3 me-2"></i>Arbre de Décision (Classification)
                             </a></li>
                         </ul>
                     </li>
@@ -109,7 +118,10 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'regLog_atelier' %}">
-                                <i class="bi bi-cloud-rain me-2"></i> Régression Logistique - Météo
+                                <i class="bi bi-list-check me-2"></i> Régression Logistique - Météo
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'linreg_atelier' %}">
+                                <i class="bi bi-graph-up-arrow me-2"></i>Régression Linéaire - Performance Étudiante
                             </a></li>
                             <li><a class="dropdown-item" href="{% url 'tree_r_atelier' %}">
                                 <i class="bi bi-mortarboard me-2"></i>Arbre de décision (régression) - Performance Étudiante
@@ -119,6 +131,12 @@
                             </a></li>
                             <li><a class="dropdown-item" href="{% url 'xgboost_r_atelier' %}">
                                 <i class="bi bi-graph-up-arrow me-2"></i>XGBoost (régression) - Performance Étudiante
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'svm_r_atelier' %}">
+                                <i class="bi bi-activity me-2"></i>SVM (Régression) - Météo
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'tree_c_atelier' %}">
+                                <i class="bi bi-diagram-3 me-2"></i>Arbre de Décision (Classification) - Performance Étudiante
                             </a></li>
                         </ul>
                     </li>
@@ -130,7 +148,10 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'regLog_tester' %}">
-                                <i class="bi bi-cloud-rain me-2"></i>Régression Logistique
+                                <i class="bi bi-list-check me-2"></i>Régression Logistique
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'linreg_tester' %}">
+                                <i class="bi bi-graph-up-arrow me-2"></i>Régression Linéaire
                             </a></li>
                             <li><a class="dropdown-item" href="{% url 'tree_r_tester' %}">
                                 <i class="bi bi-mortarboard me-2"></i>Arbre de Décision (Régression)
@@ -140,6 +161,12 @@
                             </a></li>
                             <li><a class="dropdown-item" href="{% url 'xgboost_r_tester' %}">
                                 <i class="bi bi-lightning-charge me-2"></i>XGBoost (Régression)
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'svm_r_tester' %}">
+                                <i class="bi bi-activity me-2"></i>SVM (Régression)
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'tree_c_tester' %}">
+                                <i class="bi bi-diagram-3 me-2"></i>Arbre de Décision (Classification)
                             </a></li>
                         </ul>
                     </li>
