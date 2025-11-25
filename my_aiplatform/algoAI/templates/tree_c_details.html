@@ -1,0 +1,36 @@
+{% include "includes/header.html" %} 
+{% load static %}
+
+<div class="container">
+    <h2 class="mb-4">Algorithme d'Arbre de Décision (Classification)</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Détails :</h3>
+            <p>Les Arbres de Décision pour la classification sont des modèles supervisés qui séparent les données en régions basées sur des règles de décision.</p>
+            <p>À chaque nœud, l'arbre choisit la variable et le seuil qui maximise la séparation des classes (ex. en utilisant l'entropie ou l'indice Gini).</p>
+            <p>Les feuilles de l'arbre correspondent à la **classe prédite** pour les observations qui y arrivent.</p>
+            <p>Ils peuvent gérer des problèmes binaires ou multi-classes et sont facilement interprétables grâce à leur structure hiérarchique.</p>
+        </div>
+
+        <div class="col-md-6">
+            <h3>Caractéristiques :</h3>
+            <ul>
+                <li>Prédiction de classes (binaire ou multi-classe).</li>
+                <li>Modèle interprétable et visualisable.</li>
+                <li>Capacité à capturer des relations non linéaires entre variables.</li>
+                <li>Peut être sensible au surapprentissage si non limité (max depth, min samples, etc.).</li>
+                <li>Fonctionne avec des données catégorielles et numériques.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div>
+        <h3 class="mt-4">Visualisation de l'Arbre de Décision</h3>
+        <iframe src="{% static 'pdfs/tree_classification.pdf' %}" width="100%" height="600px" style="border:1px solid #ccc;">
+            <a href="{% static 'pdfs/tree_classification.pdf' %}">Télécharger PDF</a>
+        </iframe>
+    </div>
+</div>
+
+{% include "includes/footer.html" %}

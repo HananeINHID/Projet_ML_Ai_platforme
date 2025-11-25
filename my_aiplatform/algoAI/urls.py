@@ -22,12 +22,26 @@ urlpatterns = [
     path('tree_r_atelier/', views.tree_r_atelier, name='tree_r_atelier'),
     path('tree_r_tester/', views.tree_r_tester, name='tree_r_tester'),
     path('tree_r_prediction/', views.tree_r_prediction, name='tree_r_prediction'),
+
+    # --- Arbre de Décision (Classification) ---
+    path('tree_c_details/', views.tree_c_details, name='tree_c_details'),
+    path('tree_c_atelier/', views.tree_c_atelier, name='tree_c_atelier'),
+    path('tree_c_tester/', views.tree_c_tester, name='tree_c_tester'),
+    path('tree_c_prediction/', views.tree_c_prediction, name='tree_c_prediction'),
+
     
     # SVM (Classification)
     path('svm_c_details/', views.svm_c_details, name='svm_c_details'),
     path('svm_c_atelier/', views.svm_c_atelier, name='svm_c_atelier'),
     path('svm_c_tester/', views.svm_c_tester, name='svm_c_tester'),
     path('svm_c_prediction/', views.svm_c_prediction, name='svm_c_prediction'),
+
+    # SVM (Régression)
+    path('svm_r_details/', views.svm_r_details, name='svm_r_details'),
+    path('svm_r_atelier/', views.svm_r_atelier, name='svm_r_atelier'),
+    path('svm_r_tester/', views.svm_r_tester, name='svm_r_tester'),
+    path('svm_r_prediction/', views.svm_r_prediction, name='svm_r_prediction'),
+
     
     # XGBoost (Regression)
     path('xgboost_r_details/', views.xgboost_r_details, name='xgboost_r_details'),
