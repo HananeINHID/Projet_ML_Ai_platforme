@@ -7,33 +7,44 @@
 
         <!-- Régression Logistique -->
         <div class="col">
-            <div class="card h-100">
-                <h5 class="card-header">Algorithme Régression Logistique</h5>
+            <div class="card h-100 shadow-sm">
+                <h5 class="card-header bg-primary text-white">Régression Logistique</h5>
+                <img src="{% static 'images/regression_logistique.jpg' %}" class="card-img-top" alt="Régression Logistique" style="height:200px; object-fit:cover;">
                 <div class="card-body d-flex flex-column">
-                    <img src="{% static 'images/regression_logistique.jpg' %}" class="card-img-top" alt="Régression Logistique" style="height:300px; object-fit:cover;">
-                    <div class="card-text mt-3 flex-grow-1">
-                        <p>Algorithme d'apprentissage supervisé utilisé pour la classification binaire.</p>
-                    </div>
-                    <div class="card-footer mt-auto">
-                        <a class="btn btn-info col-12 mt-2" href="{% url 'regLog_details' %}">Plus de détails</a>
-                        <a class="btn btn-success col-12 mt-2" href="{% url 'regLog_atelier' %}">Exemple de Classification</a>
+                    <p>Algorithme d'apprentissage supervisé utilisé pour la classification binaire, particulièrement efficace pour les problèmes de prédiction de catégories.</p>
+                    <div class="mt-auto">
+                        <a class="btn btn-info w-100 mb-2" href="{% url 'regLog_details' %}"><i class="bi bi-info-circle"></i> Plus de détails</a>
+                        <a class="btn btn-success w-100" href="{% url 'regLog_atelier' %}"><i class="bi bi-cloud-rain"></i> Prédiction Météo</a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Arbre de Décision (R) -->
+        <!-- Régression Linéaire -->
         <div class="col">
-            <div class="card h-100">
-                <h5 class="card-header">Algorithme Arbre de Décision (R)</h5>
+            <div class="card h-100 shadow-sm">
+                <h5 class="card-header bg-warning text-white">Régression Linéaire</h5>
+                <img src="{% static 'images/linear_regression.jpg' %}" class="card-img-top" alt="Régression Linéaire" style="height:200px; object-fit:cover;">
                 <div class="card-body d-flex flex-column">
-                    <img src="{% static 'images/tree_r.png' %}" class="card-img-top" alt="Arbre de Décision" style="height:300px; object-fit:cover;">
-                    <div class="card-text mt-3 flex-grow-1">
-                        <p>Prédiction de la performance des étudiants (Régression) en utilisant le dataset Student Performance.</p>
+                    <p>Algorithme d'apprentissage supervisé qui permet de prédire des valeurs numériques continues à partir de données.</p>
+                    <div class="mt-auto">
+                        <a class="btn btn-info w-100 mb-2" href="{% url 'linreg_details' %}"><i class="bi bi-info-circle"></i> Plus de détails</a>
+                        <a class="btn btn-success w-100" href="{% url 'linreg_atelier' %}"><i class="bi bi-bar-chart-line"></i> Performance Étudiante</a>
                     </div>
-                    <div class="card-footer mt-auto">
-                        <a class="btn btn-info col-12 mt-2" href="{% url 'tree_r_details' %}">Plus de détails</a>
-                        <a class="btn btn-success col-12 mt-2" href="{% url 'tree_r_atelier' %}">Tester le Modèle</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Arbre de Décision (Régression) -->
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <h5 class="card-header bg-success text-white">Arbre de Décision (Régression)</h5>
+                <img src="{% static 'images/tree_r.png' %}" class="card-img-top" alt="Arbre de Décision" style="height:200px; object-fit:cover;">
+                <div class="card-body d-flex flex-column">
+                    <p>Prédiction de la performance des étudiants en utilisant le dataset Student Performance. Segmente l'espace des features en régions.</p>
+                    <div class="mt-auto">
+                        <a class="btn btn-info w-100 mb-2" href="{% url 'tree_r_details' %}"><i class="bi bi-info-circle"></i> Plus de détails</a>
+                        <a class="btn btn-success w-100" href="{% url 'tree_r_atelier' %}"><i class="bi bi-mortarboard"></i> Performance Étudiante</a>
                     </div>
                 </div>
             </div>
@@ -41,33 +52,29 @@
 
         <!-- SVM (Classification) -->
         <div class="col">
-            <div class="card h-100">
-                <h5 class="card-header">Algorithme Support Vector Machines (C)</h5>
+            <div class="card h-100 shadow-sm">
+                <h5 class="card-header bg-warning text-dark">SVM (Classification)</h5>
+                <img src="{% static 'images/svm_c.png' %}" class="card-img-top" alt="SVM Classification" style="height:200px; object-fit:cover;">
                 <div class="card-body d-flex flex-column">
-                    <img src="{% static 'images/svm_c.png' %}" class="card-img-top" alt="SVM Classification" style="height:300px; object-fit:cover;">
-                    <div class="card-text mt-3 flex-grow-1">
-                        <p>Prédiction de la pluie (Classification) en utilisant le dataset Météo.</p>
-                    </div>
-                    <div class="card-footer mt-auto">
-                        <a class="btn btn-info col-12 mt-2" href="{% url 'svm_c_details' %}">Plus de détails</a>
-                        <a class="btn btn-success col-12 mt-2" href="{% url 'svm_c_atelier' %}">Tester le Modèle</a>
+                    <p>Support Vector Machines trouve l'hyperplan optimal qui sépare les classes avec la marge maximale.</p>
+                    <div class="mt-auto">
+                        <a class="btn btn-info w-100 mb-2" href="{% url 'svm_c_details' %}"><i class="bi bi-info-circle"></i> Plus de détails</a>
+                        <a class="btn btn-success w-100" href="{% url 'svm_c_atelier' %}"><i class="bi bi-cloud-sun"></i> Prédiction Météo</a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- XGBoost (Regression) -->
+        <!-- XGBoost (Régression) -->
         <div class="col">
-            <div class="card h-100">
-                <h5 class="card-header">Algorithme XGBoost (Regression)</h5>
+            <div class="card h-100 shadow-sm">
+                <h5 class="card-header bg-danger text-white">XGBoost (Regression)</h5>
+                <img src="{% static 'images/xgboost_r.png' %}" class="card-img-top" alt="XGBoost Regression" style="height:200px; object-fit:contain; background-color:#f8f9fa;">
                 <div class="card-body d-flex flex-column">
-                    <img src="{% static 'images/xgboost_r.png' %}" class="card-img-top" alt="XGBoost regression" style="height:300px; object-fit:contain;">
-                    <div class="card-text mt-3 flex-grow-1">
-                        <p>Prédiction de la performance des étudiants (Régression) en utilisant le dataset Student Performance.</p>
-                    </div>
-                    <div class="card-footer mt-auto">
-                        <a class="btn btn-info col-12 mt-2" href="{% url 'xgboost_r_details' %}">Plus de détails</a>
-                        <a class="btn btn-success col-12 mt-2" href="{% url 'xgboost_r_atelier' %}">Tester le Modèle</a>
+                    <p>Algorithme de boosting avancé qui combine plusieurs modèles faibles pour créer un prédicteur robuste.</p>
+                    <div class="mt-auto">
+                        <a class="btn btn-info w-100 mb-2" href="{% url 'xgboost_r_details' %}"><i class="bi bi-info-circle"></i> Plus de détails</a>
+                        <a class="btn btn-success w-100" href="{% url 'xgboost_r_atelier' %}"><i class="bi bi-graph-up-arrow"></i> Tester le Modèle</a>
                     </div>
                 </div>
             </div>
@@ -75,33 +82,28 @@
 
         <!-- Random Forest (Classification) -->
         <div class="col">
-            <div class="card h-100">
-                <h5 class="card-header">Algorithme Random Forest (Classification)</h5>
+            <div class="card h-100 shadow-sm">
+                <h5 class="card-header bg-info text-white">Random Forest (Classification)</h5>
+                <img src="{% static 'images/random_forest.jpg' %}" class="card-img-top" alt="Random Forest Classification" style="height:200px; object-fit:cover;">
                 <div class="card-body d-flex flex-column">
-                    <img src="{% static 'images/random_forest.jpg' %}" class="card-img-top" alt="Random Forest" style="height:300px; object-fit:cover;">
-                    <div class="card-text mt-3 flex-grow-1">
-                        <p>Algorithme de classification basé sur plusieurs arbres de décision combinés pour une meilleure précision.</p>
-                    </div>
-                    <div class="card-footer mt-auto">
-                        <a class="btn btn-info col-12 mt-2" href="{% url 'ran_forest_details' %}">Plus de détails</a>
-                        <a class="btn btn-success col-12 mt-2" href="{% url 'ran_forest_atelier' %}">Exemple de Classification</a>
+                    <p>Algorithme d'ensemble qui combine plusieurs arbres de décision pour améliorer la précision et réduire le surapprentissage.</p>
+                    <div class="mt-auto"></div>
+                        <a class="btn btn-info w-100 mb-2" href="{% url 'ran_forest_details' %}"><i class="bi bi-info-circle"></i> Plus de détails</a>
+                        <a class="btn btn-success w-100" href="{% url 'ran_forest_atelier' %}"><i class="bi bi-shield-check"></i> Tester le Modèle</a>
                     </div>
                 </div>
-            </div>
         </div>
 
-        <!-- Random Forest (Regression) -->
+        <!-- Random Forest (Régression) -->
         <div class="col">
-            <div class="card h-100">
-                <h5 class="card-header">Algorithme Random Forest (Regression)</h5>
+            <div class="card h-100 shadow-sm">
+                <h5 class="card-header bg-secondary text-white">Random Forest (Regression)</h5>
+                <img src="{% static 'images/random_forest_regression.jpeg' %}" class="card-img-top" alt="Random Forest Regression" style="height:200px; object-fit:cover;">
                 <div class="card-body d-flex flex-column">
-                    <img src="{% static 'images/random_forest_regression.jpeg' %}" class="card-img-top" alt="Random Forest Regression" style="height:300px; object-fit:cover;">
-                    <div class="card-text mt-3 flex-grow-1">
-                        <p>Algorithme de régression basé sur plusieurs arbres de décision combinés pour une meilleure précision.</p>
-                    </div>
-                    <div class="card-footer mt-auto">
-                        <a class="btn btn-info col-12 mt-2" href="{% url 'ran_forest_reg_details' %}">Plus de détails</a>
-                        <a class="btn btn-success col-12 mt-2" href="{% url 'ran_forest_reg_atelier' %}">Exemple de Régression</a>
+                    <p>Version de Random Forest adaptée aux problèmes de régression, utilisant la moyenne des prédictions de multiples arbres.</p>
+                    <div class="mt-auto">
+                        <a class="btn btn-info w-100 mb-2" href="{% url 'ran_forest_reg_details'%}"><i class="bi bi-info-circle"></i> Plus de détails</a>
+                        <a class="btn btn-success w-100" href="{% url 'ran_forest_reg_atelier' %}"><i class="bi bi-calculator"></i> Tester le Modèle</a>
                     </div>
                 </div>
             </div>
@@ -109,21 +111,33 @@
 
         <!-- XGBoost (Classification) -->
         <div class="col">
-            <div class="card h-100">
-                <h5 class="card-header">Algorithme XGBoost (Classification)</h5>
+            <div class="card h-100 shadow-sm">
+                <h5 class="card-header bg-dark text-white">XGBoost (Classification)</h5>
+                <img src="{% static 'images/XGBoost.jpg' %}" class="card-img-top" alt="XGBoost Classification" style="height:200px; object-fit:cover;">
                 <div class="card-body d-flex flex-column">
-                    <img src="{% static 'images/XGBoost.jpg' %}" class="card-img-top" alt="XGBoost Classification" style="height:300px; object-fit:cover;">
-                    <div class="card-text mt-3 flex-grow-1">
-                        <p>Algorithme de classification qui construit plusieurs arbres de décision séquentiellement pour améliorer la précision.</p>
-                    </div>
-                    <div class="card-footer mt-auto">
-                        <a class="btn btn-info col-12 mt-2" href="{% url 'XGBoost_details' %}">Plus de détails</a>
-                        <a class="btn btn-success col-12 mt-2" href="{% url 'XGBoost_atelier' %}">Exemple de Classification</a>
+                    <p>Algorithme de classification qui construit plusieurs arbres de décision séquentiellement pour améliorer la précision.</p>
+                    <div class="mt-auto">
+                        <a class="btn btn-info w-100 mb-2" href="{% url 'XGBoost_details' %}"><i class="bi bi-info-circle"></i> Plus de détails</a>
+                        <a class="btn btn-success w-100" href="{% url 'XGBoost_atelier' %}"><i class="bi bi-graph-up-arrow"></i> Exemple de Classification</a>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
+
+    <!-- Section d'information -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="alert alert-info">
+                <h4 class="alert-heading">📊 Explorez nos Algorithmes</h4>
+                <p class="mb-0">
+                    Cette plateforme vous permet de découvrir et tester différents algorithmes d'apprentissage automatique.
+                    Chaque algorithme est accompagné d'explications détaillées et d'ateliers pratiques pour une meilleure compréhension.
+                </p>
+            </div>
+        </div>
     </div>
 </div>
 
