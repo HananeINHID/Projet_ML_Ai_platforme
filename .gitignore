@@ -219,6 +219,3 @@ envML/
 # pycache
 __pycache__/
 *.pyc
-
-# Fichier python des modèles
-creer_modele.py
