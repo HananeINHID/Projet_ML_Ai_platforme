@@ -111,7 +111,7 @@ def tree_r_atelier(request):
     return render(request, 'tree_r_atelier.html')
 
 def tree_r_tester(request):
-    return render(request, 'tree_r_form.html')
+    return render(request, 'tree_r_form.html', {'form_action': 'tree_r_prediction'})
 
 def tree_r_prediction(request):
     if request.method == 'POST':
@@ -154,7 +154,7 @@ def tree_c_atelier(request):
     return render(request, 'tree_c_atelier.html')
 
 def tree_c_tester(request):
-    return render(request, 'meteo_form.html')
+    return render(request, 'tree_c_form.html')
 
 def tree_c_prediction(request):
     if request.method == 'POST':
@@ -164,11 +164,11 @@ def tree_c_prediction(request):
             wind_speed = float(request.POST.get('Vent_kmh'))
             pressure = float(request.POST.get('Pression_hPa'))
         except (ValueError, TypeError):
-            return render(request, 'meteo_form.html', {'error': "Veuillez saisir des valeurs valides."})
+            return render(request, 'tree_c_form.html', {'error': "Veuillez saisir des valeurs valides."})
 
         model_tree_c = load_models('model_tree_c.pkl')
         if model_tree_c is None:
-            return render(request, 'meteo_form.html', {'error': "Erreur de chargement du modèle."})
+            return render(request, 'tree_c_form.html', {'error': "Erreur de chargement du modèle."})
 
         raw_data = np.array([[temperature, humidity, wind_speed, pressure]])
         prediction = model_tree_c.predict(raw_data)
@@ -199,9 +199,9 @@ def tree_c_prediction(request):
             'initial_data': input_data
         }
 
-        return render(request, 'meteo_results.html', context)
+        return render(request, 'tree_c_results.html', context)
 
-    return render(request, 'meteo_form.html')
+    return render(request, 'tree_c_form.html')
 
 # --- SVM (CLASSIFICATION) ---
 
@@ -264,14 +264,27 @@ def svm_c_prediction(request):
 
 # --- SVM (RÉGRESSION) ---
 
+# Fonction pour charger le modèle
+def load_model(filename):
+    try:
+        model_path = os.path.join('algoAI', 'models', filename)  # Assure-toi que le chemin est correct
+        return joblib.load(model_path)
+    except Exception as e:
+        print(f"Erreur lors du chargement du modèle: {e}")
+        return None
+
+
 def svm_r_details(request):
     return render(request, 'svm_r_details.html')
+
 
 def svm_r_atelier(request):
     return render(request, 'svm_r_atelier.html')
 
+
 def svm_r_tester(request):
-    return render(request, 'student_form.html')
+    return render(request, 'svm_r_form.html')
+
 
 def svm_r_prediction(request):
     if request.method == 'POST':
@@ -282,17 +295,18 @@ def svm_r_prediction(request):
             sleep_hours = float(request.POST.get('sleep_hours'))
             sample_papers = float(request.POST.get('sample_papers'))
 
+            # Conversion en 0 ou 1
             extracurricular = 1 if extracurricular == "Yes" else 0
 
         except (ValueError, TypeError):
-            print("Erreur : données invalides.")
             return render(request, 'erreur_modele.html')
 
-        model_svm_r = load_model('svm_regression_model.pkl')
+        # Chargement du modèle SVM avec joblib
+        model_svm_r = load_model('svm_regression_model.joblib')
         if model_svm_r is None:
-            print("Erreur : le fichier svm_regression_model.pkl est introuvable.")
             return render(request, 'erreur_modele.html')
 
+        # Préparer les données pour la prédiction
         features = [
             "Hours Studied",
             "Previous Scores",
@@ -305,39 +319,35 @@ def svm_r_prediction(request):
             columns=features
         )
 
-        prediction = round(model_svm_r.predict(entree)[0], 2)
+        # Faire la prédiction
+        predicted_score = round(model_svm_r.predict(entree)[0], 2)
 
-        if prediction >= 80:
+        if predicted_score >= 80:
             niveau = "Excellent ⭐⭐⭐"
-            img = "images/study.jpg"
-        elif prediction >= 60:
+        elif predicted_score >= 60:
             niveau = "Bon 👍"
-            img = "images/study.jpg"
-        elif prediction >= 40:
+        elif predicted_score >= 40:
             niveau = "Moyen 😕"
-            img = "images/student.jpeg"
         else:
             niveau = "Faible ⚠️"
-            img = "images/badstudent.jpg"
 
         input_data_display = {
-            "hours_studied": hours_studied,
-            "previous_scores": previous_scores,
-            "extracurricular": "Yes" if extracurricular == 1 else "No",
-            "sleep_hours": sleep_hours,
-            "sample_papers": sample_papers
+            "Hours Studied": hours_studied,
+            "Previous Scores": previous_scores,
+            "Extracurricular Activities": "Yes" if extracurricular == 1 else "No",
+            "Sleep Hours": sleep_hours,
+            "Sample Question Papers Practiced": sample_papers
         }
 
         context = {
-            "prediction": prediction,
-            "resultat": niveau,
-            "img": img,
-            "input_data": input_data_display
+            "predicted_score": predicted_score,
+            "niveau": niveau,
+            "initial_data": input_data_display
         }
 
-        return render(request, 'student_results.html', context)
+        return render(request, 'svm_r_results.html', context)
 
-    return render(request, 'student_form.html')
+    return render(request, 'svm_r_form.html')
 
 # --- XGBOOST (RÉGRESSION) ---
 
@@ -570,7 +580,7 @@ def linreg_atelier(request):
     return render(request, 'linreg_atelier.html')
 
 def linreg_tester(request):
-    return render(request, 'student_form.html')
+    return render(request, 'linreg_form.html')
 
 def linreg_prediction(request):
     if request.method == 'POST':
@@ -584,14 +594,23 @@ def linreg_prediction(request):
             extracurricular = 1 if extracurricular == "Yes" else 0
 
         except (ValueError, TypeError):
-            print("Erreur : données invalides.")
-            return render(request, 'erreur_modele.html')
+            return render(request, 'linreg_form.html', {"error": "Données invalides."})
 
-        model = load_model('linear_regression_model.pkl')
-        if model is None:
-            print("Erreur : le fichier linear_regression_model.pkl est introuvable.")
-            return render(request, 'erreur_modele.html')
+        # Construire un chemin relatif pour le modèle
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # dossier my_aiplatform/algoAI
+        model_path = os.path.join(base_dir, "models_ai", "linear_regression_model.pkl")
 
+        # Vérifier que le fichier existe
+        if not os.path.exists(model_path):
+            return render(request, 'linreg_form.html', {"error": "Modèle non trouvé."})
+
+        # Charger le modèle avec joblib
+        try:
+            model = joblib.load(model_path)
+        except Exception as e:
+            return render(request, 'linreg_form.html', {"error": f"Erreur lors du chargement du modèle : {e}"})
+
+        # Préparer les données pour la prédiction
         features = [
             "Hours Studied",
             "Previous Scores",
@@ -604,8 +623,10 @@ def linreg_prediction(request):
             columns=features
         )
 
+        # Prédiction
         prediction = round(model.predict(entree)[0], 2)
 
+        # Catégorisation
         if prediction >= 80:
             niveau = "Excellent ⭐⭐⭐"
             img = "images/study.jpg"
@@ -634,6 +655,6 @@ def linreg_prediction(request):
             "input_data": input_data_display
         }
 
-        return render(request, 'student_results.html', context)
+        return render(request, 'linreg_results.html', context)
 
-    return render(request, 'student_form.html')
+    return render(request, 'linreg_form.html')

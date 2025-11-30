@@ -1,0 +1,43 @@
+{% include "includes/header.html" %}
+{% load static %}
+
+<div class="container my-4">
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Résultats de la Prédiction - SVM Régression</h3>
+        </div>
+        <div class="card-body">
+            <h4>Score Prévu :</h4>
+            <p class="fs-2 fw-bold">{{ predicted_score|floatformat:1 }}/100</p>
+
+            <h5>Niveau :</h5>
+            {% if predicted_score >= 80 %}
+                <span class="badge bg-success fs-6">Excellent ⭐⭐⭐</span>
+            {% elif predicted_score >= 60 %}
+                <span class="badge bg-warning fs-6">Bon 👍</span>
+            {% elif predicted_score >= 40 %}
+                <span class="badge bg-info fs-6">Moyen 😕</span>
+            {% else %}
+                <span class="badge bg-danger fs-6">Faible ⚠️</span>
+            {% endif %}
+
+            <hr>
+
+            <h5>Données Entrées :</h5>
+            <ul>
+                {% for key, value in input_data.items %}
+                    <li><strong>{{ key }}:</strong> {{ value }}</li>
+                {% endfor %}
+            </ul>
+
+            <div class="mt-4 d-flex gap-2">
+                <a href="{% url 'svm_r_tester' %}" class="btn btn-primary">Nouvelle Prédiction</a>
+                <a href="{% url 'index' %}" class="btn btn-outline-secondary">Retour à l'accueil</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% include "includes/footer.html" %}
