@@ -6,6 +6,7 @@ import pickle
 from django.conf import settings
 from django.shortcuts import render
 
+
 def load_model(filename):
     """
     Charge un modèle pickle (.pkl) depuis le dossier model_ai et le retourne.
@@ -262,17 +263,7 @@ def svm_c_prediction(request):
     
     return render(request, 'svm_c_form.html')
 
-# --- SVM (RÉGRESSION) ---
-
-# Fonction pour charger le modèle
-def load_model(filename):
-    try:
-        model_path = os.path.join('algoAI', 'models', filename)  # Assure-toi que le chemin est correct
-        return joblib.load(model_path)
-    except Exception as e:
-        print(f"Erreur lors du chargement du modèle: {e}")
-        return None
-
+# --- SVM RÉGRESSION ---
 
 def svm_r_details(request):
     return render(request, 'svm_r_details.html')
@@ -295,59 +286,70 @@ def svm_r_prediction(request):
             sleep_hours = float(request.POST.get('sleep_hours'))
             sample_papers = float(request.POST.get('sample_papers'))
 
-            # Conversion en 0 ou 1
+            # Convertir en 0 ou 1
             extracurricular = 1 if extracurricular == "Yes" else 0
 
         except (ValueError, TypeError):
-            return render(request, 'erreur_modele.html')
+            return render(request, 'svm_r_form.html', {"error": "Données invalides."})
 
-        # Chargement du modèle SVM avec joblib
-        model_svm_r = load_model('svm_regression_model.joblib')
-        if model_svm_r is None:
-            return render(request, 'erreur_modele.html')
+        # --- Définir base_dir ---
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-        # Préparer les données pour la prédiction
-        features = [
-            "Hours Studied",
-            "Previous Scores",
-            "Extracurricular Activities",
-            "Sleep Hours",
-            "Sample Question Papers Practiced"
-        ]
-        entree = pd.DataFrame(
-            [[hours_studied, previous_scores, extracurricular, sleep_hours, sample_papers]],
-            columns=features
-        )
+        # --- Chemins vers le modèle et le scaler ---
+        model_path = os.path.join(base_dir, "models_ai", "svm_regression_model.pkl")
+        scaler_path = os.path.join(base_dir, "models_ai", "svm_regression_scaler.pkl")
 
-        # Faire la prédiction
-        predicted_score = round(model_svm_r.predict(entree)[0], 2)
+        if not os.path.exists(model_path) or not os.path.exists(scaler_path):
+            return render(request, 'svm_r_form.html', {"error": "Modèle ou scaler non trouvé."})
 
-        if predicted_score >= 80:
+        try:
+            model = joblib.load(model_path)
+            scaler = joblib.load(scaler_path)
+        except Exception as e:
+            return render(request, 'svm_r_form.html', {"error": f"Erreur lors du chargement : {e}"})
+
+        # --- Préparer et scaler les données ---
+        entree = np.array([[hours_studied, previous_scores, extracurricular, sleep_hours, sample_papers]])
+        try:
+            entree_scaled = scaler.transform(entree)
+            prediction = model.predict(entree_scaled)[0]
+            prediction = round(max(0, min(100, prediction)), 2)  # Clamp between 0 and 100
+        except Exception as e:
+            return render(request, 'svm_r_form.html', {"error": f"Erreur lors de la prédiction : {e}"})
+
+        # --- Catégorisation du résultat ---
+        if prediction >= 80:
             niveau = "Excellent ⭐⭐⭐"
-        elif predicted_score >= 60:
+            img = "images/study.jpg"
+        elif prediction >= 60:
             niveau = "Bon 👍"
-        elif predicted_score >= 40:
+            img = "images/study.jpg"
+        elif prediction >= 40:
             niveau = "Moyen 😕"
+            img = "images/student.jpeg"
         else:
             niveau = "Faible ⚠️"
+            img = "images/badstudent.jpg"
 
         input_data_display = {
-            "Hours Studied": hours_studied,
-            "Previous Scores": previous_scores,
-            "Extracurricular Activities": "Yes" if extracurricular == 1 else "No",
-            "Sleep Hours": sleep_hours,
-            "Sample Question Papers Practiced": sample_papers
+            "hours_studied": hours_studied,
+            "previous_scores": previous_scores,
+            "extracurricular": "Yes" if extracurricular == 1 else "No",
+            "sleep_hours": sleep_hours,
+            "sample_papers": sample_papers
         }
 
         context = {
-            "predicted_score": predicted_score,
+            "prediction": prediction,
             "niveau": niveau,
-            "initial_data": input_data_display
+            "img": img,
+            "input_data": input_data_display
         }
 
         return render(request, 'svm_r_results.html', context)
 
     return render(request, 'svm_r_form.html')
+
 
 # --- XGBOOST (RÉGRESSION) ---
 
@@ -596,37 +598,35 @@ def linreg_prediction(request):
         except (ValueError, TypeError):
             return render(request, 'linreg_form.html', {"error": "Données invalides."})
 
-        # Construire un chemin relatif pour le modèle
-        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # dossier my_aiplatform/algoAI
+        # --- DEFINIR base_dir ici ---
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+        # --- Chemins vers le modèle et le scaler ---
         model_path = os.path.join(base_dir, "models_ai", "linear_regression_model.pkl")
+        scaler_path = os.path.join(base_dir, "models_ai", "linear_regression_scaler.pkl")
 
-        # Vérifier que le fichier existe
-        if not os.path.exists(model_path):
-            return render(request, 'linreg_form.html', {"error": "Modèle non trouvé."})
+        if not os.path.exists(model_path) or not os.path.exists(scaler_path):
+            return render(request, 'linreg_form.html', {"error": "Modèle ou scaler non trouvé."})
 
-        # Charger le modèle avec joblib
         try:
             model = joblib.load(model_path)
+            scaler = joblib.load(scaler_path)
         except Exception as e:
-            return render(request, 'linreg_form.html', {"error": f"Erreur lors du chargement du modèle : {e}"})
+            return render(request, 'linreg_form.html', {"error": f"Erreur lors du chargement du modèle ou du scaler : {e}"})
 
-        # Préparer les données pour la prédiction
-        features = [
-            "Hours Studied",
-            "Previous Scores",
-            "Extracurricular Activities",
-            "Sleep Hours",
-            "Sample Question Papers Practiced"
-        ]
-        entree = pd.DataFrame(
-            [[hours_studied, previous_scores, extracurricular, sleep_hours, sample_papers]],
-            columns=features
-        )
+        # --- Préparer les données et appliquer le scaler ---
+        entree = np.array([[hours_studied, previous_scores, extracurricular, sleep_hours, sample_papers]])
+        entree_scaled = scaler.transform(entree)
 
-        # Prédiction
-        prediction = round(model.predict(entree)[0], 2)
+        # --- Prédiction ---
+        try:
+            prediction = model.predict(entree_scaled)[0]
+            prediction = round(max(0, min(100, prediction)), 2)  
 
-        # Catégorisation
+        except Exception as e:
+            return render(request, 'linreg_form.html', {"error": f"Erreur lors de la prédiction : {e}"})
+
+        # --- Catégorisation du résultat ---
         if prediction >= 80:
             niveau = "Excellent ⭐⭐⭐"
             img = "images/study.jpg"

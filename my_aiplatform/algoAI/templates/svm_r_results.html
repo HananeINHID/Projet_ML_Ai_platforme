@@ -9,14 +9,14 @@
         </div>
         <div class="card-body">
             <h4>Score Prévu :</h4>
-            <p class="fs-2 fw-bold">{{ predicted_score|floatformat:1 }}/100</p>
+            <p class="fs-2 fw-bold">{{ prediction|floatformat:1 }}/100</p>
 
             <h5>Niveau :</h5>
-            {% if predicted_score >= 80 %}
+            {% if prediction >= 80 %}
                 <span class="badge bg-success fs-6">Excellent ⭐⭐⭐</span>
-            {% elif predicted_score >= 60 %}
+            {% elif prediction >= 60 %}
                 <span class="badge bg-warning fs-6">Bon 👍</span>
-            {% elif predicted_score >= 40 %}
+            {% elif prediction >= 40 %}
                 <span class="badge bg-info fs-6">Moyen 😕</span>
             {% else %}
                 <span class="badge bg-danger fs-6">Faible ⚠️</span>

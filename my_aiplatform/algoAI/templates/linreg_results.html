@@ -42,17 +42,28 @@
         </h5>
 
         <ul class="list-group mb-4">
-            {% for key, value in input_data.items %}
-                <li class="list-group-item d-flex justify-content-between">
-                    <!-- Remplacer _ par espace -->
-                    <span>{{ key|capfirst|replace:"_"," " }}</span>
-
-
-                    <strong>{{ value }}</strong>
-                </li>
-            {% endfor %}
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Hours Studied</span>
+                <strong>{{ input_data.hours_studied }}</strong>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Previous Scores</span>
+                <strong>{{ input_data.previous_scores }}</strong>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Extracurricular Activities</span>
+                <strong>{{ input_data.extracurricular }}</strong>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Sleep Hours</span>
+                <strong>{{ input_data.sleep_hours }}</strong>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Sample Papers Practiced</span>
+                <strong>{{ input_data.sample_papers }}</strong>
+            </li>
         </ul>
-
+        
         <!-- Boutons -->
         <div class="row">
             <div class="col-md-6 mb-2">

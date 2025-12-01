@@ -8,6 +8,12 @@
             <img src="{% static 'images/passedvsfailed.png' %}" width="40%"  class="img-fluid" alt="Background">
         </div>
         <div class="card-body">
+            
+            <!-- ADD THIS DEBUG SECTION -->
+            <div class="alert alert-info">
+                <strong>Debug:</strong> Form action URL: "{% url 'linreg_prediction' %}"
+            </div>
+            
             <form method="post" action="{% url 'linreg_prediction' %}">
                 {% csrf_token %}
 
@@ -31,11 +37,11 @@
                 <div class="mb-4">
                     <label class="form-label">Activités extra-scolaires</label><br>
                     <div class="form-check form-check-inline">
-                        <input type="radio" id="extra_yes" name="extracurricular" value="1" class="form-check-input" checked>
+                        <input type="radio" id="extra_yes" name="extracurricular" value="Yes" class="form-check-input" checked>
                         <label for="extra_yes" class="form-check-label">Oui</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input type="radio" id="extra_no" name="extracurricular" value="0" class="form-check-input">
+                        <input type="radio" id="extra_no" name="extracurricular" value="No" class="form-check-input">
                         <label for="extra_no" class="form-check-label">Non</label>
                     </div>
                 </div>

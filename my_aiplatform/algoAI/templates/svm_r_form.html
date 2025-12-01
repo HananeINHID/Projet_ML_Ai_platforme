@@ -1,118 +1,90 @@
 {% include "includes/header.html" %}
 {% load static %}
+
 <div class="container my-4">
-
-<div class="container">
-    <h2 class="mb-4  text-center">SVM Regression - Performance Étudiante</h2>
-    <p class="lead text-center mb-4">Prédisez la performance académique avec l'algorithme SVM</p>
-    
-    <div class="card border-0 shadow">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-1">Formulaire de Prédiction SVM</h5>
-            <p class="mb-0 small">Algorithme avancé de Gradient Boosting</p>
+    <h2 class="mb-4 text-center">Prédiction de Performance des Étudiants (SVM)</h2>
+    <div class="card shadow-sm">
+        <div class="card-title text-center">
+            <img src="{% static 'images/passedvsfailed.png' %}" width="40%" class="img-fluid" alt="SVM Background">
         </div>
         <div class="card-body">
-            <form method="post" action="{% url 'svm_r_prediction' %}">
-                {% csrf_token %}
-                
-                <!-- Section Performance Académique -->
-                <div class="bg-light rounded p-3 mb-4">
-                    <h6 class="text-primary mb-3">Performance Académique</h6>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="hours_studied" class="form-label fw-bold">
-                                Heures d'Étude Quotidiennes
-                            </label>
-                            <div class="input-group">
-                                <input type="number" class="form-control" id="hours_studied" 
-                                       name="hours_studied" min="1" max="20" step="0.5" value="5.0" required>
-                                <span class="input-group-text">heures</span>
-                            </div>
-                            <div class="form-text">Temps consacré aux études chaque jour</div>
-                        </div>
-                        
-                        <div class="col-md-6 mb-3">
-                            <label for="previous_scores" class="form-label fw-bold">
-                                Moyenne Générale
-                            </label>
-                            <div class="input-group">
-                                <input type="number" class="form-control" id="previous_scores" 
-                                       name="previous_scores" min="40" max="100" step="0.1" value="75.0" required>
-                                <span class="input-group-text">/100</span>
-                            </div>
-                            <div class="form-text">Moyenne des résultats précédents</div>
-                        </div>
-                    </div>
-                </div>
+        
+        <form method="post" action="{% url 'svm_r_prediction' %}">
 
-                <!-- Section Mode de Vie -->
-                <div class="bg-light rounded p-3 mb-4">
-                    <h6 class="text-primary mb-3">Mode de Vie</h6>
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label for="sleep_hours" class="form-label fw-bold">
-                                Heures de Sommeil
-                            </label>
-                            <div class="input-group">
-                                <input type="number" class="form-control" id="sleep_hours" 
-                                       name="sleep_hours" min="4" max="12" step="0.5" value="7.5" required>
-                                <span class="input-group-text">h/nuit</span>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-4 mb-3">
-                            <label for="extracurricular" class="form-label fw-bold">
-                                Activités Extra-scolaires
-                            </label>
-                            <select class="form-select" id="extracurricular" name="extracurricular" required>
-                                <option value="1">Oui</option>
-                                <option value="0">Non</option>
-                            </select>
-                        </div>
-                        
-                        <div class="col-md-4 mb-3">
-                            <label for="sample_papers" class="form-label fw-bold">
-                                Examens Pratiqués
-                            </label>
-                            <div class="input-group">
-                                <input type="number" class="form-control" id="sample_papers" 
-                                       name="sample_papers" min="0" max="20" step="1" value="5" required>
-                                <span class="input-group-text">tests</span>
-                            </div>
-                        </div>
-                    </div>
+            {% csrf_token %}
+
+            <!-- Hours Studied -->
+            <div class="mb-4">
+                <label for="hours_studied" class="form-label">Heures d'étude</label>
+                <input type="range" class="form-range" min="0" max="12" step="1" id="hours_studied" name="hours_studied"
+                       value="6" oninput="hoursStudiedValue.textContent=this.value">
+                <span id="hoursStudiedValue" class="fw-bold">6</span>
+            </div>
+
+            <!-- Previous Scores -->
+            <div class="mb-4">
+                <label for="previous_scores" class="form-label">Scores précédents</label>
+                <input type="range" class="form-range" min="0" max="100" step="1" id="previous_scores" name="previous_scores"
+                       value="70" oninput="previousScoresValue.textContent=this.value">
+                <span id="previousScoresValue" class="fw-bold">70</span>
+            </div>
+
+            <!-- Extracurricular Activities -->
+            <div class="mb-4">
+                <label class="form-label">Activités extra-scolaires</label><br>
+                <div class="form-check form-check-inline">
+                    <input type="radio" id="extra_yes" name="extracurricular" value="Yes" class="form-check-input" checked>
+                    <label for="extra_yes" class="form-check-label">Oui</label>
                 </div>
-                
-                <!-- Boutons d'action -->
-                <div class="text-center mt-4 pt-3 border-top">
-                    <button type="submit" class="btn btn-primary btn-lg me-3">
-                        Lancer la Prédiction
-                    </button>
-                    <button type="reset" class="btn btn-outline-secondary btn-lg">
-                        Effacer
-                    </button>
+                <div class="form-check form-check-inline">
+                    <input type="radio" id="extra_no" name="extracurricular" value="No" class="form-check-input">
+                    <label for="extra_no" class="form-check-label">Non</label>
                 </div>
-            </form>
-        </div>
+            </div>
+
+            <!-- Sleep Hours -->
+            <div class="mb-4">
+                <label for="sleep_hours" class="form-label">Heures de sommeil</label>
+                <input type="range" class="form-range" min="0" max="12" step="1" id="sleep_hours" name="sleep_hours"
+                       value="7" oninput="sleepHoursValue.textContent=this.value">
+                <span id="sleepHoursValue" class="fw-bold">7</span>
+            </div>
+
+            <!-- Sample Question Papers Practiced -->
+            <div class="mb-4">
+                <label for="sample_papers" class="form-label">Sujets pratiques réalisés</label>
+                <input type="range" class="form-range" min="0" max="10" step="1" id="sample_papers" name="sample_papers"
+                       value="3" oninput="samplePapersValue.textContent=this.value">
+                <span id="samplePapersValue" class="fw-bold">3</span>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Prédire</button>
+        </form>
     </div>
-
-
-    <!-- Informations sur le dataset -->
-    <div class="card">
-        <div class="card-header"><h5 class="mb-0">À propos du Dataset</h5></div>
-        <div class="card-body">
-            <p><strong>Dataset:</strong> Student Performance</p>
-            <p><strong>Objectif:</strong> Prédire le Performance Index (0-100)</p>
-            <p><strong>Variables utilisées:</strong></p>
-            <ul>
-                <li>Hours Studied - Heures d'étude quotidiennes</li>
-                <li>Previous Scores - Moyenne des notes précédentes</li>
-                <li>Extracurricular Activities - Participation aux activités extra-scolaires</li>
-                <li>Sleep Hours - Durée du sommeil</li>
-                <li>Sample Question Papers - Examens blancs réalisés</li>
-            </ul>
-        </div>
-    </div>
+</div>
+```
 
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    const hours = document.getElementById("hours_studied");
+    const prev  = document.getElementById("previous_scores");
+    const sleep = document.getElementById("sleep_hours");
+    const papers = document.getElementById("sample_papers");
+
+    const hoursVal = document.getElementById("hoursStudiedValue");
+    const prevVal  = document.getElementById("previousScoresValue");
+    const sleepVal = document.getElementById("sleepHoursValue");
+    const papersVal = document.getElementById("samplePapersValue");
+
+    if (hours) hours.oninput = () => hoursVal.textContent = hours.value;
+    if (prev) prev.oninput = () => prevVal.textContent = prev.value;
+    if (sleep) sleep.oninput = () => sleepVal.textContent = sleep.value;
+    if (papers) papers.oninput = () => papersVal.textContent = papers.value;
+});
+</script>
+
+
 {% include "includes/footer.html" %}
