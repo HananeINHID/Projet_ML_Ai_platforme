@@ -56,6 +56,32 @@
             font-size: 0.6rem;
             margin-left: 5px;
         }
+        #searchInput {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+        #searchInput::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        #searchInput:focus {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.5);
+            color: white;
+            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+        }
+        .btn-outline-light:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        @media (max-width: 991px) {
+            #searchForm {
+                width: 100%;
+            }
+            #searchForm .input-group {
+                max-width: 100% !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -177,8 +203,16 @@
                         </a>
                     </li>
                 </ul>
-                    </span>
-                </div>
+                
+                <!-- Barre de recherche -->
+                <form class="d-flex ms-lg-3 mt-3 mt-lg-0" role="search" id="searchForm">
+                    <div class="input-group" style="max-width: 300px;">
+                        <input class="form-control" type="search" id="searchInput" placeholder="Rechercher un algorithme..." aria-label="Search" style="border-radius: 20px 0 0 20px;">
+                        <button class="btn btn-outline-light" type="submit" style="border-radius: 0 20px 20px 0;">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </nav>

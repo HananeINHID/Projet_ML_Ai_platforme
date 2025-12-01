@@ -3,7 +3,7 @@
 
 <div class="container">
     <h2 class="mb-4">Les Algorithmes</h2>
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="algorithmCards">
 
         <!-- Régression Logistique -->
         <div class="col">
@@ -141,5 +141,66 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Fonctionnalité de recherche en temps réel
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const searchForm = document.getElementById('searchForm');
+        const algorithmCards = document.querySelectorAll('#algorithmCards .col');
+        
+        // Empêcher la soumission du formulaire
+        if (searchForm) {
+            searchForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+            });
+        }
+        
+        // Fonction de filtrage
+        function filterAlgorithms() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            
+            algorithmCards.forEach(card => {
+                const cardText = card.textContent.toLowerCase();
+                const cardElement = card;
+                
+                if (searchTerm === '' || cardText.includes(searchTerm)) {
+                    cardElement.style.display = '';
+                } else {
+                    cardElement.style.display = 'none';
+                }
+            });
+            
+            // Afficher un message si aucun résultat
+            const visibleCards = Array.from(algorithmCards).filter(card => card.style.display !== 'none');
+            const noResultsMessage = document.getElementById('noResultsMessage');
+            
+            if (visibleCards.length === 0 && searchTerm !== '') {
+                if (!noResultsMessage) {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.id = 'noResultsMessage';
+                    messageDiv.className = 'col-12 mt-4';
+                    messageDiv.innerHTML = `
+                        <div class="alert alert-warning text-center">
+                            <i class="bi bi-search me-2"></i>
+                            Aucun algorithme trouvé pour "${searchTerm}"
+                        </div>
+                    `;
+                    document.getElementById('algorithmCards').appendChild(messageDiv);
+                }
+            } else {
+                if (noResultsMessage) {
+                    noResultsMessage.remove();
+                }
+            }
+        }
+        
+        // Écouter les changements dans la barre de recherche
+        if (searchInput) {
+            searchInput.addEventListener('input', filterAlgorithms);
+            searchInput.addEventListener('keyup', filterAlgorithms);
+        }
+    });
+</script>
 
 {% include "includes/footer.html" %}
