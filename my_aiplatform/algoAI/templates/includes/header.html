@@ -128,6 +128,15 @@
                             <li><a class="dropdown-item" href="{% url 'xgboost_r_details' %}">
                                 <i class="bi bi-lightning-charge me-2"></i>XGBoost (Régression)
                             </a></li>
+                            <li><a class="dropdown-item" href="{% url 'XGBoost_details' %}">
+                                <i class="bi bi-lightning-charge me-2"></i>XGBoost (Classification)
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'ran_forest_reg_details' %}">
+                                <i class="bi bi-lightning-charge me-2"></i>Random Forest(Régression)
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'ran_forest_details' %}">
+                                <i class="bi bi-lightning-charge me-2"></i>Random Forest (Classification)
+                            </a></li>
                             <li><a class="dropdown-item" href="{% url 'svm_r_details' %}">
                                 <i class="bi bi-activity me-2"></i>SVM (Régression)
                             </a></li>
@@ -157,6 +166,15 @@
                             </a></li>
                             <li><a class="dropdown-item" href="{% url 'xgboost_r_atelier' %}">
                                 <i class="bi bi-graph-up-arrow me-2"></i>XGBoost (régression) - Performance Étudiante
+                            </a></li>
+                             <li><a class="dropdown-item" href="{% url 'XGBoost_atelier' %}">
+                                <i class="bi bi-graph-up-arrow me-2"></i>XGBoost (Classification) - Météo
+                            </a></li>
+                             <li><a class="dropdown-item" href="{% url 'ran_forest_reg_atelier' %}">
+                                <i class="bi bi-graph-up-arrow me-2"></i>Random Forest (régression) - Performance Étudiante
+                            </a></li>
+                             <li><a class="dropdown-item" href="{% url 'ran_forest_atelier' %}">
+                                <i class="bi bi-graph-up-arrow me-2"></i>Random Forest (Classification) - Météo
                             </a></li>
                             <li><a class="dropdown-item" href="{% url 'svm_r_atelier' %}">
                                 <i class="bi bi-activity me-2"></i>SVM (Régression) - Météo
@@ -188,11 +206,20 @@
                             <li><a class="dropdown-item" href="{% url 'xgboost_r_tester' %}">
                                 <i class="bi bi-lightning-charge me-2"></i>XGBoost (Régression)
                             </a></li>
+                            <li><a class="dropdown-item" href="{% url 'XGboost_tester' %}">
+                                <i class="bi bi-lightning-charge me-2"></i>XGBoost (Classification)
+                            </a></li>
                             <li><a class="dropdown-item" href="{% url 'svm_r_tester' %}">
                                 <i class="bi bi-activity me-2"></i>SVM (Régression)
                             </a></li>
                             <li><a class="dropdown-item" href="{% url 'tree_c_tester' %}">
                                 <i class="bi bi-diagram-3 me-2"></i>Arbre de Décision (Classification)
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'ran_forest_tester' %}">
+                                <i class="bi bi-diagram-3 me-2"></i>Random Forest  (Classification)
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'ran_forest_reg_tester' %}">
+                                <i class="bi bi-diagram-3 me-2"></i>Random Forest  (Régression)
                             </a></li>
                         </ul>
                     </li>

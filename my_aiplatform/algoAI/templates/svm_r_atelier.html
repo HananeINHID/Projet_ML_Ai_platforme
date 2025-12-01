@@ -2,18 +2,19 @@
 {% load static %}
 <div class="container">
     
-    <h2 class="mb-4">Atelier Pratique - SVM - régression (Météo)</h2>
+    <h2 class="mb-4">Atelier Pratique - SVM - Régression (Student Performance)</h2>
     
     <div class="row">
         <div class="col-md-6">
-            <h3>Dataset Météo</h3>
-            <p>Le dataset météo contient des enregistrements journaliers de conditions météorologiques, y compris la température, l'humidité, le vent et la pression. L'objectif est de prédire une valeur continue, par exemple la température ou la vitesse du vent, en fonction de ces caractéristiques.</p>
-            <p>Les Support Vector Regression (SVR) sont adaptés pour ce type de problème où nous cherchons à approximer une fonction continue à partir des données. SVR essaie de trouver un modèle qui prédit les valeurs cibles avec un écart maximum toléré (epsilon) tout en restant le plus plat possible.</p>
-            <p>Dans cet atelier, nous allons explorer comment entraîner un modèle SVR sur ce dataset, évaluer ses performances avec des métriques de régression comme MSE ou R², et visualiser les résultats.</p>
+            <h3>Dataset Student Performance</h3>
+            <p>L'objectif de cet atelier est d'entraîner un modèle d'<strong>Arbre de Décision (Régression)</strong> pour
+            prédire le Performance Index des étudiants basé sur leurs habitudes d'étude, sommeil, et activités.</p>
+            <p>Ce modèle de régression prédit une valeur continue entre 0 et 100 représentant la performance académique.</p>
         </div>
+        
         <div class="col-lg-6 mb-4">
-            <img src="{% static 'images/student.jpg' %}" class="img-fluid rounded shadow-sm" alt="Student Performance" style="width:47%; object-fit: contain;">
-            <img src="{% static 'images/perfor.jpg' %}" class="img-fluid rounded shadow-sm" alt="Performance" style="width:47%;  object-fit: contain;">
+            <img src="{% static 'images/perfor.jpg' %}" class="img-fluid rounded shadow-sm" alt="Performance" style="width:40%; object-fit: contain;">
+            <img src="{% static 'images/perfor2.jpg' %}" class="img-fluid rounded shadow-sm" alt="Performance" style="width: 40%; object-fit: contain;">
         </div>
     </div>
     

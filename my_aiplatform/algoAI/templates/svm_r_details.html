@@ -7,21 +7,28 @@
     <div class="row">
         <div class="col-md-6">
             <h3>Détails :</h3>
-            <p>Les Support Vector Machines pour la régression (SVR) sont une variante des SVM conçue pour prédire des valeurs continues plutôt que des classes.</p>
-            <p>Le SVR cherche à trouver une fonction qui s'éloigne le moins possible des points d'entraînement, tout en respectant une zone de tolérance appelée <strong>ε-tube</strong>.</p>
-            <p>Au lieu de maximiser une marge entre classes (comme en classification), le SVR tente de maintenir les erreurs à l'intérieur de ce tube tout en limitant les points en dehors (slack variables).</p>
-            <p>Comme les SVM classiques, le SVR peut utiliser des noyaux (kernels) pour modéliser des relations non linéaires.</p>
+            <p>Le Support Vector Regression (SVR) est un algorithme d'apprentissage supervisé utilisé pour prédire des valeurs continues.</p>
+            <p>Il fonctionne en trouvant une fonction qui s'approche le plus possible des données tout en respectant une zone de tolérance appelée <strong>ε-tube</strong>.</p>
+            <p>Le SVR cherche à limiter les erreurs importantes en utilisant des variables de relaxation (slack variables) pour les points situés en dehors du tube.</p>
+            <p>L'algorithme s'appuie uniquement sur certains points clés appelés support vectors, qui déterminent la forme finale de la fonction de prédiction.</p>
+            <p>Le paramètre C contrôle le compromis entre la simplicité du modèle et la pénalisation des erreurs trop grandes.</p>
+            <p>Le paramètre ε définit la largeur du tube dans lequel les erreurs ne sont pas pénalisées.</p>
+            <p>Le SVR peut utiliser des noyaux (kernels) pour modéliser des relations non linéaires, comme les noyaux linéaire, polynomial ou RBF.</p>
+            <p>Il est particulièrement efficace pour les problèmes où l'on cherche une fonction lisse et robuste pour prédire des valeurs numériques.</p>
         </div>
+
 
         <div class="col-md-6">
             <h3>Caractéristiques :</h3>
             <ul>
-                <li>Prédiction de valeurs continues (problèmes de régression).</li>
-                <li>Contrôle des erreurs avec le paramètre ε (zone sans pénalité).</li>
-                <li>Très efficace pour les données non linéaires grâce aux kernels.</li>
-                <li>Robuste face au surapprentissage grâce à la régularisation.</li>
-                <li>Capacité à modéliser des relations complexes entre variables.</li>
+                <li>Prédiction de valeurs continues pour les problèmes de régression.</li>
+                <li>Contrôle des erreurs grâce au paramètre ε (zone de tolérance sans pénalité).</li>
+                <li>Capacité à gérer des données non linéaires grâce aux fonctions noyaux (kernels).</li>
+                <li>Robustesse face au surapprentissage grâce à la régularisation (paramètre C).</li>
+                <li>Utilisation efficace de la mémoire en se concentrant uniquement sur les vecteurs de support.</li>
+                <li>Possibilité de modéliser des relations complexes entre les variables.</li>
             </ul>
+
         </div>
     </div>
 

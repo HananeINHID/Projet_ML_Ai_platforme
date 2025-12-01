@@ -23,7 +23,7 @@ urlpatterns = [
     path('tree_r_tester/', views.tree_r_tester, name='tree_r_tester'),
     path('tree_r_prediction/', views.tree_r_prediction, name='tree_r_prediction'),
 
-    # --- Arbre de Décision (Classification) ---
+    # Arbre de Décision (Classification)
     path('tree_c_details/', views.tree_c_details, name='tree_c_details'),
     path('tree_c_atelier/', views.tree_c_atelier, name='tree_c_atelier'),
     path('tree_c_tester/', views.tree_c_tester, name='tree_c_tester'),

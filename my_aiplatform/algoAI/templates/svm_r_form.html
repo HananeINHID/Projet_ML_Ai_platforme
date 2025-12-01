@@ -1,0 +1,90 @@
+{% include "includes/header.html" %}
+{% load static %}
+
+<div class="container my-4">
+    <h2 class="mb-4 text-center">Prédiction de Performance des Étudiants (SVM)</h2>
+    <div class="card shadow-sm">
+        <div class="card-title text-center">
+            <img src="{% static 'images/passedvsfailed.png' %}" width="40%" class="img-fluid" alt="SVM Background">
+        </div>
+        <div class="card-body">
+        
+        <form method="post" action="{% url 'svm_r_prediction' %}">
+
+            {% csrf_token %}
+
+            <!-- Hours Studied -->
+            <div class="mb-4">
+                <label for="hours_studied" class="form-label">Heures d'étude</label>
+                <input type="range" class="form-range" min="0" max="12" step="1" id="hours_studied" name="hours_studied"
+                       value="6" oninput="hoursStudiedValue.textContent=this.value">
+                <span id="hoursStudiedValue" class="fw-bold">6</span>
+            </div>
+
+            <!-- Previous Scores -->
+            <div class="mb-4">
+                <label for="previous_scores" class="form-label">Scores précédents</label>
+                <input type="range" class="form-range" min="0" max="100" step="1" id="previous_scores" name="previous_scores"
+                       value="70" oninput="previousScoresValue.textContent=this.value">
+                <span id="previousScoresValue" class="fw-bold">70</span>
+            </div>
+
+            <!-- Extracurricular Activities -->
+            <div class="mb-4">
+                <label class="form-label">Activités extra-scolaires</label><br>
+                <div class="form-check form-check-inline">
+                    <input type="radio" id="extra_yes" name="extracurricular" value="Yes" class="form-check-input" checked>
+                    <label for="extra_yes" class="form-check-label">Oui</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" id="extra_no" name="extracurricular" value="No" class="form-check-input">
+                    <label for="extra_no" class="form-check-label">Non</label>
+                </div>
+            </div>
+
+            <!-- Sleep Hours -->
+            <div class="mb-4">
+                <label for="sleep_hours" class="form-label">Heures de sommeil</label>
+                <input type="range" class="form-range" min="0" max="12" step="1" id="sleep_hours" name="sleep_hours"
+                       value="7" oninput="sleepHoursValue.textContent=this.value">
+                <span id="sleepHoursValue" class="fw-bold">7</span>
+            </div>
+
+            <!-- Sample Question Papers Practiced -->
+            <div class="mb-4">
+                <label for="sample_papers" class="form-label">Sujets pratiques réalisés</label>
+                <input type="range" class="form-range" min="0" max="10" step="1" id="sample_papers" name="sample_papers"
+                       value="3" oninput="samplePapersValue.textContent=this.value">
+                <span id="samplePapersValue" class="fw-bold">3</span>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Prédire</button>
+        </form>
+    </div>
+</div>
+```
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    const hours = document.getElementById("hours_studied");
+    const prev  = document.getElementById("previous_scores");
+    const sleep = document.getElementById("sleep_hours");
+    const papers = document.getElementById("sample_papers");
+
+    const hoursVal = document.getElementById("hoursStudiedValue");
+    const prevVal  = document.getElementById("previousScoresValue");
+    const sleepVal = document.getElementById("sleepHoursValue");
+    const papersVal = document.getElementById("samplePapersValue");
+
+    if (hours) hours.oninput = () => hoursVal.textContent = hours.value;
+    if (prev) prev.oninput = () => prevVal.textContent = prev.value;
+    if (sleep) sleep.oninput = () => sleepVal.textContent = sleep.value;
+    if (papers) papers.oninput = () => papersVal.textContent = papers.value;
+});
+</script>
+
+
+{% include "includes/footer.html" %}

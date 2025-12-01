@@ -1,0 +1,85 @@
+{% load static %}
+{% include "includes/header.html" %}
+
+<div class="container mt-4">
+
+    <h2 class="text-center mb-4">Résultats</h2>
+
+    <div class="card shadow p-4">
+
+        <!-- Image + texte -->
+        <div class="row align-items-center mb-4">
+
+            <!-- Image -->
+            <div class="col-md-5 text-center">
+                <img src="{% static img %}"
+                     class="img-fluid rounded shadow"
+                     style="max-height:250px; object-fit:cover;">
+            </div>
+
+            <!-- Texte prédiction -->
+            <div class="col-md-7 text-center">
+                <h1 class="fw-bold mb-2">
+                    {{ prediction }} / 100
+                </h1>
+
+                <h4 class="fw-semibold text-primary">
+                    {{ resultat }}
+                </h4>
+
+                <p class="text-muted mt-2">
+                    Prévision effectuée grâce au modèle de <strong>Régression Linéaire</strong>.
+                </p>
+            </div>
+
+        </div>
+
+        <hr>
+
+        <!-- Données d'entrée -->
+        <h5 class="mb-3">
+            <i class="bi bi-list-ul"></i> Données saisies :
+        </h5>
+
+        <ul class="list-group mb-4">
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Hours Studied</span>
+                <strong>{{ input_data.hours_studied }}</strong>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Previous Scores</span>
+                <strong>{{ input_data.previous_scores }}</strong>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Extracurricular Activities</span>
+                <strong>{{ input_data.extracurricular }}</strong>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Sleep Hours</span>
+                <strong>{{ input_data.sleep_hours }}</strong>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Sample Papers Practiced</span>
+                <strong>{{ input_data.sample_papers }}</strong>
+            </li>
+        </ul>
+        
+        <!-- Boutons -->
+        <div class="row">
+            <div class="col-md-6 mb-2">
+                <a href="{% url 'linreg_tester' %}" class="btn btn-primary w-100 py-2">
+                    <i class="bi bi-arrow-repeat"></i> Nouvelle prédiction
+                </a>
+            </div>
+
+            <div class="col-md-6 mb-2">
+                <a href="{% url 'index' %}" class="btn btn-outline-secondary w-100 py-2">
+                    <i class="bi bi-house-door-fill"></i> Retour à l'accueil
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% include "includes/footer.html" %}
