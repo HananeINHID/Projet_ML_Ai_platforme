@@ -4,36 +4,254 @@
     <meta charset="UTF-8">
     <title>AI Platform</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .navbar {
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        .nav-link {
+            font-weight: 500;
+        }
+        .search-input {
+            width: 250px;
+            transition: width 0.3s ease;
+        }
+        .search-input:focus {
+            width: 350px;
+        }
+        @media (max-width: 768px) {
+            .search-input {
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'index' %}">AI Platform</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'index' %}">Accueil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'regLog_tester' %}">Test Véhicules</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'ran_forest_tester' %}">Test Rain / No Rain</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'regLog_atelier' %}">Atelier Véhicules</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'ran_forest_atelier' %}">Atelier Rain / No Rain</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">À propos</a>
-                    </li>
-                </ul>
-            </div>
+
+    <!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+    <div class="container">
+
+        <!-- Logo -->
+        <a class="navbar-brand" href="{% url 'index' %}">AI Platform</a>
+
+        <!-- Toggle mobile -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Links + Search -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Liens -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-lg-center">
+
+                <!-- Menu Algorithmes -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="algosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Algorithmes
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="algosDropdown">
+                        <li><a class="dropdown-item" href="{% url 'regLog_details' %}">Régression Logistique</a></li>
+                        <li><a class="dropdown-item" href="{% url 'ran_forest_details' %}">Random Forest (Classification)</a></li>
+                        <li><a class="dropdown-item" href="{% url 'ran_forest_reg_details' %}">Random Forest (Régression)</a></li>
+                        <li><a class="dropdown-item" href="{% url 'XGBoost_details' %}">XGBoost</a></li>
+                    </ul>
+                </li>
+
+                <!-- Menu Tester -->
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="testerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Tester
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="testerDropdown">
+            <li><a class="dropdown-item" href="{% url 'regLog_tester' %}">Méteo by RegLog</a></li>
+            <li><a class="dropdown-item" href="{% url 'ran_forest_tester' %}">Méteo by Random Forest <span class="badge bg-warning text-dark ms-1"></span></a></li>
+            <li><a class="dropdown-item" href="{% url 'ran_forest_reg_tester' %}">StudentPerformance by Random Forest <span class="badge bg-warning text-dark ms-1"></span></a></li>
+
+        </ul>
+    </li>
+    <li class="nav-item">
+    <a class="nav-link" href="{% url 'about' %}">À propos</a>
+</li>
+
+    <!-- Menu Ateliers -->
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="atelierDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Ateliers
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="atelierDropdown">
+            <li><a class="dropdown-item" href="{% url 'regLog_atelier' %}">RegLogAtelier Méteo 🌧️</a></li>
+            <li><a class="dropdown-item" href="{% url 'ran_forest_atelier' %}">RandomForestAtelier Méteo 🌧️</a></li>
+            <li><a class="dropdown-item" href="{% url 'ran_forest_reg_atelier' %}">RandomForestAtelier StudentPerformance 📊</a></li>
+
+        </ul>
+    </li>
+
+</ul>
+
+            <!-- SEARCH BAR INSIDE NAVBAR -->
+            <form class="d-flex ms-lg-3" onsubmit="goToAlgo(); return false;">
+                <input id="searchInput"
+                       class="form-control me-2 search-input"
+                       type="search"
+                       placeholder="Tape un algorithme..."
+                       aria-label="Search">
+                <button class="btn btn-outline-light" type="submit">
+                    Chercher
+                </button>
+            </form>
         </div>
-    </nav>
+    </div>
+</nav>
+
+    <!-- Script de redirection -->
+    <script>
+    function goToAlgo() {
+        let algo = document.getElementById("searchInput").value;
+
+        if (!algo.trim()) return;
+
+        algo = algo.toLowerCase().replace(/\s+/g, "");
+
+        const routes = {
+            "regressionlogistique": "/regLog_details/",
+            "reglog": "/regLog_details/",
+
+            "randomforest": "/ran_forest_details/",
+            "rf": "/ran_forest_details/",
+
+            "randomforestregression": "/ran_forest_reg_details/",
+            "rfreg": "/ran_forest_reg_details/",
+
+            "xgboost": "/XGBoost_details/",
+            "xgb": "/XGBoost_details/",
+        };
+
+        if (routes[algo]) {
+            window.location.href = routes[algo];
+        } else {
+            alert("Algorithme non trouvé.");
+        }
+    }
+    </script>
+
+</body>
+</html>
+<style>
+/* =======================
+   Navbar dynamique et créative
+   ======================= */
+.navbar {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    transition: background-color 0.3s ease;
+}
+.navbar:hover {
+    background-color: #1a1a1a; /* légère variation au survol */
+}
+
+/* Logo */
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.6rem;
+    letter-spacing: 1px;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+.navbar-brand:hover {
+    color: #c3cfd1; /* couleur bleu dynamique */
+    transform: scale(1.05);
+}
+
+/* Liens et boutons uniformisés */
+.navbar-nav .nav-link,
+.navbar-nav .btn {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+.navbar-nav .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #c5cecf !important;
+}
+.navbar-nav .btn {
+    border: 2px solid #b9c2c4;
+    color: #bec6c8;
+    background-color: transparent;
+}
+.navbar-nav .btn:hover {
+    background-color: #c5ccce;
+    color: #000;
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Dropdown items */
+.dropdown-menu {
+    border-radius: 8px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.dropdown-item:hover {
+    background-color: #c8dade;
+    color: #000;
+    transform: translateX(5px);
+    font-weight: 600;
+}
+
+/* Barre de recherche */
+.search-input {
+    width: 220px;
+    transition: width 0.4s ease, box-shadow 0.3s ease;
+    border-radius: 20px;
+    padding-left: 15px;
+    border: 2px solid #a6b5b8;
+}
+.search-input:focus {
+    width: 320px;
+    box-shadow: 0 0 12px rgba(182, 193, 196, 0.6);
+}
+
+/* Bouton recherche */
+.btn-outline-light {
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+.btn-outline-light:hover {
+    background-color: #6c787a;
+    color: #000;
+    transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .search-input {
+        width: 100%;
+        margin-top: 10px;
+    }
+    .navbar-nav .btn,
+    .navbar-nav .nav-link {
+        width: 100%;
+        justify-content: center;
+        margin-top: 5px;
+    }
+}
+</style>

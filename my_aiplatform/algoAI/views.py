@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render , redirect
+
 import joblib  # Utilisé pour charger les modèles .pkl (modèle ML et scaler)
 import os      # Utilisé pour la manipulation des chemins de fichiers (os.path, os.path.exists)
 import numpy as np # Utilisé pour créer des tableaux (arrays) pour la prédiction
@@ -369,3 +370,28 @@ def XGboost_prediction(request):
 
     # GET -> afficher le formulaire
     return render(request, 'xgrain_form.html')
+
+
+
+# Mapping entre le texte tapé et les URLs
+ALGO_URLS = {
+    "randomforest": "/randomforest/",
+    "xgboost": "/xgboost/",
+}
+
+
+def recherche_algo_view(request):
+    algo_tape = request.GET.get('algo', '').lower().replace(" ", "")
+    if algo_tape in ALGO_URLS:
+        return redirect(ALGO_URLS[algo_tape])
+    elif algo_tape:
+        message = "Algorithme non trouvé !"
+    else:
+        message = ""
+    return render(request, 'app/index.html', {'message': message})
+def randomforest_view(request):
+    return render(request, 'app/ran_forest_atelier.html', {
+        'algo_nom': 'randomforest'
+    })
+def about(request):
+    return render(request, 'about.html')

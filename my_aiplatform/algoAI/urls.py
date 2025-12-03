@@ -18,7 +18,10 @@ urlpatterns = [
     path('XGBoost_atelier/', views.XGBoost_atelier, name='XGBoost_atelier'),
     path('XGboost_prediction/', views.rf_prediction, name='XGboost_prediction'),
     path('XGboost_tester/', views.XGboost_tester, name='XGboost_tester'),
-
+    path('', views.recherche_algo_view, name='recherche_algo'),
+    path('randomforest/', views.ran_forest_atelier, name='ran_forest_atelier'),
+    path('XGBoost/', views.XGBoost_atelier, name='XGBoost_atelier'),
+    path('about/', views.about, name='about'),
 
 
 ]
