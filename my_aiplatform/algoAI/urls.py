@@ -82,6 +82,6 @@ urlpatterns = [
     path('XGboost_tester/', views.XGboost_tester, name='XGboost_tester'),
     path('XGboost_prediction/', views.XGboost_prediction, name='XGboost_prediction'),
 
-
+    path('export_pdf/', views.export_pdf, name='export_pdf'),
 
 ]

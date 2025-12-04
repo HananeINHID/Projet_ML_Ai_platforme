@@ -98,7 +98,11 @@ def regLog_prediction(request):
             'prediction_image': img_path,
             'initial_data': input_data 
         }
-        
+        # --- Stocker les résultats dans la session pour l'export ---
+        request.session['prediction'] = pred_texte
+        request.session['input_data'] = input_data
+        request.session['algo_name'] = "RÉGRESSION LOGISTIQUE"
+
         return render(request, 'regLog_results.html', context)
         
     return render(request, 'meteo_form.html')
@@ -142,6 +146,11 @@ def tree_r_prediction(request):
             'predicted_score': predicted_score,
             'initial_data': input_features
         }
+        # --- Stocker les résultats dans la session pour l'export ---
+        request.session['prediction'] = predicted_score
+        request.session['input_data'] = input_features
+        request.session['algo_name'] = "ARBRE DE DÉCISION (RÉGRESSION)"
+
         return render(request, 'tree_r_results.html', context)
     
     return render(request, 'tree_r_form.html')
@@ -199,6 +208,10 @@ def tree_c_prediction(request):
             'prediction_image': img_path,
             'initial_data': input_data
         }
+        # --- Stocker les résultats dans la session pour l'export ---
+        request.session['prediction'] = pred_texte
+        request.session['input_data'] = input_data
+        request.session['algo_name'] = "ARBRE DECISION CLASSIFICATION"
 
         return render(request, 'tree_c_results.html', context)
 
@@ -259,6 +272,11 @@ def svm_c_prediction(request):
             'prediction_image': img_path,
             'initial_data': input_data
         }
+        # --- Stocker les résultats dans la session pour l'export ---
+        request.session['prediction'] = pred_texte
+        request.session['input_data'] = input_data
+        request.session['algo_name'] = "SVM CLASSIFICATION"
+
         return render(request, 'svm_c_results.html', context)
     
     return render(request, 'svm_c_form.html')
@@ -346,6 +364,10 @@ def svm_r_prediction(request):
             "input_data": input_data_display
         }
 
+        # --- Stocker les résultats dans la session pour l'export ---
+        request.session['prediction'] = prediction
+        request.session['input_data'] = input_data_display
+        request.session['algo_name'] = "SVM RÉGRESSION"
         return render(request, 'svm_r_results.html', context)
 
     return render(request, 'svm_r_form.html')
@@ -390,6 +412,12 @@ def xgboost_r_prediction(request):
             'predicted_score': predicted_score,
             'initial_data': input_features
         }
+
+        # --- Stocker les résultats dans la session pour l'export ---
+        request.session['prediction'] = predicted_score
+        request.session['input_data'] = input_features
+        request.session['algo_name'] = "XGBOOST RÉGRESSION"
+
         return render(request, 'xgboost_r_results.html', context)
     return render(request, 'xgboost_r_form.html')
 
@@ -440,6 +468,11 @@ def XGboost_prediction(request):
                 "pression": pression
             }
         }
+
+        # --- Stocker les résultats dans la session pour l'export ---
+        request.session['prediction'] = resultat
+        request.session['input_data'] = input_data
+        request.session['algo_name'] = "XGBOOST CLASSIFICATION"
 
         return render(request, 'xgrain_results.html', context)
 
@@ -492,6 +525,12 @@ def rf_prediction(request):
                 "pression": pression
             }
         }
+
+        # --- Stocker les résultats dans la session pour l'export ---
+        request.session['prediction'] = resultat
+        request.session['input_data'] = input_data
+        request.session['algo_name'] = "RANDOM FOREST CLASSIFICATION"
+
         return render(request, 'rain_results.html', context)
 
     return render(request, 'rain_form.html')
@@ -568,6 +607,11 @@ def rf_student_prediction(request):
             "img": img,
             "input_data": input_data_display
         }
+
+        # --- Stocker les résultats dans la session pour l'export ---
+        request.session['prediction'] = prediction
+        request.session['input_data'] = input_data_display
+        request.session['algo_name'] = "RANDOM FOREST RÉGRESSION"
 
         return render(request, 'student_results.html', context)
 
@@ -655,6 +699,64 @@ def linreg_prediction(request):
             "input_data": input_data_display
         }
 
+        # --- Stocker les résultats dans la session pour l'export ---
+        request.session['prediction'] = prediction
+        request.session['input_data'] = input_data_display
+        request.session['algo_name'] = "RÉGRESSION LINÉAIRE"
+
         return render(request, 'linreg_results.html', context)
 
     return render(request, 'linreg_form.html')
+
+from django.http import HttpResponse
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+from reportlab.lib.units import cm
+
+def export_pdf(request):
+    # --- Récupérer les données de la session ---
+    prediction = request.session.get('prediction', 'N/A')
+    input_data = request.session.get('input_data', {})
+    algo_name = request.session.get('algo_name', 'Modèle')  # nom dynamique de l'algo
+
+    # --- Création du PDF ---
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{algo_name}_resultats.pdf"'
+
+    p = canvas.Canvas(response, pagesize=A4)
+    width, height = A4
+
+    # --- Titre ---
+    p.setFont("Helvetica-Bold", 20)
+    p.setFillColor(colors.darkred)
+    p.drawCentredString(width/2, height - 3*cm, f"Résultats du modèle : {algo_name}")
+
+    # --- Score prévu ---
+    p.setFont("Helvetica-Bold", 14)
+    p.setFillColor(colors.black)
+    p.drawString(3*cm, height - 5*cm, f"Score Prévu : {prediction}")
+
+    # --- Séparateur ---
+    p.setStrokeColor(colors.lightgrey)
+    p.setLineWidth(1)
+    p.line(2*cm, height - 5.5*cm, width - 2*cm, height - 5.5*cm)
+
+    # --- Données saisies ---
+    p.setFont("Helvetica", 12)
+    y_position = height - 6.5*cm
+    p.drawString(3*cm, y_position, "Données saisies :")
+    y_position -= 0.5*cm
+
+    for key, value in input_data.items():
+        p.drawString(4*cm, y_position, f"- {key} : {value}")
+        y_position -= 0.5*cm
+
+    # --- Footer ---
+    p.setFont("Helvetica-Oblique", 10)
+    p.setFillColor(colors.grey)
+    p.drawString(3*cm, 2*cm, "Généré par votre application ML")
+
+    p.showPage()
+    p.save()
+    return response
