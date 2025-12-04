@@ -64,20 +64,31 @@
             </li>
         </ul>
         
-        <!-- Boutons -->
-        <div class="row">
-            <div class="col-md-6 mb-2">
-                <a href="{% url 'linreg_tester' %}" class="btn btn-primary w-100 py-2">
-                    <i class="bi bi-arrow-repeat"></i> Nouvelle prédiction
+        <!-- Boutons prédiction et accueil -->
+        <div class="row mb-4">
+            <div class="col-md-7 mb-2">
+                <a href="{% url 'linreg_tester' %}" class="btn btn-primary w-100 py-3">
+                    <i class="bi bi-arrow-repeat me-2"></i> Nouvelle prédiction
                 </a>
             </div>
 
-            <div class="col-md-6 mb-2">
-                <a href="{% url 'index' %}" class="btn btn-outline-secondary w-100 py-2">
-                    <i class="bi bi-house-door-fill"></i> Retour à l'accueil
+            <div class="col-md-5 mb-2">
+                <a href="{% url 'index' %}" class="btn btn-outline-secondary w-100 py-3">
+                    <i class="bi bi-house-door-fill me-2"></i> Retour à l'accueil
                 </a>
             </div>
         </div>
+
+
+        <!-- Bouton Export PDF -->
+        <div class="d-flex justify-content-center mb-4">
+            <a href="{% url 'export_pdf' %}" 
+            class="btn shadow-sm px-5 py-3" 
+            style="background-color: #ff7f7f; color: white; font-size: 1.2rem; font-weight: 600; border-radius: 12px;">
+                <i class="bi bi-file-earmark-pdf-fill me-2"></i> Sauvegarder les résultats en PDF
+            </a>
+        </div>
+
 
     </div>
 </div>
