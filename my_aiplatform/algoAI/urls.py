@@ -66,6 +66,9 @@ urlpatterns = [
     path('random_forest/ran_forest_reg_tester/', views.ran_forest_reg_tester, name='ran_forest_reg_tester'),
     path('random_forest/rf_student_prediction/', views.rf_student_prediction, name='rf_student_prediction'),
 
+    # Export PDF
+    path('export_pdf/', views.export_pdf, name='export_pdf'),
+
     # URLs de compatibilité (redirections depuis les anciens chemins sans préfixes)
     # Regression Logistique
     path('regLog_details/', RedirectView.as_view(url='/logistic_regression/regLog_details/', permanent=False)),

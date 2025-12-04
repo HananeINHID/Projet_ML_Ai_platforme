@@ -3,21 +3,24 @@ import joblib
 import numpy as np
 import pandas as pd
 import pickle
+from io import BytesIO
 from django.conf import settings
 from django.shortcuts import render
+from django.http import HttpResponse
+from reportlab.pdfgen import canvas
 
 
 def load_model(filename):
-    """
-    Charge un modèle pickle (.pkl) depuis le dossier model_ai et le retourne.
-    """
     path = os.path.join(settings.BASE_DIR, 'models_ai', filename)
     if not os.path.exists(path):
         print(f"Erreur : le fichier {filename} n'existe pas à {path}")
         return None
-    with open(path, 'rb') as f:
-        return pickle.load(f)
-
+    try:
+        return joblib.load(path)
+    except Exception as e:
+        print(f"Erreur chargement modèle {path}: {e}")
+        return None
+    
 def load_models(name):
     """
     Charge un fichier .pkl (modèle ou scaler) depuis le dossier 'models_ai'.
@@ -98,10 +101,14 @@ def regLog_prediction(request):
             'prediction_image': img_path,
             'initial_data': input_data 
         }
+        # --- Stocker les résultats dans la session pour l'export ---
+        request.session['prediction'] = pred_texte
+        request.session['input_data'] = input_data
+        request.session['algo_name'] = "RÉGRESSION LOGISTIQUE"
+
+        return render(request, 'logistic_regression/regLog_results.html', context)
         
-        return render(request, 'logistic_regresison/regLog_results.html', context)
-        
-    return render(request, 'logistic_regresison/meteo_form.html')
+    return render(request, 'logistic_regression/meteo_form.html')
 
 # --- ARBRE DE DÉCISION (RÉGRESSION) ---
 
@@ -142,6 +149,11 @@ def tree_r_prediction(request):
             'predicted_score': predicted_score,
             'initial_data': input_features
         }
+        # --- Stocker les résultats dans la session pour l'export ---
+        request.session['prediction'] = predicted_score
+        request.session['input_data'] = input_features
+        request.session['algo_name'] = "ARBRE DE DÉCISION (RÉGRESSION)"
+
         return render(request, 'decision_tree/tree_r_results.html', context)
     
     return render(request, 'decision_tree/tree_r_form.html')
@@ -199,6 +211,10 @@ def tree_c_prediction(request):
             'prediction_image': img_path,
             'initial_data': input_data
         }
+        # --- Stocker les résultats dans la session pour l'export ---
+        request.session['prediction'] = pred_texte
+        request.session['input_data'] = input_data
+        request.session['algo_name'] = "ARBRE DECISION CLASSIFICATION"
 
         return render(request, 'decision_tree/tree_c_results.html', context)
 
@@ -259,6 +275,11 @@ def svm_c_prediction(request):
             'prediction_image': img_path,
             'initial_data': input_data
         }
+        # --- Stocker les résultats dans la session pour l'export ---
+        request.session['prediction'] = pred_texte
+        request.session['input_data'] = input_data
+        request.session['algo_name'] = "SVM CLASSIFICATION"
+
         return render(request, 'svm/svm_c_results.html', context)
     
     return render(request, 'svm/svm_c_form.html')
@@ -346,7 +367,11 @@ def svm_r_prediction(request):
             "input_data": input_data_display
         }
 
-        return render(request, 'svm/svm_r_results.html', context)
+        # --- Stocker les résultats dans la session pour l'export ---
+        request.session['prediction'] = prediction
+        request.session['input_data'] = input_data_display
+        request.session['algo_name'] = "SVM RÉGRESSION"
+        return render(request, 'svm_r_results.html', context)
 
     return render(request, 'svm/svm_r_form.html')
 
@@ -390,6 +415,12 @@ def xgboost_r_prediction(request):
             'predicted_score': predicted_score,
             'initial_data': input_features
         }
+
+        # --- Stocker les résultats dans la session pour l'export ---
+        request.session['prediction'] = predicted_score
+        request.session['input_data'] = input_features
+        request.session['algo_name'] = "XGBOOST RÉGRESSION"
+
         return render(request, 'xgboost/xgboost_r_results.html', context)
     return render(request, 'xgboost/xgboost_r_form.html')
 
@@ -430,6 +461,13 @@ def XGboost_prediction(request):
         resultat = "Pluie 🌧️" if prediction == 1 else "Pas de pluie ☀️"
         image = "images/rain.png" if prediction == 1 else "images/sun.png"
 
+        input_data = {
+            "temperature": temperature,
+            "humidite": humidite,
+            "vent": vent,
+            "pression": pression
+        }
+
         context = {
             "resultat": resultat,
             "img": image,
@@ -440,6 +478,11 @@ def XGboost_prediction(request):
                 "pression": pression
             }
         }
+
+        # --- Stocker les résultats dans la session pour l'export ---
+        request.session['prediction'] = resultat
+        request.session['input_data'] = input_data
+        request.session['algo_name'] = "XGBOOST CLASSIFICATION"
 
         return render(request, 'xgboost/xgrain_results.html', context)
 
@@ -482,6 +525,13 @@ def rf_prediction(request):
         resultat = "Pluie 🌧️" if prediction == 1 else "Pas de pluie ☀️"
         image = "images/rain.png" if prediction == 1 else "images/sun.png"
 
+        input_data = {
+            "temperature": temperature,
+            "humidite": humidite,
+            "vent": vent,
+            "pression": pression
+        }
+
         context = {
             "resultat": resultat,
             "img": image,
@@ -492,7 +542,13 @@ def rf_prediction(request):
                 "pression": pression
             }
         }
-        return render(request, 'random_forest/rain_results.html', context)
+
+        # --- Stocker les résultats dans la session pour l'export ---
+        request.session['prediction'] = resultat
+        request.session['input_data'] = input_data
+        request.session['algo_name'] = "RANDOM FOREST CLASSIFICATION"
+
+        return render(request, 'rain_results.html', context)
 
     return render(request, 'random_forest/rain_form.html')
 
@@ -568,6 +624,11 @@ def rf_student_prediction(request):
             "img": img,
             "input_data": input_data_display
         }
+
+        # --- Stocker les résultats dans la session pour l'export ---
+        request.session['prediction'] = prediction
+        request.session['input_data'] = input_data_display
+        request.session['algo_name'] = "RANDOM FOREST RÉGRESSION"
 
         return render(request, 'random_forest/student_results.html', context)
 
@@ -655,6 +716,64 @@ def linreg_prediction(request):
             "input_data": input_data_display
         }
 
+        # --- Stocker les résultats dans la session pour l'export ---
+        request.session['prediction'] = prediction
+        request.session['input_data'] = input_data_display
+        request.session['algo_name'] = "RÉGRESSION LINÉAIRE"
+
         return render(request, 'linear_regression/linreg_results.html', context)
 
     return render(request, 'linear_regression/linreg_form.html')
+
+from django.http import HttpResponse
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+from reportlab.lib.units import cm
+
+def export_pdf(request):
+    # --- Récupérer les données de la session ---
+    prediction = request.session.get('prediction', 'N/A')
+    input_data = request.session.get('input_data', {})
+    algo_name = request.session.get('algo_name', 'Modèle')  # nom dynamique de l'algo
+
+    # --- Création du PDF ---
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{algo_name}_resultats.pdf"'
+
+    p = canvas.Canvas(response, pagesize=A4)
+    width, height = A4
+
+    # --- Titre ---
+    p.setFont("Helvetica-Bold", 20)
+    p.setFillColor(colors.darkred)
+    p.drawCentredString(width/2, height - 3*cm, f"Résultats du modèle : {algo_name}")
+
+    # --- Score prévu ---
+    p.setFont("Helvetica-Bold", 14)
+    p.setFillColor(colors.black)
+    p.drawString(3*cm, height - 5*cm, f"Score Prévu : {prediction}")
+
+    # --- Séparateur ---
+    p.setStrokeColor(colors.lightgrey)
+    p.setLineWidth(1)
+    p.line(2*cm, height - 5.5*cm, width - 2*cm, height - 5.5*cm)
+
+    # --- Données saisies ---
+    p.setFont("Helvetica", 12)
+    y_position = height - 6.5*cm
+    p.drawString(3*cm, y_position, "Données saisies :")
+    y_position -= 0.5*cm
+
+    for key, value in input_data.items():
+        p.drawString(4*cm, y_position, f"- {key} : {value}")
+        y_position -= 0.5*cm
+
+    # --- Footer ---
+    p.setFont("Helvetica-Oblique", 10)
+    p.setFillColor(colors.grey)
+    p.drawString(3*cm, 2*cm, "Généré par votre application ML")
+
+    p.showPage()
+    p.save()
+    return response
