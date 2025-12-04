@@ -216,3 +216,6 @@ envML/
 # Cache VS Code
 .vscode/
 
+# pycache
+__pycache__/
+*.pyc
