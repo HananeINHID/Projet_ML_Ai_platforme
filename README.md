@@ -90,4 +90,4 @@ _Année Universitaire : 2025/2026_
 
 ---
 
-N’hésitez pas à contribuer ou à signaler des issues ! Bon test et exploration des algos ML 🚀🤖
+N’hésitez pas à contribuer ou à signaler des issues ! Bon test et exploration des algos ML
