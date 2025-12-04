@@ -7,3 +7,10 @@ numpy==2.3.3
 pandas==2.3.3
 scikit-learn==1.7.2
 joblib==1.5.2
+xgboost>=2.0.0
+
+# Dépendances pour la génération de PDF (trouvé dans views.py)
+reportlab>=4.0.0
+
+# La commande pour tout installer 
+# pip install -r requirements.txt
