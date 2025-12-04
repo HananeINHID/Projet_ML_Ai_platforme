@@ -8,12 +8,6 @@
             <img src="{% static 'images/passedvsfailed.png' %}" width="40%"  class="img-fluid" alt="Background">
         </div>
         <div class="card-body">
-            
-            <!-- ADD THIS DEBUG SECTION -->
-            <div class="alert alert-info">
-                <strong>Debug:</strong> Form action URL: "{% url 'linreg_prediction' %}"
-            </div>
-            
             <form method="post" action="{% url 'linreg_prediction' %}">
                 {% csrf_token %}
 
