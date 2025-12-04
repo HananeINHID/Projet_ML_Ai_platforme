@@ -107,10 +107,10 @@
                     
                     <!-- Menu déroulant Algorithmes -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownAlgorithmes" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-diagram-3 me-1"></i>Algorithmes
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu" aria-labelledby="dropdownAlgorithmes">
                             <li><a class="dropdown-item" href="{% url 'regLog_details' %}">
                                 <i class="bi bi-list-check me-2"></i>Régression Logistique
                             </a></li>
@@ -146,10 +146,10 @@
 
                     <!-- Menu déroulant Ateliers -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownAteliers" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-code-slash me-1"></i>Ateliers Pratiques
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu" aria-labelledby="dropdownAteliers">
                             <li><a class="dropdown-item" href="{% url 'regLog_atelier' %}">
                                 <i class="bi bi-list-check me-2"></i> Régression Logistique - Météo
                             </a></li>
@@ -185,10 +185,10 @@
 
                     <!-- Menu déroulant Tester les Modèles -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownModeles" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-rocket-takeoff me-1"></i>Tester les Modèles
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu" aria-labelledby="dropdownModeles">
                             <li><a class="dropdown-item" href="{% url 'regLog_tester' %}">
                                 <i class="bi bi-list-check me-2"></i>Régression Logistique
                             </a></li>
@@ -344,5 +344,3 @@
             });
         });
     </script>
-</body>
-</html>
