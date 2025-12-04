@@ -219,3 +219,14 @@ envML/
 # pycache
 __pycache__/
 *.pyc
+
+# 1. Dossiers Django standards (indispensable)
+media/
+staticfiles/
+
+# 4. Fichiers systèmes Windows
+Thumbs.db
+Desktop.ini
+
+# 5. Nettoyage des doublons
+db.sqlite3
