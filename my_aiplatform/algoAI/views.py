@@ -147,7 +147,7 @@ def tree_r_prediction(request):
         }
         context = {
             'predicted_score': predicted_score,
-            'initial_data': input_features
+            'input_features': input_features
         }
         # --- Stocker les résultats dans la session pour l'export ---
         request.session['prediction'] = predicted_score
